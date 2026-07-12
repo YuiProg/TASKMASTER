@@ -9,7 +9,7 @@
 		<relativePath/>
 	</parent>
 	<groupId>com.example.comment-service</groupId>
-	<artifactId>comment</artifactId>
+	<artifactId>task-master-comment</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name/>
 	<description/>
