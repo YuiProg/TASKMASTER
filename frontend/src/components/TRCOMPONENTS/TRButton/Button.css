@@ -1,0 +1,21 @@
+.TR-button {
+    height: 44px;
+    border-radius: 8px;
+    border: none;
+    color: white;
+    cursor: pointer;
+    width: 100%;
+}
+
+.TR-button:active {
+    opacity: 0.5;
+}
+
+.tr-btn-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.TR-button:hover:not(.tr-btn-disabled) {
+    transform: scale(1.02);
+}

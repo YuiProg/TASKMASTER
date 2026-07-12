@@ -1,0 +1,47 @@
+services:
+#  postgres-backend:
+#    image: postgres:16-alpine
+#    container_name: postgres-backend
+#    environment:
+#      - POSTGRES_USER=${DB_USER}
+#      - POSTGRES_PASSWORD=${DB_PASSWORD}
+#      - POSTGRES_DB=${DB_NAME}
+#    ports:
+#      - "5439:5432"
+#    volumes:
+#      - pgdata:/var/lib/postgresql/data
+#    healthcheck:
+#      # Fixes the 'root' error by forcing the tool to authenticate with your custom user variables
+#      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
+#      interval: 5s
+#      timeout: 5s
+#      retries: 5
+
+  backend-service:
+    build:
+      context: ./backend
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    environment:
+      - SERVER_PORT=8080
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=require&channel_binding=require
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+
+  comment-service:
+    build:
+      context: ./comment
+    ports:
+      - "8081:8081"
+    env_file:
+      - .env
+    environment:
+      - SERVER_PORT=8081
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=require&channel_binding=require
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+
+volumes:
+  pgdata:

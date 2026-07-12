@@ -1,0 +1,345 @@
+/* ── Wrapper ── */
+.table-wrapper {
+  background-color: #1C1C1E; /* Authentic Dashboard Dark Layout Surface */
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 20px;
+}
+
+/* ── Header Row ── */
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.table-header--isolated {
+  margin-bottom: 12px;
+}
+
+.table-title-area {
+  display: flex;
+  flex-direction: column;
+}
+
+.table-subtitle {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.4);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.table-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #ffffff;
+  margin: 4px 0 0 0;
+  line-height: 1.2;
+}
+
+.table-header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* ── Table Container ── */
+.table-container {
+  width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  overflow-x: auto;
+  background-color: transparent;
+}
+
+/* ── Table Base ── */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  border-spacing: 0;
+  font-size: 13px;
+  color: #fff;
+  text-align: left; /* Changes text alignments to match natural table layouts */
+}
+
+/* ── Headers ── */
+.table-thead-row {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.table-th {
+  padding: 12px 16px;
+  text-align: left;
+  color: rgba(255, 255, 255, 0.4);
+  background-color: #242426;
+  font-weight: 600;
+  font-size: 11px;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.table-th--check {
+  width: 50px;
+  text-align: center;
+  padding-right: 0;
+}
+
+.table-th--action {
+  width: 90px;
+  text-align: center;
+}
+
+/* ── Rows & Columns ── */
+.table-row {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  transition: background-color 0.15s ease;
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.table-row:hover {
+  background-color: #242426;
+}
+
+.table-row--selected {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+.table-td {
+  padding: 12px 16px;
+  text-align: left;
+  color: rgba(255, 255, 255, 0.85);
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.table-td--check {
+  text-align: center;
+  padding-right: 0;
+}
+
+.table-td--action {
+  text-align: center;
+}
+
+.table-clickable-id {
+  cursor: pointer;
+  color: #fff;
+  font-weight: 600;
+  transition: color 0.1s ease;
+}
+
+.table-clickable-id:hover {
+  color: #e24b4a; /* Brand Accent highlight color */
+}
+
+/* ── Checkboxes ── */
+.table-checkbox {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  background-color: transparent;
+  cursor: pointer;
+  position: relative;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0;
+}
+
+.table-checkbox:hover {
+  border-color: #e24b4a;
+}
+
+.table-checkbox:checked {
+  background-color: #e24b4a;
+  border-color: #e24b4a;
+}
+
+.table-checkbox:checked::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 4px;
+  height: 7px;
+  border: 2px solid #ffffff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg);
+}
+
+/* ── Action Buttons ── */
+.table-action-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.table-action-btn--delete {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.table-action-btn--delete:hover {
+  background-color: rgba(226, 75, 74, 0.15);
+  color: #e24b4a;
+}
+
+.table-action-btn--edit {
+  color: rgba(255, 255, 255, 0.3);
+}
+
+.table-action-btn--edit:hover {
+  background-color: rgba(93, 173, 226, 0.15);
+  color: #5dade2;
+}
+
+/* ── Pagination Area ── */
+.pagination {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 4px 0 4px;
+  margin-top: 12px;
+}
+
+.pagination-info {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.pagination-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pagination-btn,
+.pagination-page {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.6);
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 13px;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+}
+
+.pagination-btn:hover:not(:disabled),
+.pagination-page:hover {
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.25;
+  cursor: not-allowed;
+}
+
+.pagination-page--active {
+  background-color: #e24b4a;
+  border-color: #e24b4a;
+  color: #fff;
+  font-weight: 600;
+}
+
+.pagination-page--active:hover {
+  background-color: #e24b4a;
+  border-color: #e24b4a;
+}
+
+.pagination-dots {
+  color: rgba(255, 255, 255, 0.2);
+  font-size: 18px;
+  padding: 0 4px;
+  user-select: none;
+  line-height: 1;
+}
+
+/* ── Table Sortable Controls ── */
+.table-th--sortable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.table-th--sortable:hover {
+  color: #fff;
+}
+
+.table-th-content {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.table-sort-icon {
+  display: flex;
+  align-items: center;
+  color: #e24b4a;
+}
+
+.table-sort-icon--inactive {
+  color: rgba(255, 255, 255, 0.15);
+}
+
+/* ── No Data / Loading states ── */
+.table-td--nodata {
+  padding: 0;
+}
+
+.no-data-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 24px;
+  gap: 12px;
+}
+
+.no-data-icon {
+  color: rgba(255, 255, 255, 0.15);
+}
+
+.no-data-title {
+  color: rgba(255, 255, 255, 0.3);
+  font-size: 13px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.table-spinner {
+  width: 24px;
+  height: 24px;
+  border: 2.5px solid rgba(255, 255, 255, 0.1);
+  border-top-color: #e24b4a;
+  border-radius: 50%;
+  animation: spinner-rotate 0.7s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+@keyframes spinner-rotate {
+  to { transform: rotate(360deg); }
+}

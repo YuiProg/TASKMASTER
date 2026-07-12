@@ -1,0 +1,20 @@
+# Secrets & Environment Variables
+.env
+.env.*
+*.env
+
+# Backend Build folders
+**/target/
+**/build/
+
+# Frontend Dependencies & Builds
+**/node_modules/
+**/dist/
+**/build/
+.next/
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.log

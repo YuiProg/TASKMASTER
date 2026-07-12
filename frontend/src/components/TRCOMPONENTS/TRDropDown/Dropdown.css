@@ -1,0 +1,127 @@
+.tr-dropdown-wrapper {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+}
+
+.tr-dropdown-button {
+  background-color: #2b2b2b; /* Matches your dashboard input background color */
+  color: #ffffff;
+  height: 50px; /* Aligns smoothly with InputField height sizing lines */
+  border-radius: 6px;
+  border: none;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+  cursor: pointer;
+  outline: none;
+  font-family: sans-serif;
+  transition: background-color 0.2s ease;
+}
+
+.tr-dropdown-button:hover:not(.disabled) {
+  background-color: #323232;
+}
+
+.tr-dropdown-button.active-trigger {
+  background-color: #323232;
+}
+
+.tr-dropdown-button.disabled {
+  background-color: #1e1e1f;
+  color: #6e6e6e;
+  cursor: not-allowed;
+}
+
+.tr-dropdown-icon {
+  width: 16px;
+  height: 16px;
+  color: #6e6e6e;
+  flex-shrink: 0;
+}
+
+.tr-dropdown-text {
+  flex: 1;
+  text-align: left;
+  font-size: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tr-dropdown-chevron {
+  width: 16px;
+  height: 16px;
+  color: #6e6e6e;
+  flex-shrink: 0;
+  transition: transform 0.2s cubic-bezier(0.2, 0, 0, 1);
+}
+
+.tr-dropdown-chevron.open {
+  transform: rotate(180deg);
+}
+
+/* ── Portal Container Architecture ── */
+.tr-dropdown-list-portal {
+  position: absolute !important; /* Managed cleanly via component matrix coordinates */
+  background-color: #1c1c1e; /* Card surface matching design system dark accents */
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 6px 0;
+  z-index: 99999 !important;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+  max-height: 240px;
+  overflow-y: auto;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+.tr-dropdown-item {
+  background-color: transparent; /* Allows inheritance of container body background safely */
+  color: #d0d0d0;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.tr-dropdown-item:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: #ffffff;
+}
+
+.tr-dropdown-item.active {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.tr-all-option {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  margin-bottom: 4px;
+  padding-bottom: 12px;
+  color: #a1a1aa;
+}
+
+/* ── Webkit Scrollbar Controls ── */
+.tr-dropdown-list-portal::-webkit-scrollbar {
+  width: 6px;
+}
+
+.tr-dropdown-list-portal::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tr-dropdown-list-portal::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 20px;
+}
+
+.tr-dropdown-list-portal::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
