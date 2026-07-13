@@ -145,7 +145,7 @@ public class UserProcessServiceImpl implements UserProcessService{
                 ResponseCookie responseCookie = jwtUtil.deleteCookie();
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
                         .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-                        .body(ApiResponseModel.error("You have been logged out due to multiple authentication", "ERROR"));
+                        .body(ApiResponseModel.error(StringCodes.MULTIPLE_SESSION.getPath(), "ERROR"));
             }
             User user = userRepository.findByEmail(userRequest.getEmail())
                     .orElse(null);
