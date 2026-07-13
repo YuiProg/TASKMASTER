@@ -1,0 +1,74 @@
+.tr-login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.tr-login-shell {
+  width: 100%;
+  max-width: 400px;
+}
+
+.tr-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+
+.tr-brand-mark {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: #c0392b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tr-brand-name {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.02em;
+}
+
+.tr-login-card {
+  background-color: #1C1C1E;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+}
+
+.tr-login-card .tr-inputform-panel-container {
+  background-color: transparent;
+}
+
+.tr-login-card .tr-inputform {
+  gap: 16px;
+}
+
+.tr-login-btn {
+  background: #c0392b;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.tr-signup-hint {
+  text-align: center;
+  font-size: 13px;
+  color: #686869;
+  margin-top: 18px;
+}
+
+.tr-signup-hint a {
+  color: #d85a30;
+  text-decoration: none;
+}
+
+.tr-signup-hint a:hover {
+  text-decoration: underline;
+}

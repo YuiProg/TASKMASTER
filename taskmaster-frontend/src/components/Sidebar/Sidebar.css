@@ -1,0 +1,193 @@
+.app-sidebar {
+  width: 260px;
+  height: 100vh;
+  background-color: #141414; /* Solid premium deep gray backplate background color */
+  border-right: 1px solid #222222;
+  display: flex;
+  flex-direction: column;
+  color: #9e9e9e;
+  font-family: system-ui, -apple-system, sans-serif;
+  box-sizing: border-box;
+}
+
+.sidebar-brand-zone {
+  height: 64px;
+  padding: 0 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #1f1f1f;
+  box-sizing: border-box;
+}
+
+.brand-text {
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.95rem;
+  letter-spacing: 0.5px;
+}
+
+.hamburger-btn {
+  background: transparent;
+  border: none;
+  color: #9e9e9e;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+}
+
+.sidebar-scroller {
+  flex: 1;
+  padding: 16px 12px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.menu-group-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #4a4a4a;
+  padding: 12px 8px 6px 8px;
+  letter-spacing: 0.5px;
+}
+
+.nav-row-btn {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #9e9e9e;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.nav-row-btn:hover {
+  background-color: #1a1a1a;
+  color: #ffffff;
+}
+
+.nav-row-btn.active {
+  background-color: #242424;
+  color: #ffffff;
+}
+
+.arrow-icon {
+  margin-left: auto;
+  transition: transform 0.2s ease;
+  color: #555555;
+}
+
+.arrow-icon.rotated {
+  transform: rotate(180deg);
+}
+
+.sub-menu-box {
+  padding-left: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 2px;
+}
+
+.sub-menu-box button {
+  background: transparent;
+  border: none;
+  text-align: left;
+  padding: 8px 12px;
+  font-size: 0.8rem;
+  color: #757575;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.sub-menu-box button:hover {
+  color: #ffffff;
+  background-color: #1a1a1a;
+}
+
+/* Bottom Profile Account Block */
+.sidebar-account-footer {
+  padding: 16px;
+  border-top: 1px solid #1f1f1f;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background-color: #0f0f0f;
+  box-sizing: border-box;
+}
+
+.avatar-circle {
+  width: 36px;
+  height: 36px;
+  background-color: #2b44b8;
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+}
+
+.account-meta {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.user-title {
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-subtitle {
+  color: #616161;
+  font-size: 0.75rem;
+}
+
+.pwd-link-btn {
+  background: transparent;
+  border: none;
+  padding: 0;
+  color: #555555;
+  font-size: 0.7rem;
+  text-align: left;
+  text-decoration: underline;
+  cursor: pointer;
+  margin-top: 2px;
+}
+
+.pwd-link-btn:hover {
+  color: #9e9e9e;
+}
+
+.logout-action-btn {
+  background: transparent;
+  border: none;
+  color: #555555;
+  cursor: pointer;
+  padding: 4px;
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.logout-action-btn:hover {
+  color: #f44336;
+}
