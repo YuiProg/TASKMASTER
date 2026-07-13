@@ -40,6 +40,7 @@ public enum ApiEndpoint {
     GET_AUTHENTICATED_TASK("/api/v1/getAuthenticatedUserTask"),
     UPDATE_TASK("/api/v1/updateTasl/{taskId}/{status}"),
     GET_TASK_BY_ID("/api/v1/getTaskById/{id}"),
+    GET_PROJECT_TASK("/api/v1/getProjectTask/{id}"),
 
     //COMMENTS
     ADD_COMMENT("/api/v1/comments/newComment"),
@@ -48,6 +49,7 @@ public enum ApiEndpoint {
     UPDATE_COMMENT("/api/v1/comments/updateComment/{id}"),
     DELETE_COMMENT("/api/v1/comments/deleteComment/{id}"),
     LIKE_COMMENT("/api/v1/comments/like/{id}"),
+    GET_TASK_COMMENTS("/api/v1/getTaskComments/{id}"),
 
     //FEIGN
     USER_BY_ID("/api/v1/getUserById/**"),

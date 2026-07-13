@@ -10,6 +10,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.comment_service.comment.service.CommentServiceInterface;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/comments")
 @AllArgsConstructor
@@ -28,6 +30,12 @@ public class CommentController implements CommentServiceInterface {
     @PostMapping("/updateComment/{id}")
     public ResponseEntity<ApiResponseModel<Comment>> editComment(@PathVariable String id, @RequestBody CommentRequest commentRequest) {
         return commentServiceInterface.editComment(id, commentRequest);
+    }
+
+    @Override
+    @GetMapping("/getTaskComments/{id}")
+    public ResponseEntity<ApiResponseModel<List<Comment>>> getTaskComments(@PathVariable String id) {
+        return commentServiceInterface.getTaskComments(id);
     }
 
     @GetMapping("/test-feign/{id}")

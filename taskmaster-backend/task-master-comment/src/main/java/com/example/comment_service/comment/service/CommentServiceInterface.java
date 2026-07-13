@@ -5,7 +5,10 @@ import com.example.comment_service.comment.dto.ApiResponseModel;
 import com.example.comment_service.comment.models.Comment;
 import org.springframework.http.ResponseEntity;
 
+import java.util.List;
+
 public interface CommentServiceInterface {
     ResponseEntity<ApiResponseModel<Comment>> newComment (CommentRequest commentRequest);
     ResponseEntity<ApiResponseModel<Comment>> editComment (String id, CommentRequest commentRequest);
+    ResponseEntity<ApiResponseModel<List<Comment>>> getTaskComments (String taskId);
 }

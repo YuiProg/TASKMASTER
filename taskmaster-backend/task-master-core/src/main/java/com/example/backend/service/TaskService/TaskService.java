@@ -95,6 +95,7 @@ public class TaskService implements TaskServiceInterface{
         oldTask.setProject(task.getProject());
         oldTask.setUpdatedBy(task.getUpdatedBy());
         oldTask.setDescription(task.getDescription());
+        oldTask.setCreatedBy(task.getCreatedBy());
         oldTask.setCreatedAt(task.getCreatedAt());
         oldTask.setAssignee(task.getAssignee());
         oldTask.setProject(task.getProject());
@@ -120,5 +121,11 @@ public class TaskService implements TaskServiceInterface{
         Task task = taskRepository.findById(id).orElse(null);
 
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("TASK FOUND", "SUCCESS", task));
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<List<Task>>> getProjectTask(String id) {
+        List<Task> tasks = taskRepository.getTaskOnProject(id);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("TASKS FOUND", "SUCCESS", tasks));
     }
 }

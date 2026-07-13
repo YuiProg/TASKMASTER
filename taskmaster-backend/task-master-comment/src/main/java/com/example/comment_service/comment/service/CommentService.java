@@ -17,6 +17,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class CommentService implements CommentServiceInterface{
@@ -88,5 +90,11 @@ public class CommentService implements CommentServiceInterface{
         Comment newComment = commentRepository.save(comment);
 
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.update("COMMENT EDITED", "SUCCESS", newComment, oldComment));
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<List<Comment>>> getTaskComments(String taskId) {
+        List<Comment> comments = commentRepository.getTaskComments(taskId);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("COMMENTS FOUND", "SUCCESS", comments));
     }
 }
