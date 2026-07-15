@@ -1,0 +1,127 @@
+.new-project-form {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.new-project-error {
+  margin: 0;
+  padding: 10px 14px;
+  border-radius: 8px;
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #EF4444;
+  font-size: 13px;
+}
+
+.new-project-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.new-project-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #d0d0d0;
+}
+
+.new-project-required {
+  color: #e0574a;
+  margin-left: 2px;
+}
+
+.new-project-note {
+  font-size: 0.7rem;
+  color: #6e6e6e;
+  margin-top: -4px;
+}
+
+.new-project-textarea {
+  width: 100%;
+  background-color: #2b2b2b;
+  border: none;
+  border-radius: 6px;
+  color: #d0d0d0;
+  font-size: 14px;
+  padding: 12px 16px;
+  box-sizing: border-box;
+  outline: none;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.new-project-textarea:focus {
+  background-color: #323232;
+}
+
+.new-project-member-input-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.new-project-member-input-row .input-container {
+  flex: 1;
+}
+
+.new-project-member-input-row .TR-button {
+  background: #2b2b2b;
+  border: 1px solid #3a3a3a;
+  color: #d0d0d0;
+  font-weight: 600;
+}
+
+.new-project-member-input-row .TR-button:hover {
+  background: #323232;
+  color: #ffffff;
+}
+
+.new-project-member-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.new-project-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 6px 5px 12px;
+  border-radius: 999px;
+  background-color: rgba(192, 57, 43, 0.15);
+  color: #e0574a;
+  font-size: 0.78rem;
+}
+
+.new-project-chip-remove {
+  background: transparent;
+  border: none;
+  color: #e0574a;
+  font-size: 1rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 2px 4px;
+}
+
+.new-project-chip-remove:hover {
+  color: #ffffff;
+}
+
+.new-project-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.new-project-actions .TR-button {
+  width: auto;
+  padding: 0 20px;
+}
+
+.new-project-submit-btn {
+  background: #c0392b;
+  font-weight: 600;
+}

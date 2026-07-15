@@ -34,6 +34,7 @@ public enum ApiEndpoint {
     REMOVE_MEMBER_PROJECT("/api/v1/removeProjectMembers/{projectId}/{userId}"),
     GET_PROJECTS("/api/v1/getProjects"),
     GET_PROJECT_BY_ID("/api/v1/getProjectById/{projectId}"),
+    GET_PROJECT_BY_NAME("/api/v1/getProjectByName/{name}"),
 
     //TASK
     ADD_TASK("/api/v1/createTask"),

@@ -53,4 +53,10 @@ public class ProjectController implements ProjectServiceInterface {
     public ResponseEntity<ApiResponseModel<List<Project>>> getAuthUserProjects() {
         return projectServiceInterface.getAuthUserProjects();
     }
+
+    @Override
+    @GetMapping("/api/v1/getProjectByName/{name}")
+    public ResponseEntity<ApiResponseModel<Project>> getProjectByName(@PathVariable String name) {
+        return projectServiceInterface.getProjectByName(name);
+    }
 }

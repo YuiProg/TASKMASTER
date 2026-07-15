@@ -43,6 +43,7 @@ public class ProjectServiceImpl implements ProjectServiceInterface{
         project.setProjectName(projectRequest.getProjectName());
         project.setCreatedAt(String.valueOf(new Date()));
         project.setUpdatedBy(user.getUsername());
+        project.setDescription(projectRequest.getDescription());
 
         if (projectRequest.getStatus() != null && !projectRequest.getStatus().trim().isEmpty()) {
             project.setStatus(projectRequest.getStatus());
@@ -138,5 +139,14 @@ public class ProjectServiceImpl implements ProjectServiceInterface{
         List<Project> projects = user.getProjects();
 
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("PROJECTS FOUND", "SUCCESS", projects));
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<Project>> getProjectByName(String name) {
+        Project project = projectRepository.getProjectByName(name);
+        if (project == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponseModel.error("PROJECT NOT FOUND", "ERROR"));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("PROJECT FOUND", "SUCCESS", project));
     }
 }

@@ -14,4 +14,5 @@ public interface ProjectServiceInterface {
     ResponseEntity<ApiResponseModel<Project>> addMemberToProject (String projectId, String userId);
     ResponseEntity<ApiResponseModel<Project>> removeMemberToProject (String projectId, String userId);
     ResponseEntity<ApiResponseModel<List<Project>>> getAuthUserProjects ();
+    ResponseEntity<ApiResponseModel<Project>> getProjectByName (String name);
 }

@@ -18,6 +18,7 @@ public class AuthController implements UserProcessService {
 
     private final UserProcessService userProcessService;
 
+
     @Override
     @PostMapping("/api/v1/addUser")
     public ResponseEntity<ApiResponseModel<User>> addUser(@RequestBody UserRequest userRequest) {

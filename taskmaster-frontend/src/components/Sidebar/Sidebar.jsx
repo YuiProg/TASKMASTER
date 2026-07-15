@@ -1,172 +1,229 @@
-import React from 'react';
-import { 
-  LayoutDashboard, 
-  Folder, 
-  CheckSquare, 
-  GitBranch, 
-  Users, 
-  Settings, 
-  ChevronDown, 
-  LogOut, 
-  Menu 
-} from 'lucide-react';
-import { useAuthStore } from '../../context/AuthStore';
-import api from '../../lib/axios'; // Adjust path to your shared axios instance
+import React from "react";
+import { useAuthStore } from "../../context/AuthStore";
+import { Link } from "react-router-dom";
 import './Sidebar.css';
+import {
+    LayoutDashboard, Folder, CheckSquare, GitBranch, Users,
+    LogOut, Menu, ChevronDown
+} from 'lucide-react';
+
+// Hardcoded for now so the sidebar always renders regardless of
+// what's (or isn't) in useAuthStore. Swap this back to real store
+// data once the black-screen / rehydration issue is sorted.
+const HARDCODED_USER = {
+    username: 'admin',
+    role: 'admin',
+};
 
 class Sidebar extends React.Component {
-  constructor(props) {
-    super(props);
-    // Grab the initial state from your Zustand store reactively
-    const storeState = useAuthStore.getState();
-    
-    this.state = {
-      activePath: window.location.pathname || '/dashboard',
-      openMenus: { projects: false, tasks: false },
-      user: storeState.user // Keeps the local profile rendering bound to Zustand data
-    };
-  }
-
-  componentDidMount() {
-    // Subscribe to global Zustand state changes so the profile syncs dynamically if updated
-    this.unsubscribeStore = useAuthStore.subscribe(
-      (state) => this.setState({ user: state.user })
-    );
-  }
-
-  componentWillUnmount() {
-    // Clean up our store subscription to prevent memory leaks when the component unmounts
-    if (this.unsubscribeStore) {
-      this.unsubscribeStore();
+    constructor(props) {
+        super(props);
+        this.state = {
+            collapsed: false,
+            projectsExpanded: false,
+            tasksExpanded: false,
+            showChangePasswordModal: false,
+            user: HARDCODED_USER,
+        };
     }
-  }
 
-  toggleMenu = (menuKey) => {
-    this.setState(prevState => ({
-      openMenus: { ...prevState.openMenus, [menuKey]: !prevState.openMenus[menuKey] }
-    }));
-  };
+    componentDidMount() {
+        this.unsubscribeAuth = useAuthStore.subscribe((state) => {
+            if (state.user) this.setState({ user: state.user });
+        });
 
-  handleNav = (path) => {
-    this.setState({ activePath: path });
-    if (window.location.pathname !== path) {
-      window.location.pathname = path;
+        const pathname = window.location.pathname;
+
+        if (["/projects", "/projects/new", "/projects/archived"].includes(pathname)) {
+            this.setState({ projectsExpanded: true });
+        }
+        if (["/tasks/my-tasks", "/tasks/backlog"].includes(pathname)) {
+            this.setState({ tasksExpanded: true });
+        }
     }
-  };
 
-  handleLogout = async () => {
-    try {
-      // 1. Hit your accurate backend endpoint running on your core Spring Boot instance
-      // Assuming your axios instance prefix handles '/api/v1', use '/logout'. Otherwise, use full URL:
-      await api.post('/logout'); 
-    } catch (err) {
-      console.error("Backend logout session cleanup failed:", err);
-    } finally {
-      // 2. Trigger the Zustand action directly via the store instance API to wipe local credentials
-      useAuthStore.getState().logout();
-      
-      // 3. Clear the window route context back to your full screen login view
-      window.location.href = '/';
+    componentWillUnmount() {
+        if (this.unsubscribeAuth) this.unsubscribeAuth();
     }
-  };
 
-  render() {
-    const { activePath, openMenus, user } = this.state;
+    handleLogout = async () => {
+        // Hits /logout via the shared axios instance, then clears local state
+        // regardless of whether the backend call succeeds.
+        await useAuthStore.getState().logout();
+        window.location.href = '/';
+    }
 
-    // Fallback names if your Zustand user payload hasn't loaded yet
-    const displayName = user?.username || user?.name || 'admin';
-    const displayRole = user?.role || 'Core Engineer';
-    const avatarInitials = displayName.substring(0, 2).toUpperCase();
+    toggleSidebar = () => {
+        this.setState(prev => ({ collapsed: !prev.collapsed }));
+    }
 
-    return (
-      <aside className="app-sidebar">
-        <div className="sidebar-brand-zone">
-          <span className="brand-text">TASKMASTER CORE</span>
-          <button className="hamburger-btn"><Menu size={18} /></button>
-        </div>
+    toggleMenu = (key) => (e) => {
+        e.preventDefault();
+        this.setState(prev => ({
+            [key]: !prev[key],
+            collapsed: prev.collapsed ? false : prev.collapsed,
+        }));
+    }
 
-        <nav className="sidebar-scroller">
-          <div className="menu-group-label">OVERVIEW</div>
-          <button 
-            className={`nav-row-btn ${activePath === '/dashboard' ? 'active' : ''}`}
-            onClick={() => this.handleNav('/dashboard')}
-          >
-            <LayoutDashboard size={18} />
-            <span>Dashboard</span>
-          </button>
+    passProps = () => {
+        const { user } = this.state;
+        return React.Children.map(this.props.children, (child) => {
+            if (!child) return;
+            return React.cloneElement(child, { user });
+        });
+    }
 
-          <div className="menu-group-label">WORKSPACE MANAGEMENT</div>
-          
-          <div className="dropdown-wrapper">
-            <button className="nav-row-btn" onClick={() => this.toggleMenu('projects')}>
-              <Folder size={18} />
-              <span>Projects</span>
-              <ChevronDown size={14} className={`arrow-icon ${openMenus.projects ? 'rotated' : ''}`} />
-            </button>
-            {openMenus.projects && (
-              <div className="sub-menu-box">
-                <button onClick={() => this.handleNav('/projects/active')}>Active Track</button>
-                <button onClick={() => this.handleNav('/projects/archived')}>Archived</button>
-              </div>
-            )}
-          </div>
+    renderAccordion({ key, expanded, active, icon, label, tooltip, items }) {
+        const { collapsed } = this.state;
+        return (
+            <li className={`sb-row sb-dropdown-wrapper ${expanded ? 'is-expanded' : ''} ${active ? 'parent-active' : ''}`}>
+                <a href={`#${key}`} onClick={this.toggleMenu(`${key}Expanded`)} className="sb-dropdown-trigger">
+                    <div className="sb-trigger-left">
+                        <span className="sb-icon-wrap">{icon}</span>
+                        <span className="sb-title">{label}</span>
+                    </div>
+                    {!collapsed && (
+                        <ChevronDown className={`sb-chevron ${expanded ? 'rotated' : ''}`} size={16} />
+                    )}
+                </a>
+                {collapsed && <span className="sb-tooltip">{tooltip || label}</span>}
+                <ul className="sb-submenu-list">
+                    {items.map(({ path, title }) => {
+                        const pathname = window.location.pathname;
+                        return (
+                            <li key={path} className={`sb-sub-row${pathname === path ? ' sub-active' : ''}`}>
+                                <Link to={path}>
+                                    <span className="sb-sub-dot"></span>
+                                    <span className="sb-sub-title">{title}</span>
+                                </Link>
+                            </li>
+                        );
+                    })}
+                </ul>
+            </li>
+        );
+    }
 
-          <div className="dropdown-wrapper">
-            <button className="nav-row-btn" onClick={() => this.toggleMenu('tasks')}>
-              <CheckSquare size={18} />
-              <span>Tasks</span>
-              <ChevronDown size={14} className={`arrow-icon ${openMenus.tasks ? 'rotated' : ''}`} />
-            </button>
-            {openMenus.tasks && (
-              <div className="sub-menu-box">
-                <button onClick={() => this.handleNav('/tasks/my-tasks')}>Assigned to Me</button>
-                <button onClick={() => this.handleNav('/tasks/backlog')}>Backlog Queue</button>
-              </div>
-            )}
-          </div>
+    renderSimpleItem({ path, icon, label, pathname }) {
+        const { collapsed } = this.state;
+        return (
+            <li className={`sb-row${pathname === path ? ' active' : ''}`}>
+                <Link to={path}>
+                    <span className="sb-icon-wrap">{icon}</span>
+                    <span className="sb-title">{label}</span>
+                </Link>
+                {collapsed && <span className="sb-tooltip">{label}</span>}
+            </li>
+        );
+    }
 
-          <button 
-            className={`nav-row-btn ${activePath === '/branches' ? 'active' : ''}`}
-            onClick={() => this.handleNav('/branches')}
-          >
-            <GitBranch size={18} />
-            <span>Branches</span>
-          </button>
+    render() {
+        const { collapsed, projectsExpanded, tasksExpanded, user } = this.state;
 
-          <div className="menu-group-label">TEAM SPACE</div>
-          <button 
-            className={`nav-row-btn ${activePath === '/team' ? 'active' : ''}`}
-            onClick={() => this.handleNav('/team')}
-          >
-            <Users size={18} />
-            <span>Members</span>
-          </button>
+        const pathname = window.location.pathname;
 
-          <div className="menu-group-label">SYSTEM</div>
-          <button 
-            className={`nav-row-btn ${activePath === '/settings' ? 'active' : ''}`}
-            onClick={() => this.handleNav('/settings')}
-          >
-            <Settings size={18} />
-            <span>Settings</span>
-          </button>
-        </nav>
+        const initials = user.username
+            ? user.username.slice(0, 2).toUpperCase()
+            : (user.role || '?').slice(0, 2).toUpperCase();
 
-        {/* User Account Bar Profile block bound to Zustand data */}
-        <div className="sidebar-account-footer">
-          <div className="avatar-circle">{avatarInitials}</div>
-          <div className="account-meta">
-            <span className="user-title">{displayName}</span>
-            <span className="user-subtitle">{displayRole}</span>
-            <button className="pwd-link-btn" onClick={() => this.handleNav('/profile')}>View profile</button>
-          </div>
-          <button className="logout-action-btn" onClick={this.handleLogout} title="Logout System">
-            <LogOut size={16} />
-          </button>
-        </div>
-      </aside>
-    );
-  }
+        const isAnyProjectsActive = ["/projects", "/projects/new", "/projects/archived"].includes(pathname);
+        const isAnyTasksActive = ["/tasks/my-tasks", "/tasks/backlog"].includes(pathname);
+
+        return (
+            <div className="sidebar-container">
+                <aside className={`sidebar-aside${collapsed ? ' collapsed' : ''}`}>
+
+                    {/* Top Section */}
+                    <div className="sb-top">
+                        <div className="sb-logo-area">
+                            {!collapsed && <span className="sb-logo-text">Task Master</span>}
+                        </div>
+                        <button className="sb-burger" onClick={this.toggleSidebar} aria-label="Toggle sidebar">
+                            <Menu size={20} />
+                        </button>
+                    </div>
+
+                    <nav className="sb-nav">
+
+                        {/* ── OVERVIEW ── */}
+                        <div className="sb-section">
+                            <p className="sb-section-label">Overview</p>
+                            <ul className="sidebar-list">
+                                {this.renderSimpleItem({ path: '/dashboard', icon: <LayoutDashboard size={20} />, label: 'Dashboard', pathname })}
+                            </ul>
+                        </div>
+
+                        {/* ── WORKSPACE ── */}
+                        <div className="sb-section">
+                            <p className="sb-section-label">Workspace</p>
+                            <ul className="sidebar-list">
+                                {this.renderAccordion({
+                                    key: 'projects',
+                                    expanded: projectsExpanded,
+                                    active: isAnyProjectsActive,
+                                    icon: <Folder size={20} />,
+                                    label: 'Projects',
+                                    items: [
+                                        { path: '/projects', title: 'All Projects' },
+                                        { path: '/projects/new', title: 'New Project' },
+                                        { path: '/projects/archived', title: 'Archived' },
+                                    ],
+                                })}
+                                {this.renderAccordion({
+                                    key: 'tasks',
+                                    expanded: tasksExpanded,
+                                    active: isAnyTasksActive,
+                                    icon: <CheckSquare size={20} />,
+                                    label: 'Tasks',
+                                    items: [
+                                        { path: '/tasks/my-tasks', title: 'Assigned to Me' },
+                                        { path: '/tasks/backlog', title: 'Backlog' },
+                                    ],
+                                })}
+                                {this.renderSimpleItem({ path: '/branches', icon: <GitBranch size={20} />, label: 'Branches', pathname })}
+                            </ul>
+                        </div>
+
+                        {/* ── TEAM ── */}
+                        <div className="sb-section">
+                            <p className="sb-section-label">Team</p>
+                            <ul className="sidebar-list">
+                                {this.renderSimpleItem({ path: '/team', icon: <Users size={20} />, label: 'Members', pathname })}
+                            </ul>
+                        </div>
+                    </nav>
+
+                    {/* Bottom User Profile Section */}
+                    <div className="user-panel">
+                        <div className="user-row">
+                            <div className="sb-avatar">{initials}</div>
+                            {!collapsed && (
+                                <div className="user-info">
+                                    <p className="userName">{user.username}</p>
+                                    <p className="userRole">{user.role || 'No role assigned'}</p>
+                                    <a
+                                        className="change-password"
+                                        onClick={() => this.setState({ showChangePasswordModal: true })}
+                                    >
+                                        Change password
+                                    </a>
+                                </div>
+                            )}
+                            {!collapsed && (
+                                <button className="sb-logout-btn" onClick={this.handleLogout} aria-label="Log out">
+                                    <LogOut size={16} />
+                                </button>
+                            )}
+                        </div>
+                    </div>
+                </aside>
+
+                <main className="children">
+                    {this.passProps()}
+                </main>
+            </div>
+        );
+    }
 }
 
 export default Sidebar;

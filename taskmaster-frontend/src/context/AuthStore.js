@@ -38,7 +38,6 @@ export const useAuthStore = create((set) => ({
     }
   },
 
-  // Centralized Async Logout Action
   logout: async () => {
     set({ isLoading: true });
     try {

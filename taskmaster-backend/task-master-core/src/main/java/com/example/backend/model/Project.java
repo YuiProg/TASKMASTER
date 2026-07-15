@@ -23,6 +23,8 @@ public class Project {
     @Column(nullable = false, unique = true)
     private String projectName;
 
+    private String description;
+
     @ManyToOne
     @JoinColumn(name = "created_by", nullable = false)
     private User createdBy;

@@ -1,36 +1,38 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
-
-// Import your new layout and page modules
-import DashboardLayout from "./components/DashboardLayout/DashBoardLayout";
+import Sidebar from "./components/Sidebar/Sidebar";
 import Dashboard from "./pages/Dashboard/Dashboard";
-// import Branches from "./pages/Branches/Branches"; // Uncomment when ready!
+import NewProject from "./pages/Project/NewProject";
+import Projects from "./pages/Project/Projects";
+import ViewProject from "./pages/Project/ViewProject";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* --- Public Auth Pages (No Sidebar Here) --- */}
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
-
-        {/* --- Protected App Pages (Always Shows Sidebar) --- */}
-        <Route 
-          element={
-            <DashboardLayout />
-          }
-        >
-          {/* All routes declared down here will inject automatically inside your layout window */}
-          <Route path="/dashboard" element={<Dashboard />} />
-          
-          {/* Example for your branches component:
-            <Route path="/branches" element={<Branches />} /> 
-          */}
-        </Route>
-
-        {/* Catch-all Fallback: Redirect invalid URLs back to Login */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="/dashboard" element={
+          <Sidebar>
+            <Dashboard/>
+          </Sidebar>
+        }/>
+        <Route path="/projects/new" element={
+          <Sidebar>
+            <NewProject/>
+          </Sidebar>
+        }/>
+        <Route path="/projects" element={
+          <Sidebar>
+            <Projects/>
+          </Sidebar>
+        }/>
+        <Route path="/projects/:id" element={
+          <Sidebar>
+            <ViewProject/>
+          </Sidebar>
+        }/>
       </Routes>
     </BrowserRouter>
   );

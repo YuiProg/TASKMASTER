@@ -3,7 +3,7 @@ import './TRPanelPage.css';
 import DropDown from '../TRDropDown/Dropdown';
 import PropTypes from 'prop-types';
 import Button from '../TRButton/Button';
-import { InputRow } from '../TRInputForm/TRInputForm';
+
 
 export class RightPanel extends React.Component {
   render() {
@@ -106,7 +106,7 @@ export class PanelContainer extends React.Component {
           <p className='tr-panel-step'>{`Step ${currentStep} of ${totalSteps}`}</p>
         )}
         {title && (
-          <h2 className='tr-panel-container-title'>{title}</h2>
+          <h2 className='tr-panel-container-title' style={{marginBottom: '0px'}}>{title}</h2>
         )}
         {this.props.children}
       </div>

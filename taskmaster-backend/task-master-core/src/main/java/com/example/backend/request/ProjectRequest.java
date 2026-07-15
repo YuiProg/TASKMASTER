@@ -14,4 +14,5 @@ public class ProjectRequest {
     public String createdAt;
     public String updatedBy;
     public String status;
+    public String description;
 }
