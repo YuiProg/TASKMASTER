@@ -1,7 +1,9 @@
 package com.example.backend.service.TaskService;
 
+import com.example.backend.client.ReportClient;
 import com.example.backend.config.AuthenticatedUser;
 import com.example.backend.dto.ApiResponseModel;
+import com.example.backend.dto.ReportDTO;
 import com.example.backend.model.Project;
 import com.example.backend.model.Task;
 import com.example.backend.model.User;
@@ -25,6 +27,7 @@ public class TaskService implements TaskServiceInterface{
     private final AuthenticatedUser authenticatedUser;
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
+    private final ReportClient reportClient;
 
     @Override
     public ResponseEntity<ApiResponseModel<Task>> createTask(TaskRequest taskRequest) {
@@ -51,7 +54,6 @@ public class TaskService implements TaskServiceInterface{
             Project project = projectRepository.getProjectByName(taskRequest.getProject());
             task.setProject(project);
         }
-
         Task newTask = taskRepository.save(task);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseModel.success("NEW TASK CREATED", "SUCCESS", newTask));
@@ -115,6 +117,12 @@ public class TaskService implements TaskServiceInterface{
             task.setProject(project);
         }
 
+        ReportDTO reportDTO = new ReportDTO();
+        reportDTO.setDescription("UPDATED STATUS TO: " + task.getStatus());
+        reportDTO.setPerformedBy(user.getId());
+        reportDTO.setCreatedAt(String.valueOf(new Date()));
+        reportDTO.setTaskId(task.getId());
+        reportClient.postReport(reportDTO);
         Task newTask = taskRepository.save(task);
 
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.update("TASK UPDATED", "SUCCESS", newTask, oldTask));

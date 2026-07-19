@@ -1,0 +1,18 @@
+package com.example.backend.client;
+
+import com.example.backend.config.FeignCookieConfig;
+import com.example.backend.dto.ReportDTO;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+@FeignClient(
+        name = "reports-service",
+        url = "http://localhost:8082/api/v1",
+        configuration = FeignCookieConfig.class
+)
+public interface ReportClient {
+
+    @PostMapping(value = "/report/newReport", consumes = "application/json")
+    void postReport (@RequestBody ReportDTO reportDTO);
+}

@@ -1,18 +1,19 @@
-package com.example.backend;
+package com.example.reports_service.reports;
 
-import com.example.backend.client.ReportClient;
+import com.example.reports_service.reports.client.UserClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
+import org.springframework.cloud.openfeign.FeignClient;
 
 @SpringBootApplication
 @EnableFeignClients(clients = {
-		ReportClient.class
+		UserClient.class
 })
-public class BackendApplication {
+public class ReportsApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BackendApplication.class, args);
+		SpringApplication.run(ReportsApplication.class, args);
 	}
 
 }

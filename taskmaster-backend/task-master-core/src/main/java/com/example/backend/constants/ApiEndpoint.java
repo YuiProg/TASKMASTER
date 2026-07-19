@@ -53,6 +53,9 @@ public enum ApiEndpoint {
     LIKE_COMMENT("/api/v1/comments/like/{id}"),
     GET_TASK_COMMENTS("/api/v1/getTaskComments/{id}"),
 
+    //REPORT
+    POST_REPORT("/api/v1/report/newReport"),
+
     //FEIGN
     USER_BY_ID("/api/v1/getUserById/**"),
     PROJECT_BY_ID("/api/v1/getProjectById/**"),

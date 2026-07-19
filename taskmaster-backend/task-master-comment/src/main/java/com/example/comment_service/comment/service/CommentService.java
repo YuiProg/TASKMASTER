@@ -10,6 +10,7 @@ import com.example.comment_service.comment.models.Comment;
 import com.example.comment_service.comment.repository.CommentRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
+@Slf4j
 public class CommentService implements CommentServiceInterface{
 
     private final CommentRepository commentRepository;
@@ -110,10 +112,12 @@ public class CommentService implements CommentServiceInterface{
         List<CommentResponseDTO> commentResponseDTOs = comments.stream()
                 .map(comment -> {
                     CommentResponseDTO dto = new CommentResponseDTO();
-                    UserDTO user = authenticatedUser.getAuthenticatedUser();
+                    //UserDTO user = authenticatedUser.getAuthenticatedUser();
+                    ApiResponseModel<UserDTO> user = userClient.getUserById(comment.getCreatedBy());
+                    log.info("FETCHING CREATED BY FOR COMMENT ID: {} USER: {}", comment.getId(), user.getData().getId());
                     dto.setId(comment.getId());
                     dto.setComment(comment.getComment());
-                    dto.setCreatedBy(user);
+                    dto.setCreatedBy(user.getData());
                     dto.setUpdatedBy(comment.getUpdatedBy());
                     dto.setLike(comment.getLike());
                     dto.setTask(task.getData());
