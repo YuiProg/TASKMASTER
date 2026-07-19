@@ -49,12 +49,12 @@ public class UserProcessServiceImpl implements UserProcessService{
 
         if (userRepository.existsByEmail(userRequest.getEmail())) {
             return ResponseEntity.badRequest()
-                    .body(ApiResponseModel.error("Email already in use", "ERROR"));
+                    .body(ApiResponseModel.error("Email already in use", StringCodes.ERROR.getPath()));
         }
 
         if (userRepository.existsByUsername(userRequest.getUsername())) {
             return ResponseEntity.badRequest()
-                    .body(ApiResponseModel.error("Username already in use", "ERROR"));
+                    .body(ApiResponseModel.error("Username already in use", StringCodes.ERROR.getPath()));
         }
 
         User user = new User();
@@ -77,7 +77,7 @@ public class UserProcessServiceImpl implements UserProcessService{
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .header(org.springframework.http.HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(ApiResponseModel.success("User created successfully", "SUCCESS", savedUser));
+                .body(ApiResponseModel.success("User created successfully", StringCodes.SUCCESS.getPath(), savedUser));
     }
 
     @Override
@@ -90,7 +90,7 @@ public class UserProcessServiceImpl implements UserProcessService{
 
             List<User> users = query.getResultList();
 
-            return ResponseEntity.status(HttpStatus.FOUND).body(ApiResponseModel.success("Users found", "SUCCESS", users));
+            return ResponseEntity.status(HttpStatus.FOUND).body(ApiResponseModel.success("Users found", StringCodes.SUCCESS.getPath(), users));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -129,7 +129,7 @@ public class UserProcessServiceImpl implements UserProcessService{
 
             List<User> users = query.getResultList();
 
-            return ResponseEntity.status(HttpStatus.FOUND).body(ApiResponseModel.success("Users found", "SUCCESS", users));
+            return ResponseEntity.status(HttpStatus.FOUND).body(ApiResponseModel.success("Users found", StringCodes.SUCCESS.getPath(), users));
 
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -145,18 +145,18 @@ public class UserProcessServiceImpl implements UserProcessService{
                 ResponseCookie responseCookie = jwtUtil.deleteCookie();
                 return ResponseEntity.status(HttpStatus.FORBIDDEN)
                         .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-                        .body(ApiResponseModel.error(StringCodes.MULTIPLE_SESSION.getPath(), "ERROR"));
+                        .body(ApiResponseModel.error(StringCodes.MULTIPLE_SESSION.getPath(), StringCodes.ERROR.getPath()));
             }
             User user = userRepository.findByEmail(userRequest.getEmail())
                     .orElse(null);
 
             if (user == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(ApiResponseModel.error("User not found with the provided email", "ERROR"));
+                        .body(ApiResponseModel.error("User not found with the provided email", StringCodes.ERROR.getPath()));
             }
 
             if (!passwordEncoder.matches(userRequest.getPassword(), user.getPassword())) {
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponseModel.error("LOGIN FAIL", "ERROR"));
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponseModel.error("LOGIN FAIL", StringCodes.ERROR.getPath()));
             }
 
             StringBuilder sql = new StringBuilder();
@@ -174,10 +174,10 @@ public class UserProcessServiceImpl implements UserProcessService{
 
 
             return ResponseEntity.status(HttpStatus.OK).header(HttpHeaders.SET_COOKIE, cookie.toString())
-                    .body(ApiResponseModel.success(StringCodes.USER_LOG_IN.getPath(), "SUCCESS", queryResult));
+                    .body(ApiResponseModel.success(StringCodes.USER_LOG_IN.getPath(), StringCodes.SUCCESS.getPath(), queryResult));
 
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponseModel.error(e.getMessage(), "ERROR"));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponseModel.error(e.getMessage(), StringCodes.ERROR.getPath()));
         }
     }
 
@@ -187,7 +187,7 @@ public class UserProcessServiceImpl implements UserProcessService{
 
         return ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(ApiResponseModel.success("SUCCESSFUL LOG OUT", "SUCCESS",null));
+                .body(ApiResponseModel.success("SUCCESSFUL LOG OUT", StringCodes.SUCCESS.getPath(),null));
     }
 
     @Override
@@ -200,7 +200,7 @@ public class UserProcessServiceImpl implements UserProcessService{
 
             if (user == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(ApiResponseModel.error("User not found", "ERROR"));
+                        .body(ApiResponseModel.error("User not found", StringCodes.ERROR.getPath()));
             }
 
             oldUserSnapshot = new User();
@@ -216,7 +216,7 @@ public class UserProcessServiceImpl implements UserProcessService{
                 if (!userRequest.getEmail().equals(user.getEmail())
                         && userRepository.existsByEmail(userRequest.getEmail())) {
                     return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                            .body(ApiResponseModel.error("EMAIL ALREADY IN USE", "ERROR"));
+                            .body(ApiResponseModel.error("EMAIL ALREADY IN USE", StringCodes.ERROR.getPath()));
                 }
                 user.setEmail(userRequest.getEmail());
                 changed = true;
@@ -227,7 +227,7 @@ public class UserProcessServiceImpl implements UserProcessService{
                         .orElse(null);
                 if (branch == null) {
                     return ResponseEntity.badRequest()
-                            .body(ApiResponseModel.error("Branch not found", "ERROR"));
+                            .body(ApiResponseModel.error("Branch not found", StringCodes.ERROR.getPath()));
                 }
                 user.setBranchLocation(branch);
                 changed = true;
@@ -236,7 +236,7 @@ public class UserProcessServiceImpl implements UserProcessService{
             if (userRequest.getUsername() != null && !userRequest.getUsername().trim().isEmpty()) {
                 if (userRequest.getUsername().equals(user.getUsername())) {
                     return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                            .body(ApiResponseModel.error("USERNAME ALREADY IN USE", "ERROR"));
+                            .body(ApiResponseModel.error("USERNAME ALREADY IN USE", StringCodes.ERROR.getPath()));
                 }
                 user.setUsername(userRequest.getUsername());
                 changed = true;
@@ -244,17 +244,17 @@ public class UserProcessServiceImpl implements UserProcessService{
 
             if (!changed) {
                 return ResponseEntity.ok(
-                        ApiResponseModel.update("No changes detected", "SUCCESS", oldUserSnapshot, oldUserSnapshot));
+                        ApiResponseModel.update("No changes detected", StringCodes.SUCCESS.getPath(), oldUserSnapshot, oldUserSnapshot));
             }
 
             User updatedUser = userRepository.save(user);
 
             return ResponseEntity.ok(
-                    ApiResponseModel.update("USER UPDATED", "SUCCESS", updatedUser, oldUserSnapshot));
+                    ApiResponseModel.update("USER UPDATED", StringCodes.SUCCESS.getPath(), updatedUser, oldUserSnapshot));
 
         } catch (Exception e) {
             return ResponseEntity.internalServerError()
-                    .body(ApiResponseModel.error("Failed to update user: " + e.getMessage(), "ERROR"));
+                    .body(ApiResponseModel.error("Failed to update user: " + e.getMessage(), StringCodes.ERROR.getPath()));
         }
     }
 
@@ -263,7 +263,7 @@ public class UserProcessServiceImpl implements UserProcessService{
     public ResponseEntity<ApiResponseModel<User>> deleteUser(String id) {
 
         if (id == null) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponseModel.error("NO ID PROVIDED", "ERROR"));
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponseModel.error("NO ID PROVIDED", StringCodes.ERROR.getPath()));
         }
 
 //        User user = userRepository.findById(id).orElse(null);
@@ -285,7 +285,7 @@ public class UserProcessServiceImpl implements UserProcessService{
 
         query.executeUpdate();
 
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("USER DELETED", "SUCCESS", null));
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("USER DELETED", StringCodes.SUCCESS.getPath(), null));
     }
 
     @Override
@@ -293,15 +293,15 @@ public class UserProcessServiceImpl implements UserProcessService{
         User user = userRepository.findById(id).orElse(null);
 
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponseModel.error("USER NOT FOUND", "ERROR"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponseModel.error("USER NOT FOUND", StringCodes.ERROR.getPath()));
         }
 
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("USER FOUND", "SUCCESS", user));
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("USER FOUND", StringCodes.SUCCESS.getPath(), user));
     }
 
     @Override
     public ResponseEntity<ApiResponseModel<User>> getAuthUser() {
         User user = authenticatedUser.getAuthenticatedUser();
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("USER FOUND", "SUCCESS", user));
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("USER FOUND", StringCodes.SUCCESS.getPath(), user));
     }
 }

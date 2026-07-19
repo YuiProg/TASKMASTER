@@ -2,6 +2,7 @@ package com.example.backend.service.ProjectService;
 
 import com.example.backend.config.AuthenticatedUser;
 import com.example.backend.config.JwtUtil;
+import com.example.backend.dto.AddProjectMembersDTO;
 import com.example.backend.dto.ApiResponseModel;
 import com.example.backend.model.Project;
 import com.example.backend.model.User;
@@ -10,13 +11,16 @@ import com.example.backend.repository.UserRepository;
 import com.example.backend.request.ProjectRequest;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class ProjectServiceImpl implements ProjectServiceInterface{
@@ -48,6 +52,18 @@ public class ProjectServiceImpl implements ProjectServiceInterface{
         if (projectRequest.getStatus() != null && !projectRequest.getStatus().trim().isEmpty()) {
             project.setStatus(projectRequest.getStatus());
         }
+        List<User> members = new ArrayList<>();
+        if (!projectRequest.getEmails().isEmpty()) {
+            for (String email : projectRequest.getEmails()) {
+                User userData = userRepository.findByEmail(email).orElse(null);
+                if (userData != null) {
+                    members.add(userData);
+                } else {
+                    log.info("USER: {} IS NOT FOUND PROCEEDING", email);
+                }
+            }
+            project.setMembers(members);
+        }
 
         Project newProject = projectRepository.save(project);
 
@@ -56,19 +72,19 @@ public class ProjectServiceImpl implements ProjectServiceInterface{
 
     @Override
     public ResponseEntity<ApiResponseModel<List<Project>>> getProjects() {
-        List<Project> projects = projectRepository.findAll();
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("PROJCETS FOUND", "SUCCESS", projects));
+        List<Project> projects = projectRepository.getAllProjects();
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("PROJECTS FOUND", "SUCCESS", projects));
     }
 
     @Override
     public ResponseEntity<ApiResponseModel<Project>> getProjectById(String id) {
         Project project = projectRepository.findById(id).orElse(null);
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("PROJECT FOUND", "SUCCESS", project));
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("PROJECTS FOUND", "SUCCESS", project));
     }
 
     @Override
     @Transactional
-    public ResponseEntity<ApiResponseModel<Project>> addMemberToProject(String projectId, String userId) {
+    public ResponseEntity<ApiResponseModel<Project>> addMemberToProject(String projectId, AddProjectMembersDTO addProjectMembersDTO) {
         try {
             Project project = projectRepository.findById(projectId).orElse(null);
             if (project == null) {
@@ -76,18 +92,30 @@ public class ProjectServiceImpl implements ProjectServiceInterface{
                         .body(ApiResponseModel.error("Project not found", "ERROR"));
             }
 
-            User user = userRepository.findById(userId).orElse(null);
-            if (user == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(ApiResponseModel.error("User not found", "ERROR"));
+            List<User> members = project.getMembers();
+            if (members == null) {
+                members = new ArrayList<>();
             }
 
-            if (project.getMembers().contains(user)) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(ApiResponseModel.error("User is already a member of this project", "ERROR"));
+            List<String> notFound = new ArrayList<>();
+
+            for (String email : addProjectMembersDTO.getEmails()) {
+                User user = userRepository.findByEmail(email).orElse(null);
+
+                if (user == null) {
+                    notFound.add(email);
+                    continue;
+                }
+
+                boolean alreadyMember = members.stream()
+                        .anyMatch(m -> m.getId().equals(user.getId()));
+
+                if (!alreadyMember) {
+                    members.add(user);
+                }
             }
 
-            project.getMembers().add(user);
+            project.setMembers(members);
             Project updatedProject = projectRepository.save(project);
 
             return ResponseEntity.ok(

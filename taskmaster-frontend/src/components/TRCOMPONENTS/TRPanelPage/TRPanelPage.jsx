@@ -99,9 +99,9 @@ export class PanelPage extends React.Component {
 
 export class PanelContainer extends React.Component {
   render() {
-    const { currentStep, totalSteps, title } = this.props;
+    const { currentStep, totalSteps, title, maxHeight } = this.props;
     return (
-      <div className='tr-panel-container-child'>
+      <div className='tr-panel-container-child' style={maxHeight && {height: '100%'}}>
         {(currentStep && totalSteps) && (
           <p className='tr-panel-step'>{`Step ${currentStep} of ${totalSteps}`}</p>
         )}

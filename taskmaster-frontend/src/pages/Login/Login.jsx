@@ -3,8 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import './Login.css';
 import { InputForm, TRInputFormPanel } from '../../components/TRCOMPONENTS/TRInputForm/TRInputForm';
 import Button from '../../components/TRCOMPONENTS/TRButton/Button';
-import InputField from '../../components/TRCOMPONENTS/TRInputField/InputFIeld';
 import { useAuthStore } from '../../context/AuthStore';
+import { InputField } from '../../components/TRCOMPONENTS/TRInputField/InputFIeld';
 
 function Login() {
   const [email, setEmail] = useState('');

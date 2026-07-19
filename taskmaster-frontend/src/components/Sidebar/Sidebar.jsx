@@ -15,13 +15,51 @@ const HARDCODED_USER = {
     role: 'admin',
 };
 
+// Safe localStorage helpers — guard against SSR (no `window`) and
+// malformed/missing values so this never throws.
+const storage = {
+    get(key) {
+        if (typeof window === 'undefined') return null;
+        try {
+            const raw = window.localStorage.getItem(key);
+            return raw !== null ? JSON.parse(raw) : null;
+        } catch (e) {
+            console.log(e);
+            return null;
+        }
+    },
+    set(key, value) {
+        if (typeof window === 'undefined') return;
+        try {
+            window.localStorage.setItem(key, JSON.stringify(value));
+        } catch (e) {
+            console.log(e);
+            // ignore (e.g. storage disabled/full)
+        }
+    },
+    has(key) {
+        if (typeof window === 'undefined') return false;
+        try {
+            return window.localStorage.getItem(key) !== null;
+        } catch (e) {
+            console.log(e);
+            return false;
+        }
+    },
+};
+
 class Sidebar extends React.Component {
     constructor(props) {
         super(props);
+
+        const savedCollapsed = storage.get('sidebar_collapsed');
+        const savedProjectsExpanded = storage.get('sidebar_projectsExpanded');
+        const savedTasksExpanded = storage.get('sidebar_tasksExpanded');
+
         this.state = {
-            collapsed: false,
-            projectsExpanded: false,
-            tasksExpanded: false,
+            collapsed: savedCollapsed !== null ? savedCollapsed : false,
+            projectsExpanded: savedProjectsExpanded !== null ? savedProjectsExpanded : false,
+            tasksExpanded: savedTasksExpanded !== null ? savedTasksExpanded : false,
             showChangePasswordModal: false,
             user: HARDCODED_USER,
         };
@@ -34,10 +72,13 @@ class Sidebar extends React.Component {
 
         const pathname = window.location.pathname;
 
-        if (["/projects", "/projects/new", "/projects/archived"].includes(pathname)) {
+        const hasSavedProjects = storage.has('sidebar_projectsExpanded');
+        const hasSavedTasks = storage.has('sidebar_tasksExpanded');
+
+        if (!hasSavedProjects && ["/projects", "/projects/new", "/projects/archived"].includes(pathname)) {
             this.setState({ projectsExpanded: true });
         }
-        if (["/tasks/my-tasks", "/tasks/backlog"].includes(pathname)) {
+        if (!hasSavedTasks && ["/tasks/my-tasks", "/tasks/backlog"].includes(pathname)) {
             this.setState({ tasksExpanded: true });
         }
     }
@@ -54,15 +95,26 @@ class Sidebar extends React.Component {
     }
 
     toggleSidebar = () => {
-        this.setState(prev => ({ collapsed: !prev.collapsed }));
+        this.setState(prev => {
+            const collapsed = !prev.collapsed;
+            storage.set('sidebar_collapsed', collapsed);
+            return { collapsed };
+        });
     }
 
     toggleMenu = (key) => (e) => {
         e.preventDefault();
-        this.setState(prev => ({
-            [key]: !prev[key],
-            collapsed: prev.collapsed ? false : prev.collapsed,
-        }));
+        this.setState(prev => {
+            const expanded = !prev[key];
+            const collapsed = prev.collapsed ? false : prev.collapsed;
+
+            storage.set(`sidebar_${key}`, expanded);
+            if (collapsed !== prev.collapsed) {
+                storage.set('sidebar_collapsed', collapsed);
+            }
+
+            return { [key]: expanded, collapsed };
+        });
     }
 
     passProps = () => {

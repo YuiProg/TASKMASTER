@@ -1,0 +1,27 @@
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  min-height: 150px; /* Ensures space in card layouts */
+  background-color: transparent; /* Seamless blend into your dark panels */
+}
+
+.spinner-ring {
+  width: 40px;
+  height: 40px;
+  border: 4px solid #2a2a2a; /* Dark track color */
+  border-top: 4px solid #ff4d4d; /* Red loader segment */
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}

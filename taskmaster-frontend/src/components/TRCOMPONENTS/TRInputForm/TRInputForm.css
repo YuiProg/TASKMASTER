@@ -121,7 +121,7 @@
 /* ── Title spacer — keeps field height consistent when no title is present ── */
 .tr-inputrow-title-spacer {
   display: block;
-  height: calc(0.8rem * 1.2);   /* matches line-height of .tr-inputrow-title */
+  height: calc(0.8rem * 1.2); 
 }
 
 /* ── Responsive — tablet (max 768px) ── */

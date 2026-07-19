@@ -59,4 +59,10 @@ public class TaskController implements TaskServiceInterface {
     public ResponseEntity<ApiResponseModel<List<Task>>> getProjectTask(@PathVariable String id) {
         return taskServiceInterface.getProjectTask(id);
     }
+
+    @Override
+    @GetMapping("/api/v1/getOpenTasks")
+    public ResponseEntity<ApiResponseModel<List<Task>>> getAllOpenTask() {
+        return taskServiceInterface.getAllOpenTask();
+    }
 }

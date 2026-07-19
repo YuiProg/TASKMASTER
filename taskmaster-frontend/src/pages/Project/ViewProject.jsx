@@ -1,82 +1,138 @@
 import React from 'react';
 import { PanelContainer, PanelPage } from '../../components/TRCOMPONENTS/TRPanelPage/TRPanelPage';
-import {useProjectStore} from '../../context/projectStore';
+import { useProjectStore } from '../../context/projectStore';
 import { InputRow } from '../../components/TRCOMPONENTS/TRInputForm/TRInputForm';
-import InputField from '../../components/TRCOMPONENTS/TRInputField/InputFIeld';
+import { Label } from '../../components/TRCOMPONENTS/TRInputField/InputFIeld';
 import { Table } from '../../components/TRCOMPONENTS/TRTable/TrTable';
+import Spinner from '../../components/Spinner/Spinner';
+import Button from '../../components/TRCOMPONENTS/TRButton/Button';
+import { Pencil, Plus } from 'lucide-react';
+import navigateTo from '../../lib/navigate';
 
 class ViewProject extends React.Component {
     constructor (props) {
         super(props);
         this.state = {
-            project: null
-        }
+            project: null,
+            tasks: []
+        };
     }
 
     componentDidMount() {
-        this.getProject();
+        this.initProjectData();
     }
 
-    getProject = async () => {
+    initProjectData = async () => {
         const { getProjectByName } = useProjectStore.getState();
         const currentPath = window.location.pathname;
         const newPath = currentPath.replace("/projects/", "");
-        const project = await getProjectByName(newPath);
-        this.setState({ project });
+        
+        // Fetch the wrapper object containing { project, tasks } directly from the store
+        const data = await getProjectByName(newPath);
+        
+        if (data) {
+            this.setState({ 
+                project: data.project, 
+                tasks: data.tasks 
+            });
+        }
     }
 
-    //top container
-    //GAWA LABEL COMPONENT
+    // Top details section
     topContainer = () => {
+        const { project, tasks } = this.state;
+        const taskCount = tasks ? tasks.length : 0;
+
         return (
             <>
-                <InputRow gap={16}>
-                    <InputField text disabled placeholder="test"/>
-                    <InputField text disabled/>
-                </InputRow>
-                <InputRow gap={16}>
-                    <InputField text disabled/>
-                    <InputField text disabled/>
-                </InputRow>
+                <Label label={`PROJECT NAME: ${project.projectName}`} style={{marginTop: '10px'}}/>
+                <Label label={`CREATED BY: ${project.createdBy?.username || 'N/A'}`} style={{marginTop: '10px'}}/>
+                <Label label={`DESCRIPTION: ${project.description || ''}`} style={{marginTop: '10px'}}/>
+                <Label label={`TASKS: ${taskCount}`} style={{marginTop: '10px'}}/>
             </>
         );
     }
 
-    //project members
+    // Project members table mapping
     projectMembers = () => {
-        const members = this.state.project.members;
+        const members = this.state.project.members || [];
         const data = members.map(d => ({
-                                    Username: d.username,
-                                    Email: d.email,
-                                    ["Branch Location"]: d.branchLocation.branchLocation
-                                }));
+            Username: d.username,
+            Email: d.email,
+            ["Branch Location"]: d.branchLocation?.branchLocation || 'N/A'
+        }));
         return (
             <Table data={data}/>
         );
     }
 
-    render () {
-        //GAWA LOADING COMPONENT
-        if (!this.state.project) {
-            return null;
-        }
+
+    viewTasks = () => {
+        const tasks = this.state.tasks;
+        const data = tasks.map(t => {
+            const row = {
+                Title: t.taskName || 'N/A',
+                Status: t.status || 'N/A',
+                ["Due Date"]: t.dueDate || 'N/A',
+                Assignee: t.assignee?.username || 'N/A',
+                Reporter: t.createdBy?.username || 'N/A',
+            }
+
+            Object.defineProperty(row, "id", {
+                value: t.id,
+                enumerable: false,
+                writable: false
+            });
+
+            return row;
+        });
+
 
         return (
-            <PanelPage titlePage={this.state.project.projectName} isLoading={false} subTitle="View project">
+            <Table data={data} limit={6} onRowSelect={e => this.navigateToTask(e.id)}/>
+        );
+    }
+
+    navigateToTask = (id) => {
+        navigateTo(`/tasks/view/${id}`);
+    }
+
+    render () {
+
+        if (!this.state.project) {
+            return (
+                <PanelPage>
+                    <Spinner size={30} strokeWidth={3} />
+                </PanelPage>
+            );
+        }
+
+        const taskCount = this.state.tasks ? this.state.tasks.length : 0;
+        const memberCount = this.state.project.members ? this.state.project.members.length : 0;
+
+        return (
+            <PanelPage titlePage={this.state.project.projectName.toUpperCase()} isLoading={false} subTitle={`Project ID: ${this.state.project.id}`}>
+                <PanelContainer>
+                    <div style={{display: 'flex', gap: 10}}>
+                        <Label label="Action" style={{marginTop: '10px'}}/>
+                        <div style={{marginLeft: 'auto'}}/>
+                        <Button error text={<span><Plus size={10}/> CREATE TASK</span>}/>
+                        <Button error text={<span><Pencil size={10}/> EDIT PROJECT</span>}/>
+                    </div>
+                </PanelContainer>
                 <PanelContainer title="Project Details">
                     {this.topContainer()}
-                </PanelContainer>
-                <InputRow gap={16}>
-                    <PanelContainer>
-
+                    <InputRow gap={16}>
+                    <PanelContainer title="Tasks">
+                        <Label label={`TASKS: ${taskCount}`} style={{marginTop: '10px', marginBottom: '20px'}}/>
+                        {this.viewTasks()}
                     </PanelContainer>
                     <PanelContainer title="Project Members">
-                        {/* TODO YUNG <p> */}
-                        <p>Members: {this.state.project.members.length}</p>
-                        <div style={{marginBottom: '20px'}}/>
+                        <Label label={`Members: ${memberCount}`} style={{marginTop: '10px', marginBottom: '20px'}}/>
                         {this.projectMembers()}
                     </PanelContainer>
                 </InputRow>
+                </PanelContainer>
             </PanelPage>
         );
     }

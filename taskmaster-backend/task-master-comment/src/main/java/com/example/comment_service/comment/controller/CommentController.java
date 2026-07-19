@@ -3,6 +3,7 @@ package com.example.comment_service.comment.controller;
 import com.example.comment_service.comment.Request.CommentRequest;
 import com.example.comment_service.comment.client.UserClient;
 import com.example.comment_service.comment.dto.ApiResponseModel;
+import com.example.comment_service.comment.dto.CommentResponseDTO;
 import com.example.comment_service.comment.dto.UserDTO;
 import com.example.comment_service.comment.models.Comment;
 import lombok.AllArgsConstructor;
@@ -22,7 +23,7 @@ public class CommentController implements CommentServiceInterface {
 
     @Override
     @PostMapping("/newComment")
-    public ResponseEntity<ApiResponseModel<Comment>> newComment(@RequestBody CommentRequest commentRequest) {
+    public ResponseEntity<ApiResponseModel<CommentResponseDTO>> newComment(@RequestBody CommentRequest commentRequest) {
         return commentServiceInterface.newComment(commentRequest);
     }
 
@@ -34,7 +35,7 @@ public class CommentController implements CommentServiceInterface {
 
     @Override
     @GetMapping("/getTaskComments/{id}")
-    public ResponseEntity<ApiResponseModel<List<Comment>>> getTaskComments(@PathVariable String id) {
+    public ResponseEntity<ApiResponseModel<List<CommentResponseDTO>>> getTaskComments(@PathVariable String id) {
         return commentServiceInterface.getTaskComments(id);
     }
 

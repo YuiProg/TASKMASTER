@@ -30,7 +30,7 @@ public enum ApiEndpoint {
     //PROJECT
     ADD_PROJECT("/api/v1/addProject"),
     GET_AUTH_PROJECTS("/api/v1/getAuthUserProjects"),
-    ADD_MEMBER_PROJECT("/api/v1/addProjectMembers/{projectId}/{userId}"),
+    ADD_MEMBER_PROJECT("/api/v1/addProjectMembers/{projectId}"),
     REMOVE_MEMBER_PROJECT("/api/v1/removeProjectMembers/{projectId}/{userId}"),
     GET_PROJECTS("/api/v1/getProjects"),
     GET_PROJECT_BY_ID("/api/v1/getProjectById/{projectId}"),
@@ -42,6 +42,7 @@ public enum ApiEndpoint {
     UPDATE_TASK("/api/v1/updateTasl/{taskId}/{status}"),
     GET_TASK_BY_ID("/api/v1/getTaskById/{id}"),
     GET_PROJECT_TASK("/api/v1/getProjectTask/{id}"),
+    GET_OPEN_TASK("/api/v1/getOpenTasks"),
 
     //COMMENTS
     ADD_COMMENT("/api/v1/comments/newComment"),

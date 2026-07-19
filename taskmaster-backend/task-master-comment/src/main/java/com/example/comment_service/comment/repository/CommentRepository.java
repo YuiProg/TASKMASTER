@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, String> {
 
-    @Query(value = "SELECT c.* FROM comments c WHERE c.task->>'id' = :taskId",
+    @Query(value = "SELECT c.* FROM comments c WHERE c.task_id = :taskId",
             nativeQuery = true)
     List<Comment> getTaskComments(@Param("taskId") String taskId);
 

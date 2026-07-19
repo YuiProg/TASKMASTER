@@ -6,6 +6,8 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import NewProject from "./pages/Project/NewProject";
 import Projects from "./pages/Project/Projects";
 import ViewProject from "./pages/Project/ViewProject";
+import Tasks from "./pages/Tasks/MyTasks";
+import ViewTask from "./pages/Tasks/ViewTask";
 
 function App() {
   return (
@@ -31,6 +33,16 @@ function App() {
         <Route path="/projects/:id" element={
           <Sidebar>
             <ViewProject/>
+          </Sidebar>
+        }/>
+        <Route path="/tasks/my-tasks" element={
+          <Sidebar>
+            <Tasks/>
+          </Sidebar>
+        }/>
+        <Route path="/tasks/view/:id" element={
+          <Sidebar>
+            <ViewTask/>
           </Sidebar>
         }/>
       </Routes>

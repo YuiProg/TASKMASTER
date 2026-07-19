@@ -6,7 +6,7 @@ import { Search, EyeClosed, Eye } from "lucide-react";
  * @class InputField
  * @component Full-stack design system custom input text controller field.
  */
-class InputField extends React.Component {
+export class InputField extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -38,7 +38,7 @@ class InputField extends React.Component {
 
     if (text || password || email) {
       this.setState({ error: null, value: value });
-      return value;
+      return value; 
     }
 
     if (number) {
@@ -161,4 +161,23 @@ class InputField extends React.Component {
   }
 }
 
-export default InputField;
+export class Label extends React.Component {
+
+  constructor (props) {
+    super(props);
+  }
+
+  render () {
+
+    const {
+      label,
+      style
+    } = this.props;
+
+    return (
+      <div>
+        <p className="tr-input-label" style={style}>{label}</p>
+      </div>
+    );
+  }
+}

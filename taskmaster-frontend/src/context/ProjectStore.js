@@ -4,6 +4,7 @@ import api from '../lib/axios';
 export const useProjectStore = create((set, get) => ({
   projects: [],
   selectedProject: null,
+  tasks: [],
   isLoading: false,
   isCreating: false,
   error: null,
@@ -23,15 +24,13 @@ export const useProjectStore = create((set, get) => ({
     }
   },
 
-  // POST /addProject  { projectName, description } -> prepend the created project to the list
-  createProject: async (projectName, description) => {
-    // TEMP DEBUG — remove once this is sorted
-    console.log('[projectStore] createProject called with:', { projectName, description });
+  // POST /addProject  { projectName, description, emails } -> prepend the created project to the list
+  // NOTE: "emails" is an assumed field name — confirm against the actual
+  // backend DTO and adjust this key if it's named something else.
+  createProject: async (projectName, description, emails = []) => {
     set({ isCreating: true, error: null });
     try {
-      const payload = { projectName, description };
-      console.log('[projectStore] posting payload:', payload);
-      const res = await api.post('/addProject', payload);
+      const res = await api.post('/addProject', { projectName, description, emails });
 
       if (String(res.data.status).toUpperCase() === 'SUCCESS') {
         set({
@@ -57,28 +56,46 @@ export const useProjectStore = create((set, get) => ({
     }
   },
 
-  getProjectByName: async (projectName) => {
+  getProjectTasks: async (projectId) => {
     try {
-        const res = await api.get(`/getProjectByName/${projectName}`);
-        set({ selectedProject: res.data.data });
-        return res.data.data;
+        const res = await api.get(`/getProjectTask/${projectId}`);
+        const tasksList = res.data.data || [];
+        set({ tasks: tasksList });
+        return tasksList;
     } catch (err) {
         set({
-        isCreating: false,
-        error:
-          err.response?.data?.message ||
-          'Something went wrong. Please try again.',
-      });
+          error: err.response?.data?.message || 'Something went wrong. Please try again.',
+        });
+        return [];
     }
   },
 
-  // PUT /addProjectMembers/{projectId}/{userId}
+  getProjectByName: async (projectName) => {
+    try {
+        const res = await api.get(`/getProjectByName/${projectName}`);
+        const projectData = res.data.data;
+
+        const projectId = projectData.id;
+
+        set({ selectedProject: projectData });
+
+        const tasks = await get().getProjectTasks(projectId);
+
+        return { project: projectData, tasks };
+    } catch (err) {
+        set({
+          error: err.response?.data?.message || 'Something went wrong. Please try again.',
+        });
+    }
+  },
+
+  // PUT /addProjectMembers/{projectId}  { emails: [...] }
   // Updates the matching project in the list with whatever the backend returns,
   // if it returns the updated project; otherwise just reports success/failure.
-  addProjectMember: async (projectId, userId) => {
+  addProjectMembers: async (projectId, emails) => {
     set({ error: null });
     try {
-      const res = await api.put(`/addProjectMembers/${projectId}/${userId}`);
+      const res = await api.put(`/addProjectMembers/${projectId}`, { emails });
 
       if (res.data.status === 'SUCCESS') {
         if (res.data.data) {
@@ -91,13 +108,13 @@ export const useProjectStore = create((set, get) => ({
         return true;
       }
 
-      set({ error: res.data.message || 'Could not add member.' });
+      set({ error: res.data.message || 'Could not add members.' });
       return false;
     } catch (err) {
       set({
         error:
           err.response?.data?.message ||
-          'Something went wrong adding that member.',
+          'Something went wrong adding those members.',
       });
       return false;
     }

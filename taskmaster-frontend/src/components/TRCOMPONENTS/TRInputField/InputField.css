@@ -20,6 +20,13 @@
   font-family: sans-serif;
 }
 
+.tr-input-label {
+  font-size: 15px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.4);
+  margin: 0;
+}
+
 .input-wrapper input[type="password"] {
   padding-right: 40px;
 }

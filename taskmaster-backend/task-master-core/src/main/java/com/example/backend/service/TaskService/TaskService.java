@@ -36,15 +36,19 @@ public class TaskService implements TaskServiceInterface{
         task.setTaskName(taskRequest.getTaskName());
 
         //find assignee by username
-        User assignee = userRepository.findByUsername(taskRequest.getAssignee());
+        User assignee = userRepository.findByEmail(taskRequest.getAssignee()).orElse(null);
         task.setTaskName(taskRequest.getTaskName());
         task.setAssignee(assignee);
         task.setUpdatedBy(user.getUsername());
         task.setCreatedAt(String.valueOf(new Date()));
         task.setDescription(taskRequest.getDescription());
 
+        if (taskRequest.getStatus() != null && !taskRequest.getStatus().trim().isEmpty()) {
+            task.setStatus(taskRequest.getStatus());
+        }
+
         if (taskRequest.getProject() != null && !taskRequest.getProject().trim().isEmpty()) {
-            Project project = projectRepository.findById(taskRequest.getProject()).orElse(null);
+            Project project = projectRepository.getProjectByName(taskRequest.getProject());
             task.setProject(project);
         }
 
@@ -126,6 +130,12 @@ public class TaskService implements TaskServiceInterface{
     @Override
     public ResponseEntity<ApiResponseModel<List<Task>>> getProjectTask(String id) {
         List<Task> tasks = taskRepository.getTaskOnProject(id);
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("TASKS FOUND", "SUCCESS", tasks));
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<List<Task>>> getAllOpenTask() {
+        List<Task> tasks = taskRepository.getAllOpenTask();
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("TASKS FOUND", "SUCCESS", tasks));
     }
 }

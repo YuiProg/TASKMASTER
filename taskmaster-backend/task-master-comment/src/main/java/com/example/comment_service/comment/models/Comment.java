@@ -26,16 +26,14 @@ public class Comment {
     @Column(nullable = false)
     private String comment;
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(columnDefinition = "json", nullable = false)
-    private UserDTO createdBy;
+    @Column(name = "created_by", nullable = false)
+    private String createdBy;
 
     private String updatedBy;
 
     @Column(name = "like_count")
     private Integer like = 0;
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(columnDefinition = "json", nullable = false)
-    private TaskDTO task;
+    @Column(name = "task_id", nullable = false)
+    private String task;
 }

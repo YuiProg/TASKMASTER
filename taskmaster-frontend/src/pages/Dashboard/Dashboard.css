@@ -59,3 +59,9 @@
 .tr-panel-main .tr-panel-container-child + .tr-panel-container-child {
   margin-top: 16px;
 }
+
+.dash-new-task-btn {
+  background: #c0392b;
+  font-weight: 600;
+  flex-shrink: 0;
+}

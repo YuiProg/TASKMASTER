@@ -1,0 +1,205 @@
+.vt-overview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 10px;
+  margin-bottom: 16px;
+}
+
+.vt-task-title {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+/* Dropdown.css hardcodes width:100% on both the wrapper and button, and
+   bakes in a Warehouse icon meant for a branch-selector use case. Since
+   there's no prop for either, constrain width via a sized parent and
+   hide the icon here, scoped so other Dropdown usages are unaffected. */
+.vt-status-dropdown {
+  width: 160px;
+  flex-shrink: 0;
+}
+
+.vt-status-dropdown .tr-dropdown-icon {
+  display: none;
+}
+
+.vt-status-dropdown .tr-dropdown-button {
+  height: 32px;
+  padding: 0 12px;
+  font-size: 12px;
+}
+
+.vt-status-dropdown .tr-dropdown-text {
+  font-size: 12px;
+}
+
+.vt-status-dropdown .tr-dropdown-chevron {
+  width: 13px;
+  height: 13px;
+}
+
+.vt-status-blue .tr-dropdown-button {
+  background-color: rgba(59, 130, 246, 0.15);
+  color: #60a5fa;
+}
+
+.vt-status-blue .tr-dropdown-button:hover:not(.disabled) {
+  background-color: rgba(59, 130, 246, 0.25);
+}
+
+.vt-status-blue .tr-dropdown-chevron {
+  color: #60a5fa;
+}
+
+.vt-status-green .tr-dropdown-button {
+  background-color: rgba(34, 197, 94, 0.15);
+  color: #4ade80;
+}
+
+.vt-status-green .tr-dropdown-button:hover:not(.disabled) {
+  background-color: rgba(34, 197, 94, 0.25);
+}
+
+.vt-status-green .tr-dropdown-chevron {
+  color: #4ade80;
+}
+
+.vt-description {
+  margin: 0;
+  color: #b0b0b0;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.vt-details-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.vt-assignee-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.vt-assignee-key {
+  color: #757575;
+  font-size: 0.85rem;
+}
+
+.vt-assignee-badge {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #ffffff;
+  background-color: #c0392b;
+  padding: 3px 10px;
+  border-radius: 999px;
+}
+
+/* Equal-height Details/Project columns: InputRow's own children stretch
+   by default, but PanelContainer's inner box doesn't grow to fill that,
+   so shorter content leaves mismatched box heights without this. */
+.tr-inputrow-field {
+  display: flex;
+}
+
+.tr-inputrow-field .tr-panel-container-child {
+  flex: 1;
+}
+
+/* Hover card shown when hovering the assignee badge or a member chip */
+.vt-user-hover {
+  position: relative;
+  display: inline-block;
+}
+
+.vt-user-tooltip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #1C1C1E;
+  border: 1px solid #2e2e2e;
+  padding: 8px 12px;
+  border-radius: 8px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 20;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+}
+
+.vt-user-hover:hover .vt-user-tooltip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.vt-user-tooltip-avatar {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-color: #c0392b;
+  color: #ffffff;
+  font-size: 0.65rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.vt-user-tooltip-email {
+  font-size: 0.78rem;
+  color: #d0d0d0;
+}
+
+.vt-member-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.vt-member-chip {
+  padding: 5px 12px;
+  border-radius: 999px;
+  background-color: rgba(192, 57, 43, 0.15);
+  color: #e0574a;
+  font-size: 0.78rem;
+}
+
+.vt-view-project-link {
+  margin-top: 16px;
+  background: transparent;
+  border: none;
+  color: #e0574a;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+
+.vt-view-project-link:hover {
+  color: #ffffff;
+}
+
+/* TRPanelPage's .tr-panel-container-child has no margin of its own, so
+   stacked PanelContainers (and the InputRow wrapper sitting between them)
+   touch and read as one merged box without this. All transitions use the
+   same 16px so every gap on the page matches. */
+.tr-panel-main .tr-panel-container-child + .tr-panel-container-child,
+.tr-panel-main .tr-panel-container-child + .tr-inputrow,
+.tr-panel-main .tr-inputrow + .tr-panel-container-child {
+  margin-top: 16px;
+}

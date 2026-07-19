@@ -1,5 +1,6 @@
 package com.example.backend.controller;
 
+import com.example.backend.dto.AddProjectMembersDTO;
 import com.example.backend.dto.ApiResponseModel;
 import com.example.backend.model.Project;
 import com.example.backend.request.ProjectRequest;
@@ -35,9 +36,9 @@ public class ProjectController implements ProjectServiceInterface {
     }
 
     @Override
-    @PutMapping("/api/v1/addProjectMembers/{projectId}/{userId}")
-    public ResponseEntity<ApiResponseModel<Project>> addMemberToProject(@PathVariable String projectId, @PathVariable String userId) {
-        return projectServiceInterface.addMemberToProject(projectId, userId);
+    @PutMapping("/api/v1/addProjectMembers/{projectId}")
+    public ResponseEntity<ApiResponseModel<Project>> addMemberToProject(@PathVariable String projectId, @RequestBody AddProjectMembersDTO addProjectMembersDTO) {
+        return projectServiceInterface.addMemberToProject(projectId, addProjectMembersDTO);
     }
 
     @Override

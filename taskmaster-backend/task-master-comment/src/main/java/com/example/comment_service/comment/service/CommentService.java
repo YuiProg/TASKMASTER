@@ -5,10 +5,7 @@ import com.example.comment_service.comment.client.ProjectClient;
 import com.example.comment_service.comment.client.TaskClient;
 import com.example.comment_service.comment.client.UserClient;
 import com.example.comment_service.comment.config.AuthenticatedUser;
-import com.example.comment_service.comment.dto.ApiResponseModel;
-import com.example.comment_service.comment.dto.ProjectDTO;
-import com.example.comment_service.comment.dto.TaskDTO;
-import com.example.comment_service.comment.dto.UserDTO;
+import com.example.comment_service.comment.dto.*;
 import com.example.comment_service.comment.models.Comment;
 import com.example.comment_service.comment.repository.CommentRepository;
 import jakarta.transaction.Transactional;
@@ -18,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -31,7 +29,7 @@ public class CommentService implements CommentServiceInterface{
 
     @Override
     @Transactional
-    public ResponseEntity<ApiResponseModel<Comment>> newComment(CommentRequest commentRequest) {
+    public ResponseEntity<ApiResponseModel<CommentResponseDTO>> newComment(CommentRequest commentRequest) {
         UserDTO user = authenticatedUser.getAuthenticatedUser();
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponseModel.error("USER NOT FOUND", "ERROR"));
@@ -39,16 +37,27 @@ public class CommentService implements CommentServiceInterface{
 
         //ApiResponseModel<ProjectDTO> project = projectClient.getProjectById(commentRequest.getProjectId());
         ApiResponseModel<TaskDTO> task = taskClient.getTaskById(commentRequest.getTaskId());
+        CommentResponseDTO commentResponseDTO = new CommentResponseDTO();
+
         Comment comment = new Comment();
-        comment.setCreatedBy(user);
-        comment.setUpdatedBy(user.getUsername());
+
+        comment.setTask(task.getData().getId());
         comment.setComment(commentRequest.getComment());
-        comment.setTask(task.getData());
+        comment.setCreatedBy(user.getId());
+        comment.setUpdatedBy(user.getUsername());
+
         Comment newComment = commentRepository.save(comment);
+
+        commentResponseDTO.setId(newComment.getId());
+        commentResponseDTO.setLike(comment.getLike());
+        commentResponseDTO.setTask(task.getData());
+        commentResponseDTO.setComment(commentRequest.getComment());
+        commentResponseDTO.setCreatedBy(user);
+        commentResponseDTO.setUpdatedBy(user.getUsername());
 
 //        CommentResponseDTO commentResponseDTO = new CommentResponseDTO(newComment, user.getData());
 
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("COMMENT POSTED","SUCCESS", newComment));
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("COMMENT POSTED","SUCCESS", commentResponseDTO));
     }
 
     @Override
@@ -93,8 +102,26 @@ public class CommentService implements CommentServiceInterface{
     }
 
     @Override
-    public ResponseEntity<ApiResponseModel<List<Comment>>> getTaskComments(String taskId) {
+    public ResponseEntity<ApiResponseModel<List<CommentResponseDTO>>> getTaskComments(String taskId) {
+
         List<Comment> comments = commentRepository.getTaskComments(taskId);
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("COMMENTS FOUND", "SUCCESS", comments));
+        ApiResponseModel<TaskDTO> task = taskClient.getTaskById(taskId);
+
+        List<CommentResponseDTO> commentResponseDTOs = comments.stream()
+                .map(comment -> {
+                    CommentResponseDTO dto = new CommentResponseDTO();
+                    UserDTO user = authenticatedUser.getAuthenticatedUser();
+                    dto.setId(comment.getId());
+                    dto.setComment(comment.getComment());
+                    dto.setCreatedBy(user);
+                    dto.setUpdatedBy(comment.getUpdatedBy());
+                    dto.setLike(comment.getLike());
+                    dto.setTask(task.getData());
+                    return dto;
+                }).collect(Collectors.toList());
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(ApiResponseModel.success("COMMENTS FOUND", "SUCCESS", commentResponseDTOs));
     }
 }

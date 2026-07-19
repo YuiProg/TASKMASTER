@@ -1,0 +1,18 @@
+.tasks-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.tasks-page-header .input-container {
+  max-width: 280px;
+  flex: 1;
+}
+
+.tasks-new-btn {
+  background: #c0392b;
+  font-weight: 600;
+  flex-shrink: 0;
+}

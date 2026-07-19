@@ -1,6 +1,6 @@
 import React from "react";
 import { PanelPage, PanelContainer } from "../../components/TRCOMPONENTS/TRPanelPage/TRPanelPage";
-import InputField from "../../components/TRCOMPONENTS/TRInputField/InputFIeld";
+import { InputField } from "../../components/TRCOMPONENTS/TRInputField/InputFIeld";
 import Button from "../../components/TRCOMPONENTS/TRButton/Button";
 import { useProjectStore } from "../../context/projectStore";
 import navigateTo from "../../lib/navigate";
@@ -63,17 +63,14 @@ class NewProject extends React.Component {
     }
     this.setState({ localError: null });
 
-    // TEMP DEBUG — remove once this is sorted
-    console.log('[NewProject] submitting with:', {
-      projectName: this.state.projectName,
-      description: this.state.description,
-      trimmedDescription: this.state.description.trim(),
-    });
-
     try {
       const success = await useProjectStore
         .getState()
-        .createProject(this.state.projectName.trim(), this.state.description.trim());
+        .createProject(
+          this.state.projectName.trim(),
+          this.state.description.trim(),
+          this.state.members
+        );
 
       if (success) {
         navigateTo("/projects");
@@ -129,7 +126,7 @@ class NewProject extends React.Component {
             <div className="new-project-field">
               <label className="new-project-label">Members</label>
               <span className="new-project-note">
-                Client-side only for now — no invite endpoint exists yet.
+                Added to the project when it's created.
               </span>
 
               <div className="new-project-member-input-row">

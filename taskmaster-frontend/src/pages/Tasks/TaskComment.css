@@ -1,0 +1,171 @@
+.tc-container {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.tc-count-line {
+  margin: 0;
+  font-size: 0.78rem;
+  color: #6e6e6e;
+}
+
+.tc-composer {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.tc-composer .tc-textarea {
+  flex: 1;
+}
+
+.tc-post-btn {
+  background: #c0392b;
+  font-weight: 600;
+  flex-shrink: 0;
+  margin-top: 0;
+}
+
+.tc-textarea {
+  width: 100%;
+  background-color: #2b2b2b;
+  border: none;
+  border-radius: 6px;
+  color: #d0d0d0;
+  font-size: 14px;
+  padding: 12px 16px;
+  box-sizing: border-box;
+  outline: none;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.tc-textarea:focus {
+  background-color: #323232;
+}
+
+.tc-empty {
+  color: #6e6e6e;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.tc-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.tc-item {
+  display: flex;
+  gap: 12px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.tc-item:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.tc-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background-color: #c0392b;
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tc-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.tc-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.tc-username {
+  color: #ffffff;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.tc-text {
+  margin: 0 0 6px 0;
+  color: #b0b0b0;
+  font-size: 0.85rem;
+  line-height: 1.5;
+}
+
+.tc-like-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background: transparent;
+  border: none;
+  color: #6e6e6e;
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 0;
+}
+
+.tc-like-btn:hover {
+  color: #e0574a;
+}
+
+/* Fix 1: Spinner.css's .spinner-container likely stretches full width
+   (to center itself), which pushes "Loading comments..." off to the far
+   right inside .tc-loading's flex row. Constrain it to its own size. */
+.tc-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px 0;
+  color: #6e6e6e;
+  font-size: 0.85rem;
+}
+
+.tc-loading .spinner-container {
+  width: auto;
+  flex: 0 0 auto;
+}
+
+/* Fix 2: cap the comment list's height and let it scroll internally,
+   instead of the whole task page growing/scrolling with it. */
+.tc-list {
+  max-height: 250px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.tc-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.tc-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.tc-list::-webkit-scrollbar-thumb {
+  background: #3a3a3a;
+  border-radius: 4px;
+}
+
+.tc-list::-webkit-scrollbar-thumb:hover {
+  background: #4a4a4a;
+}
+.tc-list::-webkit-scrollbar-thumb:hover {
+  background: #4a4a4a;
+}

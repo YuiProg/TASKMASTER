@@ -2,7 +2,7 @@ import { useState } from 'react';
 import './Register.css';
 import { InputForm, TRInputFormPanel } from '../../components/TRCOMPONENTS/TRInputForm/TRInputForm';
 import Button from '../../components/TRCOMPONENTS/TRButton/Button';
-import InputField from '../../components/TRCOMPONENTS/TRInputField/InputFIeld';
+import { InputField } from '../../components/TRCOMPONENTS/TRInputField/InputFIeld';
 import { Link } from 'react-router-dom';
 
 function Register() {
