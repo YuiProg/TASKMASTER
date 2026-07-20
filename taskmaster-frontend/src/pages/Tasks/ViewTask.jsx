@@ -9,6 +9,7 @@ import { useTaskStore } from "../../context/taskStore";
 import navigateTo from "../../lib/navigate";
 import "./ViewTask.css";
 import TaskComments from "./TaskComment";
+import TaskReports from "./TaskReport";
 import { useCommentStore } from "../../context/commentStore";
 
 // Display labels shown in the dropdown. Backend enum is assumed to be
@@ -199,9 +200,13 @@ class ViewTask extends React.Component {
         </InputRow>        
       </PanelContainer>
 
+        <PanelContainer title="Activity Log">
+          <TaskReports taskId={task.id} />
+        </PanelContainer>
         <PanelContainer title="Comments">
           <TaskComments taskId={task.id} onAddComment={(e) => this.addComment(e)}/>
         </PanelContainer>
+
       </PanelPage>
       
     );

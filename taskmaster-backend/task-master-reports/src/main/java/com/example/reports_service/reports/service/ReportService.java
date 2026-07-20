@@ -58,19 +58,18 @@ public class ReportService implements ReportServiceInterface{
     @Override
     public ResponseEntity<ApiResponseModel<List<ReportResponseDTO>>> getTaskReports(String id) {
         List<Report> reports = reportRepository.getTaskReports(id);
-
+        log.info("FETCHING REPORTS FOR ID: {}", id);
         List<ReportResponseDTO> reportList = reports.stream()
                 .map(report -> {
                     ReportResponseDTO reportResponseDTO = new ReportResponseDTO();
                     //fetch each task here by id
                     ApiResponseModel<TaskDTO> taskDTO = taskClient.getTaskById(report.getTaskId());
                     ApiResponseModel<UserDTO> user = userClient.getUserById(report.getPerformedBy());
-                    log.info("TASK FETCHED ID: {}", taskDTO.getData().getId());
-                    log.info("USER FETCHED ID: {}", user.getData().getId());
                     reportResponseDTO.setId(report.getId());
                     reportResponseDTO.setDescription(report.getDescription());
                     reportResponseDTO.setTask(taskDTO.getData());
                     reportResponseDTO.setPerformedBy(user.getData());
+                    reportResponseDTO.setCreatedAt(report.getCreatedAt());
                     return reportResponseDTO;
                 }).collect(Collectors.toList());
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("REPORTS FOUND", "SUCCESS", reportList));

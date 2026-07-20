@@ -38,6 +38,27 @@ export const useAuthStore = create((set) => ({
     }
   },
 
+  // Rehydrates `user` from the session cookie/JWT via the existing
+  // /getAuthUser endpoint. Call this once on app load (and anywhere else
+  // that needs `user` but might be running in a fresh session) so a page
+  // refresh or direct navigation doesn't leave `user` stuck at null even
+  // though the person is still authenticated server-side.
+  fetchCurrentUser: async () => {
+    try {
+      const res = await api.get('/getAuthUser');
+      if (res.data.status === 'SUCCESS' && res.data.data) {
+        set({ user: res.data.data, isAuthenticated: true });
+        return res.data.data;
+      }
+      return null;
+    } catch (err) {
+      // Not logged in / session expired — leave user as null rather than
+      // throwing, since callers should treat this as "no user available."
+      console.log(err.message);
+      return null;
+    }
+  },
+
   logout: async () => {
     set({ isLoading: true });
     try {
