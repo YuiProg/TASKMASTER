@@ -1,8 +1,11 @@
 package com.example.reports_service.reports.service;
 
+import com.example.reports_service.reports.client.TaskClient;
 import com.example.reports_service.reports.client.UserClient;
 import com.example.reports_service.reports.config.AuthenticatedUser;
 import com.example.reports_service.reports.dto.ApiResponseModel;
+import com.example.reports_service.reports.dto.ReportResponseDTO;
+import com.example.reports_service.reports.dto.TaskDTO;
 import com.example.reports_service.reports.dto.UserDTO;
 import com.example.reports_service.reports.model.Report;
 import com.example.reports_service.reports.repository.ReportRepository;
@@ -15,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -22,6 +27,7 @@ import java.util.Date;
 public class ReportService implements ReportServiceInterface{
 
     private final UserClient userClient;
+    private final TaskClient taskClient;
     private final ReportRepository reportRepository;
     private final AuthenticatedUser authenticatedUser;
 
@@ -47,5 +53,26 @@ public class ReportService implements ReportServiceInterface{
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ApiResponseModel.error(e.getMessage(), "ERROR"));
         }
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<List<ReportResponseDTO>>> getTaskReports(String id) {
+        List<Report> reports = reportRepository.getTaskReports(id);
+
+        List<ReportResponseDTO> reportList = reports.stream()
+                .map(report -> {
+                    ReportResponseDTO reportResponseDTO = new ReportResponseDTO();
+                    //fetch each task here by id
+                    ApiResponseModel<TaskDTO> taskDTO = taskClient.getTaskById(report.getTaskId());
+                    ApiResponseModel<UserDTO> user = userClient.getUserById(report.getPerformedBy());
+                    log.info("TASK FETCHED ID: {}", taskDTO.getData().getId());
+                    log.info("USER FETCHED ID: {}", user.getData().getId());
+                    reportResponseDTO.setId(report.getId());
+                    reportResponseDTO.setDescription(report.getDescription());
+                    reportResponseDTO.setTask(taskDTO.getData());
+                    reportResponseDTO.setPerformedBy(user.getData());
+                    return reportResponseDTO;
+                }).collect(Collectors.toList());
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("REPORTS FOUND", "SUCCESS", reportList));
     }
 }

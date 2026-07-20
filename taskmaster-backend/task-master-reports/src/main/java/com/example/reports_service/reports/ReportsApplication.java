@@ -1,5 +1,6 @@
 package com.example.reports_service.reports;
 
+import com.example.reports_service.reports.client.TaskClient;
 import com.example.reports_service.reports.client.UserClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -8,7 +9,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 
 @SpringBootApplication
 @EnableFeignClients(clients = {
-		UserClient.class
+		UserClient.class,
+		TaskClient.class
 })
 public class ReportsApplication {
 

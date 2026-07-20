@@ -55,6 +55,7 @@ public enum ApiEndpoint {
 
     //REPORT
     POST_REPORT("/api/v1/report/newReport"),
+    GET_REPORT("/api/v1/getReports/{id}"),
 
     //FEIGN
     USER_BY_ID("/api/v1/getUserById/**"),
