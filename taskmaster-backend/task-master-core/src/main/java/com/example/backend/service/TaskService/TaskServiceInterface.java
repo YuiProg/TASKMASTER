@@ -11,7 +11,7 @@ public interface TaskServiceInterface {
     ResponseEntity<ApiResponseModel<Task>> createTask (TaskRequest taskRequest);
     ResponseEntity<ApiResponseModel<List<Task>>> getAllTask (String status);
     ResponseEntity<ApiResponseModel<List<Task>>> getTasksByAssignee (Long userId);
-    ResponseEntity<ApiResponseModel<Task>> updateTask (TaskRequest taskRequest);
+    ResponseEntity<ApiResponseModel<Task>> updateTask (String taskId, TaskRequest taskRequest);
     ResponseEntity<ApiResponseModel<List<Task>>> getAuthenticatedUserTask ();
     ResponseEntity<ApiResponseModel<Task>> updateTaskStatus(String taskId, TaskRequest taskRequest);
     ResponseEntity<ApiResponseModel<Task>> getTaskById (String id);

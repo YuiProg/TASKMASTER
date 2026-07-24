@@ -11,6 +11,8 @@ import "./ViewTask.css";
 import TaskComments from "./TaskComment";
 import TaskReports from "./TaskReport";
 import { useCommentStore } from "../../context/commentStore";
+import Button from "../../components/TRCOMPONENTS/TRButton/Button";
+import { Pencil } from "lucide-react";
 
 // Display labels shown in the dropdown. Backend enum is assumed to be
 // underscore-separated (e.g. IN_PROGRESS, QA_CHECK) — adjust the
@@ -121,6 +123,33 @@ class ViewTask extends React.Component {
     postComment(comment, taskId);
   }
 
+  // --- Generic optimistic field editors ------------------------------
+  // NOTE: these update local state immediately so the label swaps back
+  // right away. None of them are wired to a backend call yet (there's no
+  // generic "updateTask" in taskStore the way there's an updateStatus) —
+  // hook the real persistence call in where marked TODO once that exists.
+
+  handleAssigneeEdit = async (value) => {
+    const { updateTask } = useTaskStore.getState();
+    if (!value) return;
+    this.setState((prev) => ({
+      task: { ...prev.task, assignee: value },
+    }));
+    // TODO: persist, e.g. await assignTask(this.state.task.id, value);
+    console.log("[ViewTask] assignee set to:", value);
+    const task = await updateTask({assignee: value}, this.state.task.id);
+    this.setState({task});
+
+  };
+
+  handleDescriptionEdit = (value) => {
+    this.setState((prev) => ({
+      task: { ...prev.task, description: value },
+    }));
+    // TODO: persist, e.g. await updateTaskDescription(this.state.task.id, value);
+    console.log("[ViewTask] description changed to:", value);
+  };
+
   render() {
     if (!this.state.task)
       return (
@@ -149,9 +178,13 @@ class ViewTask extends React.Component {
               />
             </div>
           </div>
-          <p className="vt-description">
-            {task.description || "No description provided."}
-          </p>
+          <Label
+            className="vt-description"
+            label={task.description || "No description provided."}
+            value={task.description || ""}
+            placeholder="Add a description..."
+            onClick={this.handleDescriptionEdit}
+          />
 
         <InputRow gap={16}>
           <PanelContainer title="Details">
@@ -159,9 +192,11 @@ class ViewTask extends React.Component {
               <div className="vt-assignee-row">
                 <span className="vt-assignee-key">Assignee</span>
                 <UserHoverCard user={task.assignee}>
-                  <span className="vt-assignee-badge">
-                    {task.assignee?.username || "Unassigned"}
-                  </span>
+                 <Label
+                    label={`${task.assignee?.username || "Unassigned"}`}
+                    value={task.assignee?.username || ""}
+                    onClick={(e) => this.handleAssigneeEdit(e)}
+                  />
                 </UserHoverCard>
               </div>
               <Label label={`Created By: ${task.createdBy?.username || "N/A"}`} />
@@ -172,7 +207,7 @@ class ViewTask extends React.Component {
 
           <PanelContainer title="Project">
             <div className="vt-details-grid">
-              <span className="vt-assignee-key">Project Name: {project.projectName.toUpperCase()}</span>
+              <span className="vt-assignee-key">Project Name: {project.projectName?.toUpperCase() || 'NO PROJECT ASSIGNED'}</span>
               <Label label={`Status: ${project.status || "N/A"}`} />
               <Label label={`Members: ${members.length}`} />
             </div>
@@ -188,16 +223,23 @@ class ViewTask extends React.Component {
                 ))}
               </div>
             )}
-
-            <button
-              type="button"
-              className="vt-view-project-link"
-              onClick={() => this.goToProject(project.projectName)}
-            >
-              View Project &rarr;
-            </button>
+            {/* check kung may project */}
+            {project.projectName && (
+              <button
+                type="button"
+                className="vt-view-project-link"
+                onClick={() => this.goToProject(project.projectName)}
+              >
+                View Project &rarr;
+              </button>
+            )}
           </PanelContainer>
-        </InputRow>        
+        </InputRow>      
+        <PanelContainer title="Actions">
+            <InputRow>
+                <Button onClick={() => console.log(this.state.task)} error text={<span><Pencil size={10}/> EDIT TASK</span>}/>
+            </InputRow>
+        </PanelContainer>  
       </PanelContainer>
 
         <PanelContainer title="Activity Log">

@@ -16,7 +16,7 @@ public class TaskRequest {
     public String description;
     public String project;
     public String status;
-    public String createdAt;
+    public Long createdAt;
     public String createdBy;
     public String updatedBy;
     public Integer del;

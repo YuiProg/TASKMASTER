@@ -229,6 +229,7 @@ class Sidebar extends React.Component {
                                     label: 'Tasks',
                                     items: [
                                         { path: '/tasks/my-tasks', title: 'Assigned to Me' },
+                                        { path: '/tasks/open-tasks', title: 'Open Tasks' },
                                         { path: '/tasks/backlog', title: 'Backlog' },
                                     ],
                                 })}

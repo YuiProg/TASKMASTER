@@ -11,6 +11,7 @@ import com.example.backend.repository.ProjectRepository;
 import com.example.backend.repository.TaskRepository;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.request.TaskRequest;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,17 +44,20 @@ public class TaskService implements TaskServiceInterface{
         task.setTaskName(taskRequest.getTaskName());
         task.setAssignee(assignee);
         task.setUpdatedBy(user.getUsername());
-        task.setCreatedAt(String.valueOf(new Date()));
+        task.setCreatedAt(new Date().getTime());
         task.setDescription(taskRequest.getDescription());
 
         if (taskRequest.getStatus() != null && !taskRequest.getStatus().trim().isEmpty()) {
             task.setStatus(taskRequest.getStatus());
         }
 
-        if (taskRequest.getProject() != null && !taskRequest.getProject().trim().isEmpty()) {
-            Project project = projectRepository.getProjectByName(taskRequest.getProject());
-            task.setProject(project);
+        Project project = projectRepository.getProjectByName(taskRequest.getProject());
+
+        if (project == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponseModel.error("PROJECT NOT FOUND", "ERROR"));
         }
+
+        task.setProject(project);
         Task newTask = taskRepository.save(task);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseModel.success("NEW TASK CREATED", "SUCCESS", newTask));
@@ -69,9 +73,54 @@ public class TaskService implements TaskServiceInterface{
         return null;
     }
 
+    //to be tested
     @Override
-    public ResponseEntity<ApiResponseModel<Task>> updateTask(TaskRequest taskRequest) {
-        return null;
+    public ResponseEntity<ApiResponseModel<Task>> updateTask(String taskId, TaskRequest taskRequest) {
+
+        User authUser = authenticatedUser.getAuthenticatedUser();
+        Task task = taskRepository.findById(taskId).orElse(null);
+        if (task == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponseModel.error("TASK NOT FOUND", "ERROR"));
+        }
+
+        Task oldTask;
+
+        oldTask = new Task();
+        oldTask.setId(task.getId());
+        oldTask.setTaskName(task.getTaskName());
+        oldTask.setStatus(task.getStatus());
+        oldTask.setProject(task.getProject());
+        oldTask.setUpdatedBy(task.getUpdatedBy());
+        oldTask.setDescription(task.getDescription());
+        oldTask.setCreatedBy(task.getCreatedBy());
+        oldTask.setCreatedAt(task.getCreatedAt());
+        oldTask.setAssignee(task.getAssignee());
+        oldTask.setProject(task.getProject());
+
+        if (taskRequest.getTaskName() != null && !taskRequest.getTaskName().trim().isEmpty()) {
+            task.setTaskName(taskRequest.getTaskName());
+        }
+
+        task.setUpdatedBy(authUser.getUsername());
+
+        if (taskRequest.getProject() != null && !taskRequest.getProject().trim().isEmpty()) {
+            Project project = projectRepository.getProjectByName(taskRequest.getProject());
+            task.setProject(project);
+        }
+
+        task.setDescription(taskRequest.getDescription());
+
+        if (taskRequest.getAssignee() != null && !taskRequest.getAssignee().trim().isEmpty()) {
+            User assignee = userRepository.findByEmail(taskRequest.getAssignee()).orElse(null);
+            if (assignee == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponseModel.error("USER NOT FOUND", "ERROR"));
+            }
+            task.setAssignee(assignee);
+        }
+
+        Task newTask = taskRepository.save(task);
+
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.update("TASK UPDATED","SUCCESS", newTask, oldTask));
     }
 
     @Override

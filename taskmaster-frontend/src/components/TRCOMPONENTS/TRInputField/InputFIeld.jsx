@@ -161,22 +161,106 @@ export class InputField extends React.Component {
   }
 }
 
+/**
+ * @class Label
+ * @component Text label. If an `onClick` prop is passed, the label becomes
+ * clickable: clicking it swaps the label out for an editable InputField.
+ * Committing the edit — via Enter, or by clicking anywhere outside the
+ * field — calls `onClick(newValue)`, and the label view is restored using
+ * whatever `label`/`value` the parent re-renders with. Without an `onClick`
+ * prop, it behaves as a plain, non-interactive label (no cursor change, no
+ * edit mode).
+ *
+ * Props:
+ * - label: the full display text, e.g. "Created By: John Doe"
+ * - value: (optional) the raw underlying value to seed the edit box with,
+ *   e.g. "John Doe". Defaults to `label` if omitted, so simple labels
+ *   ("Unassigned") work with no extra wiring.
+ * - onClick(newValue): called when an edit is committed (Enter key, or a
+ *   click outside the field).
+ */
 export class Label extends React.Component {
 
-  constructor (props) {
+  constructor(props) {
     super(props);
+    this.state = {
+      isEditing: false,
+    };
+    this.wrapperRef = React.createRef();
   }
 
-  render () {
+  componentWillUnmount() {
+    this.removeOutsideListener();
+  }
+
+  handleLabelClick = () => {
+    if (!this.props.onClick) return;
+    this.setState({ isEditing: true }, this.addOutsideListener);
+  };
+
+  addOutsideListener = () => {
+    // mousedown (not click) so it fires before any blur/re-render races.
+    document.addEventListener("mousedown", this.handleOutsideClick);
+  };
+
+  removeOutsideListener = () => {
+    document.removeEventListener("mousedown", this.handleOutsideClick);
+  };
+
+  handleOutsideClick = (e) => {
+    if (this.wrapperRef.current && !this.wrapperRef.current.contains(e.target)) {
+      this.cancelEdit();
+    }
+  };
+
+  cancelEdit = () => {
+    this.removeOutsideListener();
+    this.setState({ isEditing: false });
+  };
+
+  commitEdit = (value) => {
+    this.removeOutsideListener();
+    this.setState({ isEditing: false });
+    if (this.props.onClick) this.props.onClick(value);
+  };
+
+  render() {
 
     const {
       label,
-      style
+      value,
+      style,
+      onClick,
+      placeholder,
+      className,
+      ...inputFieldProps
     } = this.props;
+
+    const editValue = value !== undefined ? value : label;
+
+    if (onClick && this.state.isEditing) {
+      return (
+        <div ref={this.wrapperRef}>
+          <InputField
+            {...inputFieldProps}
+            text
+            value={editValue}
+            placeholder={placeholder || label}
+            onEnterDown={(val) => this.commitEdit(val)}
+          />
+        </div>
+      );
+    }
 
     return (
       <div>
-        <p className="tr-input-label" style={style}>{label}</p>
+        <p
+          className={`tr-input-label${className ? ` ${className}` : ""}`}
+          style={{ ...style, cursor: onClick ? "pointer" : style?.cursor }}
+          onClick={this.handleLabelClick}
+        >
+          {label}
+        </p>
       </div>
     );
   }

@@ -35,7 +35,7 @@ public class Task {
     private String status = "OPEN";
 
     @Column(nullable = false)
-    private String createdAt;
+    private Long createdAt;
 
     @ManyToOne
     @JoinColumn(name = "created_by", nullable = false)

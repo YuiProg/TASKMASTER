@@ -32,8 +32,9 @@ public class TaskController implements TaskServiceInterface {
     }
 
     @Override
-    public ResponseEntity<ApiResponseModel<Task>> updateTask(TaskRequest taskRequest) {
-        return null;
+    @PutMapping("/api/v1/updateTaskDetail/{id}")
+    public ResponseEntity<ApiResponseModel<Task>> updateTask(@PathVariable String id, @RequestBody TaskRequest taskRequest) {
+        return taskServiceInterface.updateTask(id, taskRequest);
     }
 
     @Override

@@ -30,7 +30,7 @@ public class Project {
     private User createdBy;
 
     @Column(nullable = false)
-    private String createdAt;
+    private Long createdAt;
 
     @Column(nullable = false)
     private String updatedBy;

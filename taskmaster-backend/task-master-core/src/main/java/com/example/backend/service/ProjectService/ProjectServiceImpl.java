@@ -45,7 +45,7 @@ public class ProjectServiceImpl implements ProjectServiceInterface{
         project.setProjectName(projectRequest.getProjectName());
         project.setCreatedBy(user);
         project.setProjectName(projectRequest.getProjectName());
-        project.setCreatedAt(String.valueOf(new Date()));
+        project.setCreatedAt(new Date().getTime());
         project.setUpdatedBy(user.getUsername());
         project.setDescription(projectRequest.getDescription());
 

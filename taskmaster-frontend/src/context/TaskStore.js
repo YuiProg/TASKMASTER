@@ -4,11 +4,14 @@ import api from "../lib/axios"; // TODO: confirm this matches projectStore's imp
 import { useReportStore } from "./reportStore";
 import { useAuthStore } from "./authStore";
 
-export const useTaskStore = create((set) => ({
+export const useTaskStore = create((set, get) => ({
   tasks: [],
   isLoading: false,
   myTasks: [],
   isLoadingMyTasks: false,
+  isCreating: false,
+  error: null,
+  openTasks: [],
 
   fetchTasks: async () => {
     set({ isLoading: true });
@@ -66,6 +69,83 @@ export const useTaskStore = create((set) => ({
       });
     } catch (error) {
       console.log(error.message);
+    }
+  },
+
+  // POST /createTask  { taskName, assignee, description, project, status }
+  // `assignee` and `project` are sent as plain strings (email / project
+  // name) per the sample payload — adjust if the backend actually expects
+  // ids for either of those instead.
+  createTask: async ({ taskName, assignee, description, project, status }) => {
+    set({ isCreating: true, error: null });
+    try {
+      const res = await api.post("/createTask", {
+        taskName,
+        assignee,
+        description,
+        project,
+        status,
+      });
+
+      if (String(res.data.status).toUpperCase() === "SUCCESS") {
+        const newTask = res.data.data;
+        set({
+          tasks: [newTask, ...get().tasks],
+          isCreating: false,
+        });
+        return newTask;
+      }
+
+      set({
+        isCreating: false,
+        error: res.data.message || "Could not create task.",
+      });
+      return null;
+    } catch (error) {
+      console.log(error.message);
+      set({
+        isCreating: false,
+        error:
+          error.response?.data?.message ||
+          "Something went wrong. Please try again.",
+      });
+      return null;
+    }
+  },
+
+  fetchOpenTask: async () => {
+    try {
+      set({ isLoadingMyTasks: true });
+      const response = await api.get("/getOpenTasks");
+      set({ openTasks: response.data?.data || [], isLoadingMyTasks: false });
+    } catch (error) {
+      console.log(error.message);
+      set({
+        isCreating: false,
+        error:
+          error.response?.data?.message ||
+          "Something went wrong. Please try again.",
+      });
+      return null;
+    }
+  },
+
+  updateTask: async (task, id) => {
+    try {
+      const response = await api.put(`/updateTaskDetail/${id}`,{
+        assignee: task.assignee || null,
+        description: task.description || null
+      });
+      return response.data.data;
+    } catch (error) {
+      console.log(error.message);
+      set({
+        isCreating: false,
+        error:
+          error.response?.data?.message ||
+          "Something went wrong. Please try again.",
+      });
+      return null;
     }
   }
 }));

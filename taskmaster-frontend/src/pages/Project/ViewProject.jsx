@@ -97,6 +97,11 @@ class ViewProject extends React.Component {
         navigateTo(`/tasks/view/${id}`);
     }
 
+    goToCreateTask = () => {
+        const projectName = this.state.project?.projectName || '';
+        navigateTo(`/tasks/new?project=${encodeURIComponent(projectName)}`);
+    }
+
     render () {
 
         if (!this.state.project) {
@@ -116,7 +121,7 @@ class ViewProject extends React.Component {
                     <div style={{display: 'flex', gap: 10}}>
                         <Label label="Action" style={{marginTop: '10px'}}/>
                         <div style={{marginLeft: 'auto'}}/>
-                        <Button error text={<span><Plus size={10}/> CREATE TASK</span>}/>
+                        <Button error text={<span><Plus size={10}/> CREATE TASK</span>} onClick={this.goToCreateTask}/>
                         <Button error text={<span><Pencil size={10}/> EDIT PROJECT</span>}/>
                     </div>
                 </PanelContainer>
