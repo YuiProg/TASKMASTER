@@ -135,19 +135,18 @@ class ViewTask extends React.Component {
     this.setState((prev) => ({
       task: { ...prev.task, assignee: value },
     }));
-    // TODO: persist, e.g. await assignTask(this.state.task.id, value);
-    console.log("[ViewTask] assignee set to:", value);
     const task = await updateTask({assignee: value}, this.state.task.id);
     this.setState({task});
 
   };
 
-  handleDescriptionEdit = (value) => {
+  handleDescriptionEdit = async (value) => {
+    const { updateTask } = useTaskStore.getState();
     this.setState((prev) => ({
       task: { ...prev.task, description: value },
     }));
-    // TODO: persist, e.g. await updateTaskDescription(this.state.task.id, value);
-    console.log("[ViewTask] description changed to:", value);
+    const task = await updateTask({description: value}, this.state.task.id);
+    this.setState({task});
   };
 
   render() {
@@ -196,6 +195,7 @@ class ViewTask extends React.Component {
                     label={`${task.assignee?.username || "Unassigned"}`}
                     value={task.assignee?.username || ""}
                     onClick={(e) => this.handleAssigneeEdit(e)}
+                    placeholder="Assignee"
                   />
                 </UserHoverCard>
               </div>

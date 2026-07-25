@@ -10,7 +10,7 @@ import lombok.Setter;
 public class ReportRequest {
     public String id;
     public String description;
-    public String createdAt;
+    public Long createdAt;
     public String performedBy;
     public String taskId;
 }

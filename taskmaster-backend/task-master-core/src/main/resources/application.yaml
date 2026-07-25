@@ -10,6 +10,15 @@ spring:
     username: ${DB_USER}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
+    hikari:
+      pool-name: TaskMasterHikariPoolCore
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 30000
+      connection-timeout: 20000
+      max-lifetime: 1800000
+      validation-timeout: 5000
+      leak-detection-threshold: 30000
 
   jpa:
     hibernate:
@@ -19,6 +28,24 @@ spring:
       hibernate:
         format_sql: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD}
+      timeout: 2000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 2
+          max-wait: 2000ms
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 600000
 
 app:
   jwt:

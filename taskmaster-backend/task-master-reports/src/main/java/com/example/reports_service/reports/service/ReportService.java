@@ -37,12 +37,10 @@ public class ReportService implements ReportServiceInterface{
         try {
             Report report;
 
-            UserDTO user = authenticatedUser.getAuthenticatedUser();
-
             report = new Report();
 
             report.setDescription(reportRequest.getDescription());
-            report.setCreatedAt(String.valueOf(new Date()));
+            report.setCreatedAt(new Date().getTime());
             report.setPerformedBy(reportRequest.getPerformedBy());
             report.setTaskId(reportRequest.getTaskId());
 
@@ -58,7 +56,6 @@ public class ReportService implements ReportServiceInterface{
     @Override
     public ResponseEntity<ApiResponseModel<List<ReportResponseDTO>>> getTaskReports(String id) {
         List<Report> reports = reportRepository.getTaskReports(id);
-        log.info("FETCHING REPORTS FOR ID: {}", id);
         List<ReportResponseDTO> reportList = reports.stream()
                 .map(report -> {
                     ReportResponseDTO reportResponseDTO = new ReportResponseDTO();

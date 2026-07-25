@@ -7,14 +7,6 @@ import {
     LogOut, Menu, ChevronDown
 } from 'lucide-react';
 
-// Hardcoded for now so the sidebar always renders regardless of
-// what's (or isn't) in useAuthStore. Swap this back to real store
-// data once the black-screen / rehydration issue is sorted.
-const HARDCODED_USER = {
-    username: 'admin',
-    role: 'admin',
-};
-
 // Safe localStorage helpers — guard against SSR (no `window`) and
 // malformed/missing values so this never throws.
 const storage = {
@@ -61,14 +53,23 @@ class Sidebar extends React.Component {
             projectsExpanded: savedProjectsExpanded !== null ? savedProjectsExpanded : false,
             tasksExpanded: savedTasksExpanded !== null ? savedTasksExpanded : false,
             showChangePasswordModal: false,
-            user: HARDCODED_USER,
+            // No hardcoded fallback anymore — starts null until
+            // fetchCurrentUser resolves (or login() has already run).
+            user: useAuthStore.getState().user,
         };
     }
 
     componentDidMount() {
         this.unsubscribeAuth = useAuthStore.subscribe((state) => {
-            if (state.user) this.setState({ user: state.user });
+            this.setState({ user: state.user });
         });
+
+        // Actively rehydrate the user rather than only passively waiting
+        // on the subscription — otherwise a fresh page load/refresh with
+        // no login() call this session leaves `user` stuck at null.
+        if (!this.state.user) {
+            useAuthStore.getState().fetchCurrentUser();
+        }
 
         const pathname = window.location.pathname;
 
@@ -174,9 +175,12 @@ class Sidebar extends React.Component {
 
         const pathname = window.location.pathname;
 
-        const initials = user.username
+        const displayName = user?.username || '';
+        const displayEmail = user?.email || '';
+
+        const initials = user?.username
             ? user.username.slice(0, 2).toUpperCase()
-            : (user.role || '?').slice(0, 2).toUpperCase();
+            : '?';
 
         const isAnyProjectsActive = ["/projects", "/projects/new", "/projects/archived"].includes(pathname);
         const isAnyTasksActive = ["/tasks/my-tasks", "/tasks/backlog"].includes(pathname);
@@ -249,20 +253,34 @@ class Sidebar extends React.Component {
                     {/* Bottom User Profile Section */}
                     <div className="user-panel">
                         <div className="user-row">
-                            <div className="sb-avatar">{initials}</div>
-                            {!collapsed && (
-                                <div className="user-info">
-                                    <p className="userName">{user.username}</p>
-                                    <p className="userRole">{user.role || 'No role assigned'}</p>
-                                    <a
-                                        className="change-password"
-                                        onClick={() => this.setState({ showChangePasswordModal: true })}
-                                    >
-                                        Change password
-                                    </a>
-                                </div>
+                            {user ? (
+                                <>
+                                    <div className="sb-avatar">{initials}</div>
+                                    {!collapsed && (
+                                        <div className="user-info">
+                                            <p className="userName">{displayName}</p>
+                                            <p className="userRole">{displayEmail}</p>
+                                            <a
+                                                className="change-password"
+                                                onClick={() => this.setState({ showChangePasswordModal: true })}
+                                            >
+                                                Change password
+                                            </a>
+                                        </div>
+                                    )}
+                                </>
+                            ) : (
+                                <>
+                                    <div className="sb-skeleton sb-skeleton-avatar" />
+                                    {!collapsed && (
+                                        <div className="user-info">
+                                            <div className="sb-skeleton sb-skeleton-line sb-skeleton-line-name" />
+                                            <div className="sb-skeleton sb-skeleton-line sb-skeleton-line-email" />
+                                        </div>
+                                    )}
+                                </>
                             )}
-                            {!collapsed && (
+                            {!collapsed && user && (
                                 <button className="sb-logout-btn" onClick={this.handleLogout} aria-label="Log out">
                                     <LogOut size={16} />
                                 </button>

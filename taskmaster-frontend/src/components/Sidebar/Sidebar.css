@@ -459,3 +459,50 @@ body {
   overflow-y: auto;
   width: 100%;
 }
+
+.sb-avatar-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.sb-avatar-loading .spinner-container {
+  width: auto;
+  flex: 0 0 auto;
+}
+
+.sb-skeleton {
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+  animation: sb-skeleton-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes sb-skeleton-pulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.sb-skeleton-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.sb-skeleton-line {
+  height: 10px;
+  margin: 6px 0;
+}
+
+.sb-skeleton-line-name {
+  width: 70%;
+}
+
+.sb-skeleton-line-email {
+  width: 90%;
+}

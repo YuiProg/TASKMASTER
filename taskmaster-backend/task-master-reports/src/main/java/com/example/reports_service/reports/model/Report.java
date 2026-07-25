@@ -22,7 +22,7 @@ public class Report {
     private String description;
 
     @Column(nullable = false)
-    private String createdAt;
+    private Long createdAt;
 
     private String performedBy;
 

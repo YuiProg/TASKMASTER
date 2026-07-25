@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class ReportDTO {
     private String id;
     private String description;
-    private String createdAt;
+    private Long createdAt;
     private String performedBy;
     private String taskId;
 }

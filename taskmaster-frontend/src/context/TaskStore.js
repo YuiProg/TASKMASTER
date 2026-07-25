@@ -44,29 +44,31 @@ export const useTaskStore = create((set, get) => ({
     }
   },
 
+  // Shared by updateStatus/updateTask: grabs the current user (rehydrating
+  // via /getAuthUser if authStore's `user` is null — a fresh session/
+  // refresh can leave it null with no rehydration otherwise), then
+  // appends a report entry locally instead of hitting the network again.
+  addLocalReport: async (description) => {
+    let { user } = useAuthStore.getState();
+    if (!user) {
+      user = await useAuthStore.getState().fetchCurrentUser();
+    }
+    const { addReport } = useReportStore.getState();
+    addReport({
+      id: `local-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+      description,
+      performedBy: user,
+      createdAt: new Date().toString(),
+    });
+  },
+
   updateStatus: async (id, status) => {
     try {
       await api.put(`/updateTask/${id}`, {
         status
       });
 
-      // Build the report entry locally instead of hitting the network
-      // again — it won't have a real backend id until the next actual
-      // refresh, but it renders identically in the meantime.
-      let { user } = useAuthStore.getState();
-      if (!user) {
-        // authStore only populates `user` during login() with no
-        // rehydration on page load, so a fresh session/refresh can leave
-        // it null even though we're still authenticated server-side.
-        user = await useAuthStore.getState().fetchCurrentUser();
-      }
-      const { addReport } = useReportStore.getState();
-      addReport({
-        id: `local-${Date.now()}`,
-        description: `UPDATED STATUS TO: ${status}`,
-        performedBy: user,
-        createdAt: new Date().toString(),
-      });
+      await get().addLocalReport(`UPDATED STATUS TO: ${status}`);
     } catch (error) {
       console.log(error.message);
     }
@@ -130,12 +132,24 @@ export const useTaskStore = create((set, get) => ({
     }
   },
 
+  // PUT /updateTaskDetail/{id}  { assignee, description }
+  // Adds one report entry per field that was actually provided —
+  // "UPDATED DESCRIPTION TO: ..." and/or "UPDATED ASSIGNEE TO: ..." —
+  // matching the same naming convention as updateStatus's report.
   updateTask: async (task, id) => {
     try {
-      const response = await api.put(`/updateTaskDetail/${id}`,{
+      const response = await api.put(`/updateTaskDetail/${id}`, {
         assignee: task.assignee || null,
         description: task.description || null
       });
+
+      if (task.description) {
+        await get().addLocalReport(`UPDATED DESCRIPTION TO: ${task.description}`);
+      }
+      if (task.assignee) {
+        await get().addLocalReport(`UPDATED ASSIGNEE TO: ${task.assignee}`);
+      }
+
       return response.data.data;
     } catch (error) {
       console.log(error.message);

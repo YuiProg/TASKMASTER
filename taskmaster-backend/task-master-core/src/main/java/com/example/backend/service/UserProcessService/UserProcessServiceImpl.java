@@ -14,6 +14,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import com.example.backend.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -31,14 +32,11 @@ public class UserProcessServiceImpl implements UserProcessService{
 
     @Autowired
     private final UserRepository userRepository;
-
     private final PasswordEncoder passwordEncoder;
-
     private final JwtUtil jwtUtil;
-
     private final BranchRepository branchRepository;
-
     private final AuthenticatedUser authenticatedUser;
+    private final UserCacheService userCacheService;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -290,7 +288,7 @@ public class UserProcessServiceImpl implements UserProcessService{
 
     @Override
     public ResponseEntity<ApiResponseModel<User>> getUserById(String id) {
-        User user = userRepository.findById(id).orElse(null);
+        User user = userCacheService.getUserInCache(id);
 
         if (user == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponseModel.error("USER NOT FOUND", StringCodes.ERROR.getPath()));
@@ -298,6 +296,7 @@ public class UserProcessServiceImpl implements UserProcessService{
 
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("USER FOUND", StringCodes.SUCCESS.getPath(), user));
     }
+
 
     @Override
     public ResponseEntity<ApiResponseModel<User>> getAuthUser() {

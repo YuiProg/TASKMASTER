@@ -29,6 +29,7 @@ public class ProjectServiceImpl implements ProjectServiceInterface{
     private final UserRepository userRepository;
     private final AuthenticatedUser authenticatedUser;
     private final ProjectRepository projectRepository;
+    private final ProjectCacheService projectCacheService;
 
     @Override
     @Transactional
@@ -72,7 +73,7 @@ public class ProjectServiceImpl implements ProjectServiceInterface{
 
     @Override
     public ResponseEntity<ApiResponseModel<List<Project>>> getProjects() {
-        List<Project> projects = projectRepository.getAllProjects();
+        List<Project> projects = projectCacheService.getProjectsCache();
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("PROJECTS FOUND", "SUCCESS", projects));
     }
 
@@ -171,7 +172,7 @@ public class ProjectServiceImpl implements ProjectServiceInterface{
 
     @Override
     public ResponseEntity<ApiResponseModel<Project>> getProjectByName(String name) {
-        Project project = projectRepository.getProjectByName(name);
+        Project project = projectCacheService.getProjectInCache(name);
         if (project == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponseModel.error("PROJECT NOT FOUND", "ERROR"));
         }

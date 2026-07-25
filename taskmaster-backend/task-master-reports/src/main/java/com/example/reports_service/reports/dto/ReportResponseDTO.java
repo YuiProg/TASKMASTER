@@ -6,7 +6,7 @@ import lombok.Data;
 public class ReportResponseDTO {
     private String id;
     private String description;
-    private String createdAt;
+    private Long createdAt;
     private UserDTO performedBy;
     private TaskDTO task;
 }
