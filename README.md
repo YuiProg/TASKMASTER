@@ -52,16 +52,16 @@ All client traffic enters through a single **API Gateway**, which authenticates 
       └───────┬───────┘ └───────┬───────┘ └──────┬───────┘
               │                 │                │
               │                 ▼                │
-              │         ┌──────────────┐          │
-              │         │    redis      │         │
-              │         │ cache check   │         │
-              │         │  port 6379    │         │
-              │         └───────┬───────┘         │
+              │         ┌───────────────┐        │
+              │         │    redis      │        │
+              │         │ cache check   │        │
+              │         │  port 6379    │        │
+              │         └───────┬───────┘        │
               │                 │                │
               ▼                 ▼                ▼
         ┌─────────────────────────────────────────────┐
-        │           external PostgreSQL                │
-        │        (shared across all services)           │
+        │           external PostgreSQL               │
+        │        (shared across all services)         │
         └─────────────────────────────────────────────┘
 ```
 
