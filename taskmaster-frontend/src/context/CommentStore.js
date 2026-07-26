@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import commentsApi from '../lib/commentAxios';
+import gateWayApi from '../lib/gateway';
 
 
 export const useCommentStore = create((set) => ({
@@ -11,7 +11,7 @@ export const useCommentStore = create((set) => ({
     getComments: async (id) => {
         set({ isLoading: true, error: null });
         try {
-            const response = await commentsApi.get(`/getTaskComments/${id}`);
+            const response = await gateWayApi.get(`/comments/getTaskComments/${id}`);
             const list = Array.isArray(response.data?.data) ? response.data.data.reverse() : [];
             set({ comments: list, isLoading: false });
             return list;
@@ -28,7 +28,7 @@ export const useCommentStore = create((set) => ({
     postComment: async (comment, taskId) => {
         set({loadButton: true});
         try {
-            const response = await commentsApi.post("/newComment", {
+            const response = await gateWayApi.post("/comments/newComment", {
                 comment,
                 taskId
             });

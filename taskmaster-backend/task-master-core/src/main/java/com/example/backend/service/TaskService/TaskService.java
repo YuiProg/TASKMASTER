@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -40,8 +41,6 @@ public class TaskService implements TaskServiceInterface {
         task.setCreatedBy(user);
         task.setTaskName(taskRequest.getTaskName());
 
-        User assignee = userRepository.findByEmail(taskRequest.getAssignee()).orElse(null);
-        task.setAssignee(assignee);
         task.setUpdatedBy(user.getUsername());
         task.setCreatedAt(new Date().getTime());
         task.setDescription(taskRequest.getDescription());
@@ -54,6 +53,25 @@ public class TaskService implements TaskServiceInterface {
 
         if (project == null) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponseModel.error("PROJECT NOT FOUND", "ERROR"));
+        }
+
+        List<User> members = project.getMembers();
+        User assignee = userRepository.findByEmail(taskRequest.getAssignee()).orElse(null);
+
+        if (assignee == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponseModel.error("USER NOT FOUND", "ERROR"));
+        }
+
+        for (User users : members) {
+            boolean isMember = project.getMembers().stream()
+                    .anyMatch(member -> Objects.equals(member.getId(), assignee.getId()));
+
+            if (!isMember) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(ApiResponseModel.error("USER IS NOT A MEMBER OF PROJECT", "ERROR"));
+            }
+
         }
 
         task.setProject(project);
@@ -112,8 +130,23 @@ public class TaskService implements TaskServiceInterface {
 
         if (taskRequest.getAssignee() != null && !taskRequest.getAssignee().trim().isEmpty()) {
             User assignee = userRepository.findByEmail(taskRequest.getAssignee()).orElse(null);
+
             if (assignee == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponseModel.error("USER NOT FOUND", "ERROR"));
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(ApiResponseModel.error("USER NOT FOUND", "ERROR"));
+            }
+
+            if (task.getProject() != null) {
+                List<User> members = task.getProject().getMembers();
+                for (User users : members) {
+                    boolean isMember = task.getProject().getMembers()
+                            .stream().anyMatch(member -> Objects.equals(member.getId(), assignee.getId()));
+
+                    if (!isMember) {
+                        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                                .body(ApiResponseModel.error("USER IS NOT A MEMBER OF THIS PROJECT", "ERROR"));
+                    }
+                }
             }
             task.setAssignee(assignee);
             log = String.format("UPDATED ASSIGNEE TO %s", assignee.getUsername());
@@ -127,7 +160,6 @@ public class TaskService implements TaskServiceInterface {
         reportClient.postReport(reportDTO);
         Task newTask = taskRepository.save(task);
 
-        // Evict from Redis cache
         taskCacheService.evictTaskCache(taskId);
 
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.update("TASK UPDATED", "SUCCESS", newTask, oldTask));

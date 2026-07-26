@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import api from '../lib/axios';
+import gateWayApi from '../lib/gateway';
 
 export const useAuthStore = create((set) => ({
   user: null,
@@ -45,7 +46,7 @@ export const useAuthStore = create((set) => ({
   // though the person is still authenticated server-side.
   fetchCurrentUser: async () => {
     try {
-      const res = await api.get('/getAuthUser');
+      const res = await gateWayApi.get('/getAuthUser');
       if (res.data.status === 'SUCCESS' && res.data.data) {
         set({ user: res.data.data, isAuthenticated: true });
         return res.data.data;
