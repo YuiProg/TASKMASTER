@@ -46,18 +46,23 @@ All client traffic enters through a single **API Gateway**, which authenticates 
                 ┌───────────────┼───────────────┐
                 ▼               ▼               ▼
       ┌──────────────┐ ┌──────────────┐ ┌──────────────┐
-      │backend-service│ │comment-service│ │report-service│
-      │  port 8080    │ │  port 8081    │ │  port 8082   │
-      │ tasks / auth  │ │  comments     │ │  audit logs  │
+      │comment-service│ │backend-service│ │report-service│
+      │  port 8081    │ │  port 8080    │ │  port 8082   │
+      │  comments     │ │ tasks / auth  │ │  audit logs  │
       └───────┬───────┘ └───────┬───────┘ └──────┬───────┘
+              │                 │                │
+              │                 ▼                │
+              │         ┌──────────────┐          │
+              │         │    redis      │         │
+              │         │ cache check   │         │
+              │         │  port 6379    │         │
+              │         └───────┬───────┘         │
               │                 │                │
               ▼                 ▼                ▼
         ┌─────────────────────────────────────────────┐
         │           external PostgreSQL                │
         │        (shared across all services)           │
         └─────────────────────────────────────────────┘
-
-              redis (cache / session store, port 6379)
 ```
 
 ---
@@ -70,7 +75,7 @@ All client traffic enters through a single **API Gateway**, which authenticates 
 | **backend** (core) | 8080 | Owns task, project, and user/auth domain logic, including login and JWT/cookie issuance. |
 | **comment** | 8081 | Manages comments and threaded discussions tied to tasks. |
 | **reports** | 8082 | Generates activity and audit logs (e.g. "Updated description to: X") for tasks. |
-| **redis** | 6379 | Shared cache and session store, password-protected with append-only persistence. |
+| **redis** | 6379 | Cache layer for `backend-service` — checked before falling through to PostgreSQL on reads. |
 | **PostgreSQL** | 5432 (external) | Shared relational datastore across backend, comment, and reports services. |
 
 ---
