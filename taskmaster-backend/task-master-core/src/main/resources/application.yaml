@@ -1,5 +1,9 @@
 server:
-  port: ${SERVER_PORT:8080} # Defaults to 8080 if not set
+  # Render automatically injects PORT (10000). Falling back to 8080 for local dev.
+  port: ${PORT:8080}
+  compression:
+    enabled: true
+    mime-types: "application/json"
 
 spring:
   application:
@@ -34,13 +38,18 @@ spring:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
       password: ${REDIS_PASSWORD}
-      timeout: 2000ms
+      # Increased from 2000ms to 10000ms to allow TLS handshake & cloud latency
+      timeout: 10000ms
+      # Optional: enable SSL if using Upstash or managed cloud Redis with TLS
+      ssl:
+        enabled: ${REDIS_SSL_ENABLED:false}
       lettuce:
         pool:
           max-active: 8
           max-idle: 8
           min-idle: 2
-          max-wait: 2000ms
+          # Increased max-wait to give pool acquisition breathing room
+          max-wait: 10000ms
 
   cache:
     type: redis
