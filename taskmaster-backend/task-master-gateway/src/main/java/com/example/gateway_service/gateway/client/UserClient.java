@@ -16,10 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(name = "backend-core-client", url = "${services.backend.url}", configuration = FeignCookieConfig.class)
 public interface UserClient {
     @GetMapping("/getUserById/{id}")
-    ApiResponseModel<UserDTO> getUserById(@PathVariable String id);
+    ResponseEntity<ApiResponseModel<UserDTO>> getUserById(@PathVariable String id);
 
     @GetMapping(value = "/getAuthUser", produces = "application/json")
-    ApiResponseModel<UserDTO> getAuthUser();
+    ResponseEntity<ApiResponseModel<UserDTO>> getAuthUser();
 
     @PostMapping(value = "/login", produces = "application/json")
     ResponseEntity<ApiResponseModel<UserDTO>> login(@RequestBody UserRequest userRequest);

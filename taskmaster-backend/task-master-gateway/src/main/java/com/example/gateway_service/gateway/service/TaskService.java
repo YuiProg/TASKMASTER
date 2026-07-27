@@ -24,7 +24,6 @@ public class TaskService implements TaskClient {
             ResponseEntity<ApiResponseModel<TaskDTO>> response = taskClient.getTaskById(id);
             log.info("RESPONSE getTaskById -> httpStatus: {}", response.getStatusCode());
 
-            // Rebuild the response to strip internal Feign headers (Content-Length / Transfer-Encoding)
             return ResponseEntity
                     .status(response.getStatusCode())
                     .body(response.getBody());

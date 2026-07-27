@@ -4,7 +4,9 @@ import com.example.gateway_service.gateway.client.CommentClient;
 import com.example.gateway_service.gateway.dto.ApiResponseModel;
 import com.example.gateway_service.gateway.dto.CommentDTO;
 import com.example.gateway_service.gateway.request.CommentRequest;
+import com.example.gateway_service.gateway.service.CommentService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,19 +15,19 @@ import java.util.List;
 @RequestMapping("/api/v1/comments")
 @AllArgsConstructor
 public class CommentController implements CommentClient{
-    private final CommentClient commentClient;
+    private final CommentService commentService;
 
 
     @Override
     @GetMapping("/getTaskComments/{id}")
-    public ApiResponseModel<List<CommentDTO>> getComments(@PathVariable String id) {
-        return commentClient.getComments(id);
+    public ResponseEntity<ApiResponseModel<List<CommentDTO>>> getComments(@PathVariable String id) {
+        return commentService.getComments(id);
     }
 
     @Override
     @PostMapping("/newComment")
     public ApiResponseModel<CommentDTO> postComment(CommentRequest commentRequest) {
-        return commentClient.postComment(commentRequest);
+        return null;
     }
 }
 

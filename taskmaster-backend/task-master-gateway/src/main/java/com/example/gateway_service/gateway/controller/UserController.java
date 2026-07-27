@@ -18,13 +18,13 @@ public class UserController implements UserClient{
 
     @Override
     @GetMapping("/getUserById/{id}")
-    public ApiResponseModel<UserDTO> getUserById (@PathVariable String id) {
+    public ResponseEntity<ApiResponseModel<UserDTO>> getUserById (@PathVariable String id) {
         return userService.getUserById(id);
     }
 
     @Override
     @GetMapping("/getAuthUser")
-    public ApiResponseModel<UserDTO> getAuthUser() {
+    public ResponseEntity<ApiResponseModel<UserDTO>> getAuthUser() {
         return userService.getAuthUser();
     }
 

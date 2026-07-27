@@ -25,16 +25,41 @@ public class UserService implements UserClient {
     private final JwtUtil jwtUtil;
 
     @Override
-    public ApiResponseModel<UserDTO> getUserById(String id) {
-        log.info("REQUEST getUserById -> id: {}", id);
-        ApiResponseModel<UserDTO> response = userClient.getUserById(id);
-        log.info("RESPONSE getUserById -> status: {}, data: {}", response.getStatus(), response.getData());
-        return response;
+    public ResponseEntity<ApiResponseModel<UserDTO>> getUserById(String id) {
+        try {
+            log.info("REQUEST getUserById -> id: {}", id);
+            ResponseEntity<ApiResponseModel<UserDTO>> response = userClient.getUserById(id);
+            log.info("RESPONSE getUserById -> status: {}, data: {}", response.getStatusCode(), response.getBody());
+
+            ResponseEntity.BodyBuilder builder = ResponseEntity.status(response.getStatusCode());
+
+            return builder.body(response.getBody());
+        } catch (FeignException e) {
+            log.error("RESPONSE GET USER BY ID (error) -> status: {}, cause: {}", e.status(), e.getCause() != null ? e.getCause().getMessage() : e.getMessage(), e);
+            HttpStatus status = (e.status() > 0)
+                    ? HttpStatus.valueOf(e.status())
+                    : HttpStatus.SERVICE_UNAVAILABLE;
+
+            return ResponseEntity.status(status)
+                    .body(ApiResponseModel.error(e.status() > 0 ? e.contentUTF8() : "SERVER ERROR", "ERROR"));
+        }
     }
 
     @Override
-    public ApiResponseModel<UserDTO> getAuthUser() {
-        return userClient.getAuthUser();
+    public ResponseEntity<ApiResponseModel<UserDTO>> getAuthUser() {
+        try {
+            log.info("REQUEST getAuthUser");
+            ResponseEntity<ApiResponseModel<UserDTO>> response = userClient.getAuthUser();
+            log.info("RESPONSE getAuthUser -> status: {}, data: {}", response.getStatusCode(), response.getBody());
+            ResponseEntity.BodyBuilder builder = ResponseEntity.status(response.getStatusCode());
+
+            return builder.body(response.getBody());
+
+        } catch (FeignException e) {
+            log.error("RESPONSE login (error) -> status: {}, cause: {}", e.status(), e.getCause() != null ? e.getCause().getMessage() : e.getMessage(), e);
+            HttpStatus status = e.status() > 0 ? HttpStatus.valueOf(e.status()) : HttpStatus.SERVICE_UNAVAILABLE;
+            return ResponseEntity.status(status).body(ApiResponseModel.error(e.status() > 0 ? e.contentUTF8() : "SERVICE UNAVAILABLE", "ERROR"));
+        }
     }
 
     @Override
