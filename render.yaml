@@ -9,9 +9,9 @@ services:
     plan: free
     envVars:
       - key: SERVER_PORT
-        value: 10000          # Render expects services to listen on $PORT (default 10000)
+        value: 10000
       - key: DB_HOST
-        sync: false           # set manually — external Postgres host
+        sync: false
       - key: DB_PORT
         value: "6543"
       - key: DB_NAME
@@ -23,6 +23,18 @@ services:
       - key: SECRET_KEY
         sync: false
       - key: EXPIRATION_TIME
+        sync: false
+      - key: REDIS_HOST
+        fromService:
+          type: keyvalue
+          name: task-master-redis
+          property: host
+      - key: REDIS_PORT
+        fromService:
+          type: keyvalue
+          name: task-master-redis
+          property: port
+      - key: REDIS_PASSWORD
         sync: false
       - key: SERVICES_BACKEND_URL
         fromService:
@@ -40,7 +52,7 @@ services:
           name: task-master-reports
           property: hostport
 
-  # ── Core service (tasks, projects, users/auth) — internal only ─────────
+  # ── Core service (tasks, projects, users/auth) ──────────────────────────
   - type: web
     name: task-master-core
     runtime: docker
@@ -61,6 +73,10 @@ services:
         sync: false
       - key: DB_PASSWORD
         sync: false
+      - key: SECRET_KEY
+        sync: false
+      - key: EXPIRATION_TIME
+        sync: false
       - key: REDIS_HOST
         fromService:
           type: keyvalue
@@ -72,9 +88,24 @@ services:
           name: task-master-redis
           property: port
       - key: REDIS_PASSWORD
-        sync: false           # set manually — Render Key Value doesn't expose password via fromService (check the Redis service's Connect tab for it)
+        sync: false
+      - key: SERVICES_BACKEND_URL
+        fromService:
+          type: web
+          name: task-master-core
+          property: hostport
+      - key: SERVICES_COMMENT_URL
+        fromService:
+          type: web
+          name: task-master-comment
+          property: hostport
+      - key: SERVICES_REPORT_URL
+        fromService:
+          type: web
+          name: task-master-reports
+          property: hostport
 
-  # ── Comment service — internal only ─────────────────────────────────────
+  # ── Comment service ──────────────────────────────────────────────────────
   - type: web
     name: task-master-comment
     runtime: docker
@@ -95,8 +126,39 @@ services:
         sync: false
       - key: DB_PASSWORD
         sync: false
+      - key: SECRET_KEY
+        sync: false
+      - key: EXPIRATION_TIME
+        sync: false
+      - key: REDIS_HOST
+        fromService:
+          type: keyvalue
+          name: task-master-redis
+          property: host
+      - key: REDIS_PORT
+        fromService:
+          type: keyvalue
+          name: task-master-redis
+          property: port
+      - key: REDIS_PASSWORD
+        sync: false
+      - key: SERVICES_BACKEND_URL
+        fromService:
+          type: web
+          name: task-master-core
+          property: hostport
+      - key: SERVICES_COMMENT_URL
+        fromService:
+          type: web
+          name: task-master-comment
+          property: hostport
+      - key: SERVICES_REPORT_URL
+        fromService:
+          type: web
+          name: task-master-reports
+          property: hostport
 
-  # ── Reports service — internal only ─────────────────────────────────────
+  # ── Reports service ──────────────────────────────────────────────────────
   - type: web
     name: task-master-reports
     runtime: docker
@@ -117,10 +179,41 @@ services:
         sync: false
       - key: DB_PASSWORD
         sync: false
+      - key: SECRET_KEY
+        sync: false
+      - key: EXPIRATION_TIME
+        sync: false
+      - key: REDIS_HOST
+        fromService:
+          type: keyvalue
+          name: task-master-redis
+          property: host
+      - key: REDIS_PORT
+        fromService:
+          type: keyvalue
+          name: task-master-redis
+          property: port
+      - key: REDIS_PASSWORD
+        sync: false
+      - key: SERVICES_BACKEND_URL
+        fromService:
+          type: web
+          name: task-master-core
+          property: hostport
+      - key: SERVICES_COMMENT_URL
+        fromService:
+          type: web
+          name: task-master-comment
+          property: hostport
+      - key: SERVICES_REPORT_URL
+        fromService:
+          type: web
+          name: task-master-reports
+          property: hostport
 
   # ── Redis — managed Key Value instance ──────────────────────────────────
   - type: keyvalue
     name: task-master-redis
     plan: free
     region: oregon
-    ipAllowList: []          # empty = only accessible from services in this account
+    ipAllowList: []
