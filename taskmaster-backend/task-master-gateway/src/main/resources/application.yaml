@@ -62,3 +62,10 @@ services:
     url: ${SERVICES_COMMENT_URL:http://localhost:8081/api/v1}
   report:
     url: ${SERVICES_REPORT_URL:http://localhost:8082/api/v1}
+
+feign:
+  client:
+    config:
+      default:
+        connectTimeout: 5000
+        readTimeout: 60000

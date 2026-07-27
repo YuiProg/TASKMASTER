@@ -9,6 +9,7 @@ import feign.FeignException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -39,15 +40,21 @@ public class UserService implements UserClient {
         log.info("REQUEST login -> email: {}", userRequest.getEmail());
         try {
             ResponseEntity<ApiResponseModel<UserDTO>> response = userClient.login(userRequest);
-            log.info("RESPONSE login -> httpStatus: {}, body: {}",
-                    response.getStatusCode(), response.getBody());
+            log.info("RESPONSE login -> httpStatus: {}", response.getStatusCode());
             return response;
         } catch (FeignException e) {
             log.warn("RESPONSE login (error) -> status: {}, body: {}", e.status(), e.contentUTF8());
+
+            HttpStatus status = (e.status() > 0)
+                    ? HttpStatus.valueOf(e.status())
+                    : HttpStatus.SERVICE_UNAVAILABLE;
+
             ResponseCookie responseCookie = jwtUtil.deleteCookie();
-            return ResponseEntity.status(e.status())
+            return ResponseEntity.status(status)
                     .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-                    .body(ApiResponseModel.error(e.contentUTF8(), "ERROR"));
+                    .body(ApiResponseModel.error(
+                            e.status() > 0 ? e.contentUTF8() : "Backend service unavailable, please try again",
+                            "ERROR"));
         }
     }
 }
