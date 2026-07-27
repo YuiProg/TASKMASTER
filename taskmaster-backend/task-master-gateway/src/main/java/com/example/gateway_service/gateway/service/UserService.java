@@ -14,6 +14,8 @@ import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -41,7 +43,20 @@ public class UserService implements UserClient {
         try {
             ResponseEntity<ApiResponseModel<UserDTO>> response = userClient.login(userRequest);
             log.info("RESPONSE login -> httpStatus: {}", response.getStatusCode());
-            return response;
+
+            // Extract Set-Cookie headers specifically, discarding internal transport headers (Content-Length, Transfer-Encoding)
+            List<String> cookies = response.getHeaders().get(HttpHeaders.SET_COOKIE);
+
+            ResponseEntity.BodyBuilder builder = ResponseEntity.status(response.getStatusCode());
+
+            if (cookies != null && !cookies.isEmpty()) {
+                for (String cookie : cookies) {
+                    builder.header(HttpHeaders.SET_COOKIE, cookie);
+                }
+            }
+
+            return builder.body(response.getBody());
+
         } catch (FeignException e) {
 
             log.error("RESPONSE login (error) -> status: {}, cause: {}", e.status(), e.getCause() != null ? e.getCause().getMessage() : e.getMessage(), e);
