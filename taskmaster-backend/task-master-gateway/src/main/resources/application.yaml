@@ -1,6 +1,11 @@
 server:
   # Render automatically injects PORT (10000). Falling back to 8083 for local dev.
   port: ${PORT:8083}
+  connection-timeout: 30000ms
+  tomcat:
+    connection-timeout: 30000ms
+    keep-alive-timeout: 30000ms
+    max-threads: 50
   compression:
     enabled: true
     mime-types: "application/json"
@@ -38,13 +43,16 @@ spring:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
       password: ${REDIS_PASSWORD}
-      timeout: 2000ms
+      # Increased from 2000ms to 10000ms to prevent Lettuce connection timeouts on cloud Redis
+      timeout: 10000ms
+      ssl:
+        enabled: ${REDIS_SSL_ENABLED:false}
       lettuce:
         pool:
           max-active: 8
           max-idle: 8
           min-idle: 2
-          max-wait: 2000ms
+          max-wait: 10000ms
 
   cache:
     type: redis
@@ -68,7 +76,5 @@ feign:
   client:
     config:
       default:
-        # 20s connection timeout gives free instances time to wake up during cold starts
         connectTimeout: 20000
-        # 20s read timeout aligns within Render's gateway limits
         readTimeout: 20000
