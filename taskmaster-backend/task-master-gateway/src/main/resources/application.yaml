@@ -7,8 +7,8 @@ server:
     keep-alive-timeout: 30000ms
     max-threads: 50
   compression:
-    enabled: true
-    mime-types: "application/json"
+    # Disabled on Gateway to prevent GZIP response body corruption / header mismatches with Cloudflare
+    enabled: false
 
 spring:
   application:
@@ -43,7 +43,6 @@ spring:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
       password: ${REDIS_PASSWORD}
-      # Increased timeout to prevent Lettuce connection timeouts on cloud Redis
       timeout: 10000ms
       ssl:
         enabled: ${REDIS_SSL_ENABLED:true}
@@ -66,11 +65,11 @@ app:
 
 services:
   backend:
-    url: ${SERVICES_BACKEND_URL:http://localhost:8080/api/v1}
+    url: ${SERVICES_BACKEND_URL:http://localhost:8080}
   comment:
-    url: ${SERVICES_COMMENT_URL:http://localhost:8081/api/v1}
+    url: ${SERVICES_COMMENT_URL:http://localhost:8081}
   report:
-    url: ${SERVICES_REPORT_URL:http://localhost:8082/api/v1}
+    url: ${SERVICES_REPORT_URL:http://localhost:8082}
 
 feign:
   client:
