@@ -50,10 +50,7 @@ services:
           name: task-master-redis
           property: port
       - key: REDIS_PASSWORD
-        fromService:
-          type: keyvalue
-          name: task-master-redis
-          property: password
+        sync: false           # set manually — Render Key Value doesn't expose password via fromService (check the Redis service's Connect tab for it)
 
   # ── Core service (tasks, projects, users/auth) — internal only ─────────
   - type: pserv
