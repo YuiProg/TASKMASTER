@@ -53,13 +53,7 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
-                        .requestMatchers(
-                                ApiEndpoint.ADD_USER.getPath(),
-                                ApiEndpoint.LOGIN.getPath(),
-                                ApiEndpoint.USER_BY_ID.getPath(),
-                                ApiEndpoint.PROJECT_BY_ID.getPath(),
-                                ApiEndpoint.GET_TASK.getPath()
-                        ).permitAll()
+                        .requestMatchers("/api/v1/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

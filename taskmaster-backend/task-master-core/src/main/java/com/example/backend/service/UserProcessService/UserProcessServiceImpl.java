@@ -135,17 +135,9 @@ public class UserProcessServiceImpl implements UserProcessService{
     }
 
     @Override
-    public ResponseEntity<ApiResponseModel<User>> loginUser(UserRequest userRequest, HttpServletRequest request) {
+    public ResponseEntity<ApiResponseModel<User>> loginUser(UserRequest userRequest) {
         try {
 
-            String tokenExist = jwtUtil.extractTokenFromCookie(request);
-
-            if (tokenExist != null) {
-                ResponseCookie responseCookie = jwtUtil.deleteCookie();
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
-                        .body(ApiResponseModel.error(StringCodes.MULTIPLE_SESSION.getPath(), StringCodes.ERROR.getPath()));
-            }
             User user = userRepository.findByEmail(userRequest.getEmail())
                     .orElse(null);
 
@@ -167,12 +159,8 @@ public class UserProcessServiceImpl implements UserProcessService{
 
             User queryResult = (User) query.getSingleResult();
 
-            String token = jwtUtil.generateToken(queryResult.getId());
 
-            ResponseCookie cookie = jwtUtil.createCookie(token);
-
-
-            return ResponseEntity.status(HttpStatus.OK).header(HttpHeaders.SET_COOKIE, cookie.toString())
+            return ResponseEntity.status(HttpStatus.OK)
                     .body(ApiResponseModel.success(StringCodes.USER_LOG_IN.getPath(), StringCodes.SUCCESS.getPath(), queryResult));
 
         } catch (Exception e) {

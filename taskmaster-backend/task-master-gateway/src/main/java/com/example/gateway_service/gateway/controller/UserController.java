@@ -5,6 +5,7 @@ import com.example.gateway_service.gateway.dto.ApiResponseModel;
 import com.example.gateway_service.gateway.dto.UserDTO;
 import com.example.gateway_service.gateway.request.UserRequest;
 import com.example.gateway_service.gateway.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

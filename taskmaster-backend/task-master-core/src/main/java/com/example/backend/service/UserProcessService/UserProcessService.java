@@ -15,7 +15,7 @@ public interface UserProcessService {
 
     ResponseEntity<ApiResponseModel<List<User>>> findUser (UserRequest userRequest);
 
-    ResponseEntity<ApiResponseModel<User>> loginUser (UserRequest userRequest, HttpServletRequest request);
+    ResponseEntity<ApiResponseModel<User>> loginUser (UserRequest userRequest);
 
     ResponseEntity<ApiResponseModel<User>> logoutUser ();
 

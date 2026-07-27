@@ -39,8 +39,8 @@ public class AuthController implements UserProcessService {
 
     @Override
     @PostMapping("/api/v1/login")
-    public ResponseEntity<ApiResponseModel<User>> loginUser(@RequestBody UserRequest userRequest, HttpServletRequest request) {
-        return userProcessService.loginUser(userRequest, request);
+    public ResponseEntity<ApiResponseModel<User>> loginUser(@RequestBody UserRequest userRequest) {
+        return userProcessService.loginUser(userRequest);
     }
 
     @Override

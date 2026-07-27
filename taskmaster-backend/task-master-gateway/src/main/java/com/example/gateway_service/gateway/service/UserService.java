@@ -6,6 +6,7 @@ import com.example.gateway_service.gateway.dto.ApiResponseModel;
 import com.example.gateway_service.gateway.dto.UserDTO;
 import com.example.gateway_service.gateway.request.UserRequest;
 import feign.FeignException;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -13,13 +14,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 @Slf4j
 @Service
 @AllArgsConstructor
-public class UserService implements UserClient {
+public class UserService implements UserClient{
 
     private final UserClient userClient;
     private final JwtUtil jwtUtil;
@@ -62,31 +63,43 @@ public class UserService implements UserClient {
         }
     }
 
+
     @Override
     public ResponseEntity<ApiResponseModel<UserDTO>> login(UserRequest userRequest) {
         log.info("REQUEST login -> email: {}", userRequest.getEmail());
+
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes != null) {
+            HttpServletRequest request = attributes.getRequest();
+
+            String existingToken = jwtUtil.extractTokenFromCookie(request);
+            if (existingToken != null) {
+                ResponseCookie deleteCookie = jwtUtil.deleteCookie();
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .header(HttpHeaders.SET_COOKIE, deleteCookie.toString())
+                        .body(ApiResponseModel.error("Multiple sessions detected", "ERROR"));
+            }
+        }
+
         try {
-            // 1. Core executes its code, sets the JWT cookie, and returns 200 OK
             ResponseEntity<ApiResponseModel<UserDTO>> response = userClient.login(userRequest);
             log.info("RESPONSE login -> httpStatus: {}", response.getStatusCode());
 
-            // 2. Gateway extracts Core's Set-Cookie header (containing the JWT token)
-            List<String> cookies = response.getHeaders().get(HttpHeaders.SET_COOKIE);
-
-            ResponseEntity.BodyBuilder builder = ResponseEntity.status(response.getStatusCode());
-
-            // 3. Gateway attaches Core's cookie to its own clean response
-            if (cookies != null && !cookies.isEmpty()) {
-                for (String cookie : cookies) {
-                    builder.header(HttpHeaders.SET_COOKIE, cookie);
-                }
+            ApiResponseModel<UserDTO> body = response.getBody();
+            if (body == null || body.getData() == null) {
+                return ResponseEntity.status(response.getStatusCode()).body(body);
             }
 
-            // 4. Returns body + Core's Set-Cookie header, leaving behind duplicate transport headers
-            return builder.body(response.getBody());
+            String token = jwtUtil.generateToken(body.getData().getId());
+            ResponseCookie cookie = jwtUtil.createCookie(token);
+
+            return ResponseEntity.status(response.getStatusCode())
+                    .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                    .body(body);
 
         } catch (FeignException e) {
-            log.error("RESPONSE login (error) -> status: {}, cause: {}", e.status(), e.getCause() != null ? e.getCause().getMessage() : e.getMessage(), e);
+            log.error("RESPONSE login (error) -> status: {}, cause: {}",
+                    e.status(), e.getCause() != null ? e.getCause().getMessage() : e.getMessage(), e);
 
             HttpStatus status = (e.status() > 0)
                     ? HttpStatus.valueOf(e.status())
