@@ -1,5 +1,6 @@
 server:
-  port: ${SERVER_PORT:8083}
+  # Render automatically injects PORT (10000). Falling back to 8083 for local dev.
+  port: ${PORT:8083}
   compression:
     enabled: true
     mime-types: "application/json"
@@ -67,5 +68,7 @@ feign:
   client:
     config:
       default:
-        connectTimeout: 5000
-        readTimeout: 150000
+        # 20s connection timeout gives free instances time to wake up during cold starts
+        connectTimeout: 20000
+        # 20s read timeout aligns within Render's gateway limits
+        readTimeout: 20000
