@@ -1,0 +1,129 @@
+services:
+  # ── API Gateway — the only publicly reachable service ──────────────────
+  - type: web
+    name: task-master-gateway
+    runtime: docker
+    dockerContext: ./taskmaster-backend/task-master-gateway
+    dockerfilePath: ./taskmaster-backend/task-master-gateway/Dockerfile
+    region: oregon
+    plan: starter
+    envVars:
+      - key: SERVER_PORT
+        value: 10000          # Render expects services to listen on $PORT (default 10000)
+      - key: DB_HOST
+        sync: false           # set manually — external Postgres host
+      - key: DB_PORT
+        value: "5432"
+      - key: DB_NAME
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: SECRET_KEY
+        sync: false
+      - key: EXPIRATION_TIME
+        sync: false
+      - key: SERVICES_BACKEND_URL
+        fromService:
+          type: pserv
+          name: task-master-core
+          property: hostport
+      - key: SERVICES_COMMENT_URL
+        fromService:
+          type: pserv
+          name: task-master-comment
+          property: hostport
+      - key: SERVICES_REPORT_URL
+        fromService:
+          type: pserv
+          name: task-master-reports
+          property: hostport
+      - key: REDIS_HOST
+        fromService:
+          type: keyvalue
+          name: task-master-redis
+          property: host
+      - key: REDIS_PORT
+        fromService:
+          type: keyvalue
+          name: task-master-redis
+          property: port
+      - key: REDIS_PASSWORD
+        fromService:
+          type: keyvalue
+          name: task-master-redis
+          property: password
+
+  # ── Core service (tasks, projects, users/auth) — internal only ─────────
+  - type: pserv
+    name: task-master-core
+    runtime: docker
+    dockerContext: ./taskmaster-backend/task-master-core
+    dockerfilePath: ./taskmaster-backend/task-master-core/Dockerfile
+    region: oregon
+    plan: starter
+    envVars:
+      - key: SERVER_PORT
+        value: 10000
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "5432"
+      - key: DB_NAME
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+
+  # ── Comment service — internal only ─────────────────────────────────────
+  - type: pserv
+    name: task-master-comment
+    runtime: docker
+    dockerContext: ./taskmaster-backend/task-master-comment
+    dockerfilePath: ./taskmaster-backend/task-master-comment/Dockerfile
+    region: oregon
+    plan: starter
+    envVars:
+      - key: SERVER_PORT
+        value: 10000
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "5432"
+      - key: DB_NAME
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+
+  # ── Reports service — internal only ─────────────────────────────────────
+  - type: pserv
+    name: task-master-reports
+    runtime: docker
+    dockerContext: ./taskmaster-backend/task-master-reports
+    dockerfilePath: ./taskmaster-backend/task-master-reports/Dockerfile
+    region: oregon
+    plan: starter
+    envVars:
+      - key: SERVER_PORT
+        value: 10000
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "5432"
+      - key: DB_NAME
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+
+  # ── Redis — managed Key Value instance ──────────────────────────────────
+  - type: keyvalue
+    name: task-master-redis
+    plan: starter
+    region: oregon
+    ipAllowList: []          # empty = only accessible from services in this account
