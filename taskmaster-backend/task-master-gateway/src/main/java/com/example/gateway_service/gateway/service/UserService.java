@@ -41,24 +41,26 @@ public class UserService implements UserClient {
     public ResponseEntity<ApiResponseModel<UserDTO>> login(UserRequest userRequest) {
         log.info("REQUEST login -> email: {}", userRequest.getEmail());
         try {
+            // 1. Core executes its code, sets the JWT cookie, and returns 200 OK
             ResponseEntity<ApiResponseModel<UserDTO>> response = userClient.login(userRequest);
             log.info("RESPONSE login -> httpStatus: {}", response.getStatusCode());
 
-            // Extract Set-Cookie headers specifically, discarding internal transport headers (Content-Length, Transfer-Encoding)
+            // 2. Gateway extracts Core's Set-Cookie header (containing the JWT token)
             List<String> cookies = response.getHeaders().get(HttpHeaders.SET_COOKIE);
 
             ResponseEntity.BodyBuilder builder = ResponseEntity.status(response.getStatusCode());
 
+            // 3. Gateway attaches Core's cookie to its own clean response
             if (cookies != null && !cookies.isEmpty()) {
                 for (String cookie : cookies) {
                     builder.header(HttpHeaders.SET_COOKIE, cookie);
                 }
             }
 
+            // 4. Returns body + Core's Set-Cookie header, leaving behind duplicate transport headers
             return builder.body(response.getBody());
 
         } catch (FeignException e) {
-
             log.error("RESPONSE login (error) -> status: {}, cause: {}", e.status(), e.getCause() != null ? e.getCause().getMessage() : e.getMessage(), e);
 
             HttpStatus status = (e.status() > 0)
