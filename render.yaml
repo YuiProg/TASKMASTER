@@ -37,11 +37,11 @@ services:
       - key: REDIS_PASSWORD
         sync: false
       - key: SERVICES_BACKEND_URL
-        sync: false           # manual — set to https://task-master-core.onrender.com/api/v1 (public URL, since Free tier can't use private hostport)
+        value: https://task-master-core.onrender.com/api/v1
       - key: SERVICES_COMMENT_URL
-        sync: false           # manual — set to https://task-master-comment.onrender.com/api/v1 (public URL, since Free tier can't use private hostport)
+        value: https://task-master-comment.onrender.com/api/v1
       - key: SERVICES_REPORT_URL
-        sync: false           # manual — set to https://task-master-reports.onrender.com/api/v1 (public URL, since Free tier can't use private hostport)
+        value: https://task-master-reports.onrender.com/api/v1
 
   # ── Core service (tasks, projects, users/auth) ──────────────────────────
   - type: web
@@ -81,11 +81,11 @@ services:
       - key: REDIS_PASSWORD
         sync: false
       - key: SERVICES_BACKEND_URL
-        sync: false           # manual — set to https://task-master-core.onrender.com/api/v1 (public URL, since Free tier can't use private hostport)
+        value: https://task-master-core.onrender.com/api/v1
       - key: SERVICES_COMMENT_URL
-        sync: false           # manual — set to https://task-master-comment.onrender.com/api/v1 (public URL, since Free tier can't use private hostport)
+        value: https://task-master-comment.onrender.com/api/v1
       - key: SERVICES_REPORT_URL
-        sync: false           # manual — set to https://task-master-reports.onrender.com/api/v1 (public URL, since Free tier can't use private hostport)
+        value: https://task-master-reports.onrender.com/api/v1
 
   # ── Comment service ──────────────────────────────────────────────────────
   - type: web
@@ -125,11 +125,11 @@ services:
       - key: REDIS_PASSWORD
         sync: false
       - key: SERVICES_BACKEND_URL
-        sync: false           # manual — set to https://task-master-core.onrender.com/api/v1 (public URL, since Free tier can't use private hostport)
+        value: https://task-master-core.onrender.com/api/v1
       - key: SERVICES_COMMENT_URL
-        sync: false           # manual — set to https://task-master-comment.onrender.com/api/v1 (public URL, since Free tier can't use private hostport)
+        value: https://task-master-comment.onrender.com/api/v1
       - key: SERVICES_REPORT_URL
-        sync: false           # manual — set to https://task-master-reports.onrender.com/api/v1 (public URL, since Free tier can't use private hostport)
+        value: https://task-master-reports.onrender.com/api/v1
 
   # ── Reports service ──────────────────────────────────────────────────────
   - type: web
@@ -169,11 +169,11 @@ services:
       - key: REDIS_PASSWORD
         sync: false
       - key: SERVICES_BACKEND_URL
-        sync: false           # manual — set to https://task-master-core.onrender.com/api/v1 (public URL, since Free tier can't use private hostport)
+        value: https://task-master-core.onrender.com/api/v1
       - key: SERVICES_COMMENT_URL
-        sync: false           # manual — set to https://task-master-comment.onrender.com/api/v1 (public URL, since Free tier can't use private hostport)
+        value: https://task-master-comment.onrender.com/api/v1
       - key: SERVICES_REPORT_URL
-        sync: false           # manual — set to https://task-master-reports.onrender.com/api/v1 (public URL, since Free tier can't use private hostport)
+        value: https://task-master-reports.onrender.com/api/v1
 
   # ── Redis — managed Key Value instance ──────────────────────────────────
   - type: keyvalue
