@@ -6,7 +6,7 @@ services:
     dockerContext: ./taskmaster-backend/task-master-gateway
     dockerfilePath: ./taskmaster-backend/task-master-gateway/Dockerfile
     region: oregon
-    plan: starter
+    plan: free
     envVars:
       - key: SERVER_PORT
         value: 10000          # Render expects services to listen on $PORT (default 10000)
@@ -26,17 +26,17 @@ services:
         sync: false
       - key: SERVICES_BACKEND_URL
         fromService:
-          type: pserv
+          type: web
           name: task-master-core
           property: hostport
       - key: SERVICES_COMMENT_URL
         fromService:
-          type: pserv
+          type: web
           name: task-master-comment
           property: hostport
       - key: SERVICES_REPORT_URL
         fromService:
-          type: pserv
+          type: web
           name: task-master-reports
           property: hostport
       - key: REDIS_HOST
@@ -53,13 +53,13 @@ services:
         sync: false           # set manually — Render Key Value doesn't expose password via fromService (check the Redis service's Connect tab for it)
 
   # ── Core service (tasks, projects, users/auth) — internal only ─────────
-  - type: pserv
+  - type: web
     name: task-master-core
     runtime: docker
     dockerContext: ./taskmaster-backend/task-master-core
     dockerfilePath: ./taskmaster-backend/task-master-core/Dockerfile
     region: oregon
-    plan: starter
+    plan: free
     envVars:
       - key: SERVER_PORT
         value: 10000
@@ -75,13 +75,13 @@ services:
         sync: false
 
   # ── Comment service — internal only ─────────────────────────────────────
-  - type: pserv
+  - type: web
     name: task-master-comment
     runtime: docker
     dockerContext: ./taskmaster-backend/task-master-comment
     dockerfilePath: ./taskmaster-backend/task-master-comment/Dockerfile
     region: oregon
-    plan: starter
+    plan: free
     envVars:
       - key: SERVER_PORT
         value: 10000
@@ -97,13 +97,13 @@ services:
         sync: false
 
   # ── Reports service — internal only ─────────────────────────────────────
-  - type: pserv
+  - type: web
     name: task-master-reports
     runtime: docker
     dockerContext: ./taskmaster-backend/task-master-reports
     dockerfilePath: ./taskmaster-backend/task-master-reports/Dockerfile
     region: oregon
-    plan: starter
+    plan: free
     envVars:
       - key: SERVER_PORT
         value: 10000
@@ -121,6 +121,6 @@ services:
   # ── Redis — managed Key Value instance ──────────────────────────────────
   - type: keyvalue
     name: task-master-redis
-    plan: starter
+    plan: free
     region: oregon
     ipAllowList: []          # empty = only accessible from services in this account
