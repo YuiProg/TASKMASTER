@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 //@FeignClient(name = "backend-user-client", url = "http://localhost:8080/api/v1")
-@FeignClient(name = "backend-user-client", url = "http://backend-service:8080/api/v1")
+@FeignClient(name = "backend-user-client", url = "${services.backend.url}")
 public interface UserClient {
     @GetMapping("/getUserById/{id}")
     ApiResponseModel<UserDTO> getUserById (@PathVariable String id);
