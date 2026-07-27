@@ -3,10 +3,14 @@ package com.example.gateway_service.gateway.service;
 import com.example.gateway_service.gateway.client.TaskClient;
 import com.example.gateway_service.gateway.dto.ApiResponseModel;
 import com.example.gateway_service.gateway.dto.TaskDTO;
+import feign.FeignException;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class TaskService implements TaskClient {
@@ -15,6 +19,28 @@ public class TaskService implements TaskClient {
 
     @Override
     public ResponseEntity<ApiResponseModel<TaskDTO>> getTaskById(String id) {
-        return taskClient.getTaskById(id);
+        log.info("REQUEST getTaskById -> id: {}", id);
+        try {
+            ResponseEntity<ApiResponseModel<TaskDTO>> response = taskClient.getTaskById(id);
+            log.info("RESPONSE getTaskById -> httpStatus: {}", response.getStatusCode());
+
+            // Rebuild the response to strip internal Feign headers (Content-Length / Transfer-Encoding)
+            return ResponseEntity
+                    .status(response.getStatusCode())
+                    .body(response.getBody());
+
+        } catch (FeignException e) {
+            log.error("RESPONSE getTaskById (error) -> status: {}, cause: {}",
+                    e.status(), e.getCause() != null ? e.getCause().getMessage() : e.getMessage(), e);
+
+            HttpStatus status = (e.status() > 0)
+                    ? HttpStatus.valueOf(e.status())
+                    : HttpStatus.SERVICE_UNAVAILABLE;
+
+            return ResponseEntity.status(status)
+                    .body(ApiResponseModel.error(
+                            e.status() > 0 ? e.contentUTF8() : "Task service unavailable, please try again",
+                            "ERROR"));
+        }
     }
 }
