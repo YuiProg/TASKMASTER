@@ -43,10 +43,10 @@ spring:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
       password: ${REDIS_PASSWORD}
-      # Increased from 2000ms to 10000ms to prevent Lettuce connection timeouts on cloud Redis
+      # Increased timeout to prevent Lettuce connection timeouts on cloud Redis
       timeout: 10000ms
       ssl:
-        enabled: ${REDIS_SSL_ENABLED:false}
+        enabled: ${REDIS_SSL_ENABLED:true}
       lettuce:
         pool:
           max-active: 8
