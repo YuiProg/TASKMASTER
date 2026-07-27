@@ -43,7 +43,8 @@ public class UserService implements UserClient {
             log.info("RESPONSE login -> httpStatus: {}", response.getStatusCode());
             return response;
         } catch (FeignException e) {
-            log.warn("RESPONSE login (error) -> status: {}, body: {}", e.status(), e.contentUTF8());
+
+            log.error("RESPONSE login (error) -> status: {}, cause: {}", e.status(), e.getCause() != null ? e.getCause().getMessage() : e.getMessage(), e);
 
             HttpStatus status = (e.status() > 0)
                     ? HttpStatus.valueOf(e.status())
