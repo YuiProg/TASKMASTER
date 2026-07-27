@@ -1,5 +1,8 @@
 server:
-  port: ${SERVER_PORT:8083} # Defaults to 8080 if not set
+  port: ${SERVER_PORT:8083}
+  compression:
+    enabled: true
+    mime-types: "application/json"
 
 spring:
   application:
@@ -51,3 +54,11 @@ app:
   jwt:
     secret: ${SECRET_KEY}
     expiration: ${EXPIRATION_TIME}
+
+services:
+  backend:
+    url: ${SERVICES_BACKEND_URL:http://localhost:8080/api/v1}
+  comment:
+    url: ${SERVICES_COMMENT_URL:http://localhost:8081/api/v1}
+  report:
+    url: ${SERVICES_REPORT_URL:http://localhost:8082/api/v1}

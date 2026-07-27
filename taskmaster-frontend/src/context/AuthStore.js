@@ -11,7 +11,7 @@ export const useAuthStore = create((set) => ({
   login: async (email, password) => {
     set({ isLoading: true, error: null });
     try {
-      const res = await api.post('/login', { email, password });
+      const res = await gateWayApi.post('/login', { email, password });
 
       if (res.data.status === 'SUCCESS') {
         set({

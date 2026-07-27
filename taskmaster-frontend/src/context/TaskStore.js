@@ -3,6 +3,7 @@ import { create } from "zustand";
 import api from "../lib/axios"; // TODO: confirm this matches projectStore's import
 import { useReportStore } from "./reportStore";
 import { useAuthStore } from "./authStore";
+import gateWayApi from "../lib/gateway";
 
 export const useTaskStore = create((set, get) => ({
   tasks: [],
@@ -37,7 +38,7 @@ export const useTaskStore = create((set, get) => ({
 
   fetchTaskById: async (id) => {
     try {
-      const response = await api.get(`getTaskById/${id}`);
+      const response = await gateWayApi.get(`/getTaskById/${id}`);
       return response.data;
     } catch (error) {
       console.log(error.message);
