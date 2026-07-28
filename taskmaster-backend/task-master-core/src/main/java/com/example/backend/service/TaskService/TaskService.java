@@ -63,8 +63,6 @@ public class TaskService implements TaskServiceInterface {
                     .body(ApiResponseModel.error("USER NOT FOUND", "ERROR"));
         }
 
-        task.setAssignee(assignee);
-
         for (User users : members) {
             boolean isMember = project.getMembers().stream()
                     .anyMatch(member -> Objects.equals(member.getId(), assignee.getId()));
@@ -75,7 +73,7 @@ public class TaskService implements TaskServiceInterface {
             }
 
         }
-
+        task.setAssignee(assignee);
         task.setProject(project);
         Task newTask = taskRepository.save(task);
 
