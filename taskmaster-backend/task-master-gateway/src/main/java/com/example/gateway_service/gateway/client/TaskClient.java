@@ -25,4 +25,7 @@ public interface TaskClient {
 
     @GetMapping("/getAuthenticatedUserTask")
     ResponseEntity<ApiResponseModel<List<TaskDTO>>> getAuthenticatedUserTask ();
+
+    @GetMapping("/getOpenTasks")
+    ResponseEntity<ApiResponseModel<List<TaskDTO>>> getOpenTasks ();
 }

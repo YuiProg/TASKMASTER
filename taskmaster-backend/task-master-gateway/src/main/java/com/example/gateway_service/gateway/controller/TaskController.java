@@ -42,4 +42,10 @@ public class TaskController implements TaskClient {
     public ResponseEntity<ApiResponseModel<List<TaskDTO>>> getAuthenticatedUserTask() {
         return taskService.getAuthenticatedUserTask();
     }
+
+    @Override
+    @GetMapping("/getOpenTasks")
+    public ResponseEntity<ApiResponseModel<List<TaskDTO>>> getOpenTasks() {
+        return taskService.getOpenTasks();
+    }
 }
