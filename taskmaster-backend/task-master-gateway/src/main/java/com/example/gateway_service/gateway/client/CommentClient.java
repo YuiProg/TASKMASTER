@@ -20,5 +20,5 @@ public interface CommentClient {
     ResponseEntity<ApiResponseModel<List<CommentDTO>>> getComments (@PathVariable String id);
 
     @GetMapping(value = "/newComment")
-    ApiResponseModel<CommentDTO> postComment (@RequestBody CommentRequest commentRequest);
+    ResponseEntity<ApiResponseModel<CommentDTO>> postComment (@RequestBody CommentRequest commentRequest);
 }
