@@ -28,4 +28,10 @@ public class TaskController implements TaskClient {
     public ResponseEntity<ApiResponseModel<TaskDTO>> createTask(TaskRequest taskRequest) {
         return taskService.createTask(taskRequest);
     }
+
+    @Override
+    @PutMapping("/updateTaskDetail/{id}")
+    public ResponseEntity<ApiResponseModel<TaskDTO>> updateTaskDetail(@PathVariable String id,@RequestBody TaskRequest taskRequest) {
+        return null;
+    }
 }
