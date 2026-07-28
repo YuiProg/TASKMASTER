@@ -56,4 +56,24 @@ public class ProjectService implements ProjectClient {
                     .body(ApiResponseModel.error(e.status() > 0 ? e.contentUTF8() : "PROJECT SERVICE UNAVAILABLE", "ERROR"));
         }
     }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<ProjectDTO>> getProjectByName(String name) {
+        try {
+            log.info("getProjectByName REQUEST name: {}", name);
+            ResponseEntity<ApiResponseModel<ProjectDTO>> response = projectClient.getProjectByName(name);
+            log.info("getProjectByName RESPONSE status: {} data: {}", response.getStatusCode(), response.getBody());
+
+            ResponseEntity.BodyBuilder builder = ResponseEntity.status(response.getStatusCode());
+
+            return builder.body(response.getBody());
+
+        } catch (FeignException e) {
+            log.info("getProjectByName FAILED status: {} message: {}", e.status(), e.contentUTF8());
+            HttpStatus status = e.status() > 0 ? HttpStatus.valueOf(e.status()) : HttpStatus.SERVICE_UNAVAILABLE;
+
+            return ResponseEntity.status(status)
+                    .body(ApiResponseModel.error(e.status() > 0 ? e.contentUTF8() : "PROJECT SERVICE UNAVAILABLE", "ERROR"));
+        }
+    }
 }

@@ -8,6 +8,7 @@ import com.example.gateway_service.gateway.request.ProjectRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -22,4 +23,7 @@ public interface ProjectClient {
 
     @PostMapping("/addProject")
     ResponseEntity<ApiResponseModel<ProjectDTO>> createProject (@RequestBody ProjectRequest projectRequest);
+
+    @GetMapping("/getProjectByName/{name}")
+    ResponseEntity<ApiResponseModel<ProjectDTO>> getProjectByName (@PathVariable String name);
 }
