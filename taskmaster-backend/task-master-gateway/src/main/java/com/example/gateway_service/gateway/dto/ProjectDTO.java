@@ -6,6 +6,7 @@ import java.util.List;
 
 @Data
 public class ProjectDTO {
+    private String id;
     private String projectName;
     private UserDTO createdBy;
     private String createdAt;
