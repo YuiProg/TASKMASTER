@@ -32,6 +32,6 @@ public class TaskController implements TaskClient {
     @Override
     @PutMapping("/updateTaskDetail/{id}")
     public ResponseEntity<ApiResponseModel<TaskDTO>> updateTaskDetail(@PathVariable String id,@RequestBody TaskRequest taskRequest) {
-        return null;
+        return taskService.updateTaskDetail(id, taskRequest);
     }
 }
