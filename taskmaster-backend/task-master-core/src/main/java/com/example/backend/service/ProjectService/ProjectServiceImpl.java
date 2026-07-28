@@ -34,7 +34,7 @@ public class ProjectServiceImpl implements ProjectServiceInterface{
     @Override
     @Transactional
     public ResponseEntity<ApiResponseModel<Project>> createProject(ProjectRequest projectRequest) {
-        User user = authenticatedUser.getAuthenticatedUser();
+        User user = userRepository.findById(projectRequest.getCreatedBy()).orElse(null);
 
         if (user == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponseModel.error("NOT LOGGED IN", "ERROR"));
@@ -173,19 +173,10 @@ public class ProjectServiceImpl implements ProjectServiceInterface{
     @Override
     public ResponseEntity<ApiResponseModel<Project>> getProjectByName(String name) {
         Project project = projectCacheService.getProjectInCache(name);
-        Project projectFix = new Project();
-
-        projectFix.setProjectName(project.getProjectName());
-        projectFix.setMembers(project.getMembers());
-        projectFix.setStatus(project.getStatus());
-        projectFix.setId(project.getId());
-        projectFix.setCreatedAt(project.getCreatedAt());
-        projectFix.setUpdatedBy(project.getUpdatedBy());
-        projectFix.setDescription(project.getDescription());
 
         if (project == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponseModel.error("PROJECT NOT FOUND", "ERROR"));
         }
-        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("PROJECT FOUND", "SUCCESS", projectFix));
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("PROJECT FOUND", "SUCCESS", project));
     }
 }

@@ -13,6 +13,7 @@ public class ProjectRequest {
     public String id;
     public String projectName;
     public Long createdAt;
+    public String createdBy;
     public String updatedBy;
     public String status;
     public String description;

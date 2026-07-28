@@ -1,6 +1,7 @@
 package com.example.gateway_service.gateway.service;
 
 import com.example.gateway_service.gateway.client.ProjectClient;
+import com.example.gateway_service.gateway.config.JwtUtil;
 import com.example.gateway_service.gateway.dto.ApiResponseModel;
 import com.example.gateway_service.gateway.dto.ProjectDTO;
 import com.example.gateway_service.gateway.request.ProjectRequest;
@@ -10,6 +11,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.List;
 
@@ -19,6 +22,7 @@ import java.util.List;
 public class ProjectService implements ProjectClient {
 
     private final ProjectClient projectClient;
+    private final JwtUtil jwtUtil;
 
     @Override
     public ResponseEntity<ApiResponseModel<List<ProjectDTO>>> getProjects() {
@@ -41,6 +45,19 @@ public class ProjectService implements ProjectClient {
     @Override
     public ResponseEntity<ApiResponseModel<ProjectDTO>> createProject(ProjectRequest projectRequest) {
         try {
+
+            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+
+            if (attributes == null) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(ApiResponseModel.error("USER NOT FOUND", "ERROR"));
+            }
+
+            String token = jwtUtil.extractTokenFromCookie(attributes.getRequest());
+            String id = jwtUtil.extractSubject(token);
+
+            projectRequest.setCreatedBy(id);
+
             log.info("createProject REQUEST data: {}", projectRequest.getProjectName());
             ResponseEntity<ApiResponseModel<ProjectDTO>> response = projectClient.createProject(projectRequest);
             log.info("createProject RESPONSE data: {}", response.getBody());

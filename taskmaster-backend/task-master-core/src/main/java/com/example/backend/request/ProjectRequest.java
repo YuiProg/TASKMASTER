@@ -15,6 +15,7 @@ public class ProjectRequest {
     public String projectName;
     public Long createdAt;
     public String updatedBy;
+    public String createdBy;
     public String status;
     public String description;
     public List<String> emails;
