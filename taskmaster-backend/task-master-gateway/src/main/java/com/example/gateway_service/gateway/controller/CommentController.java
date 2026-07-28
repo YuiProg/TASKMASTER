@@ -26,8 +26,8 @@ public class CommentController implements CommentClient{
 
     @Override
     @PostMapping("/newComment")
-    public ApiResponseModel<CommentDTO> postComment(CommentRequest commentRequest) {
-        return null;
+    public ResponseEntity<ApiResponseModel<CommentDTO>> postComment(@RequestBody CommentRequest commentRequest) {
+        return commentService.postComment(commentRequest);
     }
 }
 

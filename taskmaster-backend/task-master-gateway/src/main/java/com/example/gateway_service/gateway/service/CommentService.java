@@ -38,7 +38,19 @@ public class CommentService implements CommentClient {
     }
 
     @Override
-    public ApiResponseModel<CommentDTO> postComment(CommentRequest commentRequest) {
-        return null;
+    public ResponseEntity<ApiResponseModel<CommentDTO>> postComment(CommentRequest commentRequest) {
+        try {
+            log.info("postComment REQUEST");
+            ResponseEntity<ApiResponseModel<CommentDTO>> response = commentClient.postComment(commentRequest);
+            log.info("postComment RESPONSE status: {} data: {}", response.getStatusCode(), response.getBody());
+
+            ResponseEntity.BodyBuilder builder = ResponseEntity.status(response.getStatusCode());
+
+            return builder.body(response.getBody());
+        } catch (FeignException e) {
+            log.error("RESPONSE getComments (error) -> status: {}, cause: {}", e.status(), e.getCause() != null ? e.getCause().getMessage() : e.getMessage(), e);
+
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(ApiResponseModel.error("SERVICE UNAVAILABLE", "ERROR"));
+        }
     }
 }
