@@ -28,4 +28,7 @@ public interface TaskClient {
 
     @GetMapping("/getOpenTasks")
     ResponseEntity<ApiResponseModel<List<TaskDTO>>> getOpenTasks ();
+
+    @GetMapping("/getProjectTask/{id}")
+    ResponseEntity<ApiResponseModel<List<TaskDTO>>> getProjectTask (@PathVariable String id);
 }

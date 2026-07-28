@@ -48,4 +48,10 @@ public class TaskController implements TaskClient {
     public ResponseEntity<ApiResponseModel<List<TaskDTO>>> getOpenTasks() {
         return taskService.getOpenTasks();
     }
+
+    @Override
+    @GetMapping("/getProjectTask/{id}")
+    public ResponseEntity<ApiResponseModel<List<TaskDTO>>> getProjectTask(@PathVariable String id) {
+        return taskService.getProjectTask(id);
+    }
 }
