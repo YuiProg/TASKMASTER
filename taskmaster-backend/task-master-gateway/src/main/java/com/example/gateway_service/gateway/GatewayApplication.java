@@ -1,9 +1,6 @@
 package com.example.gateway_service.gateway;
 
-import com.example.gateway_service.gateway.client.CommentClient;
-import com.example.gateway_service.gateway.client.ProjectClient;
-import com.example.gateway_service.gateway.client.TaskClient;
-import com.example.gateway_service.gateway.client.UserClient;
+import com.example.gateway_service.gateway.client.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.openfeign.EnableFeignClients;
@@ -13,7 +10,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 		UserClient.class,
 		CommentClient.class,
 		TaskClient.class,
-		ProjectClient.class
+		ProjectClient.class,
+		ReportClient.class
 })
 public class GatewayApplication {
 
