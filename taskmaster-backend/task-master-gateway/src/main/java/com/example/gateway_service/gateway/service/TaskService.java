@@ -3,6 +3,7 @@ package com.example.gateway_service.gateway.service;
 import com.example.gateway_service.gateway.client.TaskClient;
 import com.example.gateway_service.gateway.dto.ApiResponseModel;
 import com.example.gateway_service.gateway.dto.TaskDTO;
+import com.example.gateway_service.gateway.request.TaskRequest;
 import feign.FeignException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,27 @@ public class TaskService implements TaskClient {
             HttpStatus status = (e.status() > 0)
                     ? HttpStatus.valueOf(e.status())
                     : HttpStatus.SERVICE_UNAVAILABLE;
+
+            return ResponseEntity.status(status)
+                    .body(ApiResponseModel.error(
+                            e.status() > 0 ? e.contentUTF8() : "Task service unavailable, please try again",
+                            "ERROR"));
+        }
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<TaskDTO>> createTask(TaskRequest taskRequest) {
+        log.info("createTask REQUEST data: {}", taskRequest);
+        try {
+            ResponseEntity<ApiResponseModel<TaskDTO>> response = taskClient.createTask(taskRequest);
+            log.info("createTask RESPONSE status: {}, data: {}", response.getStatusCode(), response.getBody());
+
+            return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
+
+        } catch (FeignException e) {
+            log.error("RESPONSE getTaskById (error) -> status: {}, cause: {}",
+                    e.status(), e.getCause() != null ? e.getCause().getMessage() : e.getMessage(), e);
+            HttpStatus status = e.status() > 0 ? HttpStatus.valueOf(e.status()) : HttpStatus.SERVICE_UNAVAILABLE;
 
             return ResponseEntity.status(status)
                     .body(ApiResponseModel.error(

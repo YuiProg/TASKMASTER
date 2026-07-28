@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
-@FeignClient(name = "backend-comment-service", url = "http://localhost:8081/api/v1/comments", configuration = FeignCookieConfig.class)
-//@FeignClient(name = "backend-comment-service", url = "${services.comment.url}", configuration = FeignCookieConfig.class)
+//@FeignClient(name = "backend-comment-service", url = "http://localhost:8081/api/v1/comments", configuration = FeignCookieConfig.class)
+@FeignClient(name = "backend-comment-service", url = "${services.comment.url}", configuration = FeignCookieConfig.class)
 public interface CommentClient {
 
     @GetMapping(value = "/getTaskComments/{id}", produces = "application/json")
