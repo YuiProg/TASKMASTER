@@ -60,9 +60,10 @@ public class UserService implements UserClient{
             HttpServletRequest request = attributes.getRequest();
 
             String token = jwtUtil.extractTokenFromCookie(request);
+            String id = jwtUtil.extractSubject(token);
 
-            log.info("REQUEST getAuthUser ID: {}", token);
-            ResponseEntity<ApiResponseModel<UserDTO>> response = userClient.getUserById(token);
+            log.info("REQUEST getAuthUser ID: {}", id);
+            ResponseEntity<ApiResponseModel<UserDTO>> response = userClient.getUserById(id);
             log.info("RESPONSE getAuthUser -> status: {}, data: {}", response.getStatusCode(), response.getBody());
             ResponseEntity.BodyBuilder builder = ResponseEntity.status(response.getStatusCode());
 
