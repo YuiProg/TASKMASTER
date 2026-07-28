@@ -49,8 +49,20 @@ public class UserService implements UserClient{
     @Override
     public ResponseEntity<ApiResponseModel<UserDTO>> getAuthUser() {
         try {
-            log.info("REQUEST getAuthUser");
-            ResponseEntity<ApiResponseModel<UserDTO>> response = userClient.getAuthUser();
+
+            ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+
+            if (attributes == null) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .body(ApiResponseModel.error("CURRENTLY LOGGED OUT", "ERROR"));
+            }
+
+            HttpServletRequest request = attributes.getRequest();
+
+            String token = jwtUtil.extractTokenFromCookie(request);
+
+            log.info("REQUEST getAuthUser ID: {}", token);
+            ResponseEntity<ApiResponseModel<UserDTO>> response = userClient.getUserById(token);
             log.info("RESPONSE getAuthUser -> status: {}, data: {}", response.getStatusCode(), response.getBody());
             ResponseEntity.BodyBuilder builder = ResponseEntity.status(response.getStatusCode());
 
