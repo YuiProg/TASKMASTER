@@ -8,6 +8,8 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 //@FeignClient(name = "backend-task-client", url = "http://localhost:8080/api/v1", configuration = FeignCookieConfig.class)
 @FeignClient(name = "backend-task-client", url = "${services.backend.url}", configuration = FeignCookieConfig.class)
 public interface TaskClient {
@@ -20,4 +22,7 @@ public interface TaskClient {
 
     @PutMapping("/updateTaskDetail/{id}")
     ResponseEntity<ApiResponseModel<TaskDTO>> updateTaskDetail (@PathVariable String id, @RequestBody TaskRequest taskRequest);
+
+    @GetMapping("/getAuthenticatedUserTask")
+    ResponseEntity<ApiResponseModel<List<TaskDTO>>> getAuthenticatedUserTask ();
 }

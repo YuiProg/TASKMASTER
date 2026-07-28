@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import api from '../lib/axios';
+import gateWayApi from '../lib/gateway';
 
 export const useProjectStore = create((set, get) => ({
   projects: [],
@@ -13,7 +14,7 @@ export const useProjectStore = create((set, get) => ({
   fetchProjects: async () => {
     set({ isLoading: true, error: null });
     try {
-      const res = await api.get('/getProjects');
+      const res = await gateWayApi.get('/getProjects');
       const list = Array.isArray(res.data?.data) ? res.data.data : [];
       set({ projects: list, isLoading: false });
     } catch (err) {
@@ -30,7 +31,7 @@ export const useProjectStore = create((set, get) => ({
   createProject: async (projectName, description, emails = []) => {
     set({ isCreating: true, error: null });
     try {
-      const res = await api.post('/addProject', { projectName, description, emails });
+      const res = await gateWayApi.post('/addProject', { projectName, description, emails });
 
       if (String(res.data.status).toUpperCase() === 'SUCCESS') {
         set({

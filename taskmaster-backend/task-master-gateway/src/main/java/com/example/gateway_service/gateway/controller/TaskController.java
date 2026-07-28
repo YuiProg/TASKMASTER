@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1")
 @AllArgsConstructor
@@ -33,5 +35,11 @@ public class TaskController implements TaskClient {
     @PutMapping("/updateTaskDetail/{id}")
     public ResponseEntity<ApiResponseModel<TaskDTO>> updateTaskDetail(@PathVariable String id,@RequestBody TaskRequest taskRequest) {
         return taskService.updateTaskDetail(id, taskRequest);
+    }
+
+    @Override
+    @GetMapping("/getAuthenticatedUserTask")
+    public ResponseEntity<ApiResponseModel<List<TaskDTO>>> getAuthenticatedUserTask() {
+        return taskService.getAuthenticatedUserTask();
     }
 }

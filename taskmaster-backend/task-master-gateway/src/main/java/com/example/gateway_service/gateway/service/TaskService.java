@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Slf4j
 @Service
 @AllArgsConstructor
@@ -74,6 +76,29 @@ public class TaskService implements TaskClient {
 
             return ResponseEntity.status(response.getStatusCode())
                     .body(response.getBody());
+        } catch (FeignException e) {
+            log.error("RESPONSE getTaskById (error) -> status: {}, cause: {}",
+                    e.status(), e.getCause() != null ? e.getCause().getMessage() : e.getMessage(), e);
+            HttpStatus status = e.status() > 0 ? HttpStatus.valueOf(e.status()) : HttpStatus.SERVICE_UNAVAILABLE;
+
+            return ResponseEntity.status(status)
+                    .body(ApiResponseModel.error(
+                            e.status() > 0 ? e.contentUTF8() : "Task service unavailable, please try again",
+                            "ERROR"));
+        }
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<List<TaskDTO>>> getAuthenticatedUserTask() {
+        try {
+            log.info("getAuthenticatedUserTask REQUEST");
+            ResponseEntity<ApiResponseModel<List<TaskDTO>>> response = taskClient.getAuthenticatedUserTask();
+            log.info("getAuthenticatedUserTask RESPONSE status: {} data: {}", response.getStatusCode(), response.getBody());
+
+            ResponseEntity.BodyBuilder builder = ResponseEntity.status(response.getStatusCode());
+
+            return builder.body(response.getBody());
+
         } catch (FeignException e) {
             log.error("RESPONSE getTaskById (error) -> status: {}, cause: {}",
                     e.status(), e.getCause() != null ? e.getCause().getMessage() : e.getMessage(), e);
