@@ -11,8 +11,8 @@ import "./ViewTask.css";
 import TaskComments from "./TaskComment";
 import TaskReports from "./TaskReport";
 import { useCommentStore } from "../../context/commentStore";
-import Button from "../../components/TRCOMPONENTS/TRButton/Button";
-import { Pencil } from "lucide-react";
+// import Button from "../../components/TRCOMPONENTS/TRButton/Button";
+// import { Pencil } from "lucide-react";
 
 // Display labels shown in the dropdown. Backend enum is assumed to be
 // underscore-separated (e.g. IN_PROGRESS, QA_CHECK) — adjust the
@@ -45,8 +45,14 @@ function statusColorGroup(status) {
 
 function formatDate(rawDate) {
   if (!rawDate) return "N/A";
-  const parsed = new Date(rawDate);
-  if (Number.isNaN(parsed.getTime())) return rawDate;
+  
+  // Convert numeric strings or numbers into valid timestamps
+  const timestamp = Number(rawDate);
+  const dateInput = !Number.isNaN(timestamp) ? timestamp : rawDate;
+
+  const parsed = new Date(dateInput);
+  if (Number.isNaN(parsed.getTime())) return String(rawDate);
+
   return parsed.toLocaleDateString(undefined, {
     month: "short",
     day: "numeric",
@@ -235,11 +241,11 @@ class ViewTask extends React.Component {
             )}
           </PanelContainer>
         </InputRow>      
-        <PanelContainer title="Actions">
+        {/* <PanelContainer title="Actions">
             <InputRow>
                 <Button onClick={() => console.log(this.state.task)} error text={<span><Pencil size={10}/> EDIT TASK</span>}/>
             </InputRow>
-        </PanelContainer>  
+        </PanelContainer>   */}
       </PanelContainer>
 
         <PanelContainer title="Activity Log">

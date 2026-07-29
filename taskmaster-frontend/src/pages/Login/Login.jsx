@@ -27,35 +27,37 @@ function Login() {
     <div className="tr-login-page">
       <div className="tr-login-shell">
 
+        {/* Brand Logo Header */}
         <div className="tr-brand">
           <div className="tr-brand-mark">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="20 6 9 17 4 12"></polyline>
+              <polyline points="20 6 9 17 4 12" />
             </svg>
           </div>
           <span className="tr-brand-name">TASK MASTER</span>
         </div>
 
+        {/* Login Card */}
         <div className="tr-login-card">
           <TRInputFormPanel
             header="Welcome back"
             subHeader="Log in to keep your tasks on track."
             onSubmit={handleSubmit}
-            btnTXT="LOG IN"
-            isRequired
             noBtn
           >
-            <InputForm noBtn>
+            <InputForm noBtn className="tr-login-inner-form">
               {error && <p className="tr-form-error">{error}</p>}
 
               <InputField
                 placeholder="Email address"
                 email
+                value={email}
                 onChange={setEmail}
               />
               <InputField
                 placeholder="Password"
                 password
+                value={password}
                 onChange={setPassword}
               />
 
@@ -70,7 +72,6 @@ function Login() {
                 disabled={isLoading}
                 customBorder="none"
                 className="tr-login-btn"
-                onClick={() => {}}
               />
             </InputForm>
           </TRInputFormPanel>

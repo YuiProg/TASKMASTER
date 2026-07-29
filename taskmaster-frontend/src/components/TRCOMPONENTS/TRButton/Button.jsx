@@ -44,9 +44,10 @@ class Button extends React.Component {
                         }`,
                         border: `${
                             customBorder ? customBorder
-                            : cancel ? "1px solid white" 
+                            : cancel ? "1px solid #cbd5e1" 
                             : null
-                        }`
+                        }`,
+                        color: cancel ? "#334155" : "#ffffff"
                     }}
                     className={`TR-button ${disabled && 'tr-btn-disabled'} ${className || ''}`}
                     onClick={() => onClick()}

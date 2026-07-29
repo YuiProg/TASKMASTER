@@ -1,9 +1,14 @@
+/* ==========================================================================
+   LOGIN PAGE LAYOUT
+   ========================================================================== */
+
 .tr-login-page {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 24px;
+  background-color: #f7f9fc !important;
 }
 
 .tr-login-shell {
@@ -11,6 +16,7 @@
   max-width: 400px;
 }
 
+/* ── Brand Header Fix ── */
 .tr-brand {
   display: flex;
   align-items: center;
@@ -24,6 +30,7 @@
   height: 34px;
   border-radius: 8px;
   background: #c0392b;
+  color: #ffffff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -33,35 +40,94 @@
 .tr-brand-name {
   font-size: 18px;
   font-weight: 700;
-  color: #ffffff;
+  color: #1e293b !important; /* Forces dark slate text on light background */
   letter-spacing: -0.02em;
 }
 
+/* ── Login Card Surface ── */
 .tr-login-card {
-  background-color: #1C1C1E;
+  background-color: #ffffff !important;
+  border: 1px solid #e8edf3 !important;
   border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 4px 14px rgba(30, 41, 59, 0.06);
+  overflow: hidden;
 }
 
+/* ==========================================================================
+   FORM & PANEL OVERRIDES
+   ========================================================================== */
+
 .tr-login-card .tr-inputform-panel-container {
-  background-color: transparent;
+  background-color: #ffffff !important;
+  padding: 28px !important;
+  border-radius: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.tr-login-card .tr-inputform-panel-headers {
+  border: none !important;
+  padding: 0 !important;
+  background: transparent !important;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+/* Header Text Fixes */
+.tr-login-card .tr-header {
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #1e293b !important; /* Visible dark slate header */
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.tr-login-card .tr-subheader {
+  font-size: 0.875rem;
+  color: #64748b !important;
+  margin: 0;
 }
 
 .tr-login-card .tr-inputform {
+  border: none !important;
+  padding: 0 !important;
+  background: transparent !important;
+  display: flex;
+  flex-direction: column;
   gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
+/* ── Input Field Container Overrides ── */
+.tr-login-card input {
+  background-color: #f8fafc !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #0f172a !important;
+}
+
+.tr-login-card input::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* ── Form Error Banner ── */
 .tr-form-error {
   width: 100%;
   margin: 0;
   padding: 10px 14px;
   border-radius: 8px;
-  background: rgba(239, 68, 68, 0.12);
-  border: 1px solid rgba(239, 68, 68, 0.4);
-  color: #EF4444;
+  background: #fef2f2 !important;
+  border: 1px solid #fecaca !important;
+  color: #dc2626 !important;
   font-size: 13px;
+  box-sizing: border-box;
 }
 
+/* ── Links ── */
 .tr-login-row {
   display: flex;
   align-items: center;
@@ -71,32 +137,52 @@
 }
 
 .tr-forgot {
-  color: #d85a30;
+  color: #c0392b !important;
   text-decoration: none;
+  font-weight: 500;
 }
 
 .tr-forgot:hover {
+  color: #a02e22 !important;
   text-decoration: underline;
 }
 
-.tr-login-btn {
-  background: #c0392b;
+/* ── Full Width CTA Button ── */
+.tr-login-card .tr-login-btn {
+  width: 100% !important;
+  background-color: #c0392b !important;
+  color: #ffffff !important;
   font-weight: 600;
-  margin-top: 4px;
+  margin-top: 6px;
+  border-radius: 8px;
+  padding: 12px 24px;
+  cursor: pointer;
+  border: none !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.18s ease;
 }
 
+.tr-login-card .tr-login-btn:hover {
+  background-color: #a02e22 !important;
+}
+
+/* ── Sign Up Link Below Card ── */
 .tr-signup-hint {
   text-align: center;
   font-size: 13px;
-  color: #686869;
+  color: #64748b !important;
   margin-top: 18px;
 }
 
 .tr-signup-hint a {
-  color: #d85a30;
+  color: #c0392b !important;
   text-decoration: none;
+  font-weight: 500;
 }
 
 .tr-signup-hint a:hover {
+  color: #a02e22 !important;
   text-decoration: underline;
 }

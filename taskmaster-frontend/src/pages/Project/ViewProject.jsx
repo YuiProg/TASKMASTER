@@ -9,6 +9,10 @@ import Button from '../../components/TRCOMPONENTS/TRButton/Button';
 import { Pencil, Plus } from 'lucide-react';
 import navigateTo from '../../lib/navigate';
 
+import './ViewProject.css';
+import './KanbanBoard.jsx';
+import KanbanBoard from './KanbanBoard.jsx';
+
 class ViewProject extends React.Component {
     constructor (props) {
         super(props);
@@ -112,31 +116,36 @@ class ViewProject extends React.Component {
             );
         }
 
-        const taskCount = this.state.tasks ? this.state.tasks.length : 0;
+        //const taskCount = this.state.tasks ? this.state.tasks.length : 0;
         const memberCount = this.state.project.members ? this.state.project.members.length : 0;
 
         return (
             <PanelPage titlePage={this.state.project.projectName.toUpperCase()} isLoading={false} subTitle={`Project ID: ${this.state.project.id}`}>
                 <PanelContainer>
-                    <div style={{display: 'flex', gap: 10}}>
+                    <div className="vp-action-row">
                         <Label label="Action" style={{marginTop: '10px'}}/>
-                        <div style={{marginLeft: 'auto'}}/>
-                        <Button error text={<span><Plus size={10}/> CREATE TASK</span>} onClick={this.goToCreateTask}/>
-                        <Button error text={<span><Pencil size={10}/> EDIT PROJECT</span>}/>
+                        <div className="vp-action-spacer"/>
+                        <Button className="vp-action-btn" text={<span><Plus size={10}/> CREATE TASK</span>} onClick={this.goToCreateTask}/>
+                        <Button className="vp-action-btn" text={<span><Pencil size={10}/> EDIT PROJECT</span>}/>
                     </div>
                 </PanelContainer>
                 <PanelContainer title="Project Details">
                     {this.topContainer()}
                     <InputRow gap={16}>
-                    <PanelContainer title="Tasks">
+                    {/* <PanelContainer title="Tasks">
                         <Label label={`TASKS: ${taskCount}`} style={{marginTop: '10px', marginBottom: '20px'}}/>
                         {this.viewTasks()}
-                    </PanelContainer>
+                    </PanelContainer> */}
                     <PanelContainer title="Project Members">
                         <Label label={`Members: ${memberCount}`} style={{marginTop: '10px', marginBottom: '20px'}}/>
                         {this.projectMembers()}
                     </PanelContainer>
                 </InputRow>
+                </PanelContainer>
+
+                <PanelContainer title="Task Board">
+                    <div style={{marginTop: '10px'}}/>
+                    <KanbanBoard tasks={this.state.tasks}/>
                 </PanelContainer>
             </PanelPage>
         );

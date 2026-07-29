@@ -1,8 +1,8 @@
 /* ── Wrapper ── */
 .table-wrapper {
-  background-color: #1C1C1E; /* Authentic Dashboard Dark Layout Surface */
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.3);
+  background-color: #ffffff;
+  border: 1px solid #e8edf3;
+  box-shadow: 0px 4px 14px rgba(30, 41, 59, 0.06);
   border-radius: 12px;
   width: 100%;
   box-sizing: border-box;
@@ -30,7 +30,7 @@
 .table-subtitle {
   font-size: 11px;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.4);
+  color: #94a3b8;
   letter-spacing: 0.05em;
   text-transform: uppercase;
   margin: 0;
@@ -39,7 +39,7 @@
 .table-title {
   font-size: 18px;
   font-weight: 600;
-  color: #ffffff;
+  color: #1e293b;
   margin: 4px 0 0 0;
   line-height: 1.2;
 }
@@ -53,7 +53,7 @@
 /* ── Table Container ── */
 .table-container {
   width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid #e8edf3;
   border-radius: 8px;
   overflow-x: auto;
   background-color: transparent;
@@ -65,20 +65,20 @@
   border-collapse: collapse;
   border-spacing: 0;
   font-size: 13px;
-  color: #fff;
+  color: #1e293b;
   text-align: left; /* Changes text alignments to match natural table layouts */
 }
 
 /* ── Headers ── */
 .table-thead-row {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid #e2e8f0;
 }
 
 .table-th {
   padding: 12px 16px;
   text-align: left;
-  color: rgba(255, 255, 255, 0.4);
-  background-color: #242426;
+  color: #94a3b8;
+  background-color: #f5f8fc;
   font-weight: 600;
   font-size: 11px;
   letter-spacing: 0.03em;
@@ -98,7 +98,7 @@
 
 /* ── Rows & Columns ── */
 .table-row {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid #eef2f7;
   transition: background-color 0.15s ease;
 }
 
@@ -107,17 +107,17 @@
 }
 
 .table-row:hover {
-  background-color: #242426;
+  background-color: #f7f9fc;
 }
 
 .table-row--selected {
-  background-color: rgba(255, 255, 255, 0.03);
+  background-color: #eff6ff;
 }
 
 .table-td {
   padding: 12px 16px;
   text-align: left;
-  color: rgba(255, 255, 255, 0.85);
+  color: #334155;
   white-space: nowrap;
   vertical-align: middle;
 }
@@ -133,13 +133,13 @@
 
 .table-clickable-id {
   cursor: pointer;
-  color: #fff;
+  color: #1e293b;
   font-weight: 600;
   transition: color 0.1s ease;
 }
 
 .table-clickable-id:hover {
-  color: #e24b4a; /* Brand Accent highlight color */
+  color: #2563eb; /* Brand Accent highlight color */
 }
 
 /* ── Checkboxes ── */
@@ -148,7 +148,7 @@
   -webkit-appearance: none;
   width: 16px;
   height: 16px;
-  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  border: 1.5px solid #cbd5e1;
   border-radius: 4px;
   background-color: transparent;
   cursor: pointer;
@@ -160,12 +160,12 @@
 }
 
 .table-checkbox:hover {
-  border-color: #e24b4a;
+  border-color: #2563eb;
 }
 
 .table-checkbox:checked {
-  background-color: #e24b4a;
-  border-color: #e24b4a;
+  background-color: #2563eb;
+  border-color: #2563eb;
 }
 
 .table-checkbox:checked::after {
@@ -195,21 +195,21 @@
 }
 
 .table-action-btn--delete {
-  color: rgba(255, 255, 255, 0.3);
+  color: #a3b0c2;
 }
 
 .table-action-btn--delete:hover {
-  background-color: rgba(226, 75, 74, 0.15);
-  color: #e24b4a;
+  background-color: #fdf1f1;
+  color: #dc6a6a;
 }
 
 .table-action-btn--edit {
-  color: rgba(255, 255, 255, 0.3);
+  color: #a3b0c2;
 }
 
 .table-action-btn--edit:hover {
-  background-color: rgba(93, 173, 226, 0.15);
-  color: #5dade2;
+  background-color: #eff6ff;
+  color: #2563eb;
 }
 
 /* ── Pagination Area ── */
@@ -224,7 +224,7 @@
 
 .pagination-info {
   font-size: 12px;
-  color: rgba(255, 255, 255, 0.4);
+  color: #94a3b8;
 }
 
 .pagination-controls {
@@ -236,8 +236,8 @@
 .pagination-btn,
 .pagination-page {
   background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: rgba(255, 255, 255, 0.6);
+  border: 1px solid #e2e8f0;
+  color: #64748b;
   width: 32px;
   height: 32px;
   border-radius: 6px;
@@ -251,29 +251,29 @@
 
 .pagination-btn:hover:not(:disabled),
 .pagination-page:hover {
-  border-color: rgba(255, 255, 255, 0.2);
-  color: #fff;
+  border-color: #94a3b8;
+  color: #1e293b;
 }
 
 .pagination-btn:disabled {
-  opacity: 0.25;
+  opacity: 0.35;
   cursor: not-allowed;
 }
 
 .pagination-page--active {
-  background-color: #e24b4a;
-  border-color: #e24b4a;
+  background-color: #2563eb;
+  border-color: #2563eb;
   color: #fff;
   font-weight: 600;
 }
 
 .pagination-page--active:hover {
-  background-color: #e24b4a;
-  border-color: #e24b4a;
+  background-color: #2563eb;
+  border-color: #2563eb;
 }
 
 .pagination-dots {
-  color: rgba(255, 255, 255, 0.2);
+  color: #cbd5e1;
   font-size: 18px;
   padding: 0 4px;
   user-select: none;
@@ -287,7 +287,7 @@
 }
 
 .table-th--sortable:hover {
-  color: #fff;
+  color: #1e293b;
 }
 
 .table-th-content {
@@ -299,11 +299,11 @@
 .table-sort-icon {
   display: flex;
   align-items: center;
-  color: #e24b4a;
+  color: #2563eb;
 }
 
 .table-sort-icon--inactive {
-  color: rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
 }
 
 /* ── No Data / Loading states ── */
@@ -321,11 +321,11 @@
 }
 
 .no-data-icon {
-  color: rgba(255, 255, 255, 0.15);
+  color: #cbd5e1;
 }
 
 .no-data-title {
-  color: rgba(255, 255, 255, 0.3);
+  color: #94a3b8;
   font-size: 13px;
   font-weight: 500;
   margin: 0;
@@ -334,8 +334,8 @@
 .table-spinner {
   width: 24px;
   height: 24px;
-  border: 2.5px solid rgba(255, 255, 255, 0.1);
-  border-top-color: #e24b4a;
+  border: 2.5px solid #e2e8f0;
+  border-top-color: #2563eb;
   border-radius: 50%;
   animation: spinner-rotate 0.7s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }

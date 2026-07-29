@@ -54,4 +54,10 @@ public class TaskController implements TaskClient {
     public ResponseEntity<ApiResponseModel<List<TaskDTO>>> getProjectTask(@PathVariable String id) {
         return taskService.getProjectTask(id);
     }
+
+    @Override
+    @PutMapping("/updateTask/{taskId}")
+    public ResponseEntity<ApiResponseModel<TaskDTO>> updateTaskStatus(@PathVariable String taskId, @RequestBody TaskRequest taskRequest) {
+        return taskService.updateTaskStatus(taskId, taskRequest);
+    }
 }

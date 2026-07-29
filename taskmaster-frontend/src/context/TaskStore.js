@@ -17,7 +17,7 @@ export const useTaskStore = create((set, get) => ({
   fetchTasks: async () => {
     set({ isLoading: true });
     try {
-      const response = await api.get("/getOpenTasks");
+      const response = await gateWayApi.get("/getOpenTasks");
       set({ tasks: response.data?.data || [], isLoading: false });
     } catch (error) {
       console.error("Failed to fetch tasks:", error);
@@ -28,7 +28,7 @@ export const useTaskStore = create((set, get) => ({
   fetchMyTasks: async () => {
     set({ isLoadingMyTasks: true });
     try {
-      const response = await api.get("/getAuthenticatedUserTask");
+      const response = await gateWayApi.get("/getAuthenticatedUserTask");
       set({ myTasks: response.data?.data || [], isLoadingMyTasks: false });
     } catch (error) {
       console.error("Failed to fetch my tasks:", error);
@@ -65,7 +65,7 @@ export const useTaskStore = create((set, get) => ({
 
   updateStatus: async (id, status) => {
     try {
-      await api.put(`/updateTask/${id}`, {
+      await gateWayApi.put(`/updateTask/${id}`, {
         status
       });
 
@@ -82,7 +82,7 @@ export const useTaskStore = create((set, get) => ({
   createTask: async ({ taskName, assignee, description, project, status }) => {
     set({ isCreating: true, error: null });
     try {
-      const res = await api.post("/createTask", {
+      const res = await gateWayApi.post("/createTask", {
         taskName,
         assignee,
         description,
@@ -119,7 +119,7 @@ export const useTaskStore = create((set, get) => ({
   fetchOpenTask: async () => {
     try {
       set({ isLoadingMyTasks: true });
-      const response = await api.get("/getOpenTasks");
+      const response = await gateWayApi.get("/getOpenTasks");
       set({ openTasks: response.data?.data || [], isLoadingMyTasks: false });
     } catch (error) {
       console.log(error.message);
@@ -139,7 +139,7 @@ export const useTaskStore = create((set, get) => ({
   // matching the same naming convention as updateStatus's report.
   updateTask: async (task, id) => {
     try {
-      const response = await api.put(`/updateTaskDetail/${id}`, {
+      const response = await gateWayApi.put(`/updateTaskDetail/${id}`, {
         assignee: task.assignee || null,
         description: task.description || null
       });

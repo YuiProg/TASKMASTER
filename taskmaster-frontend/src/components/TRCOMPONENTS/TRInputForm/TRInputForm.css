@@ -15,7 +15,7 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  border: 1px solid #2e2e2e;
+  border: 1px solid #e8edf3;
   border-radius: 10px;
   padding: 16px;
 }
@@ -23,14 +23,14 @@
 .tr-header {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #ffffff;
+  color: #1e293b;
   margin: 0;
   letter-spacing: -0.02em;
 }
 
 .tr-subheader {
   font-size: 0.875rem;
-  color: #888;
+  color: #64748b;
   margin: 0;
 }
 
@@ -41,7 +41,7 @@
   align-items: flex-start;
   gap: 16px;
   width: 100%;
-  border: 1px solid #2e2e2e;
+  border: 1px solid #e8edf3;
   border-radius: 10px;
   padding: 24px;
   box-sizing: border-box;
@@ -56,8 +56,8 @@
 
 .tr-inputform-cancel {
     background-color: transparent;
-    color: #aaaaaa;
-    border: 1px solid #2e2e2e;
+    color: #64748b;
+    border: 1px solid #e8edf3;
     padding: 10px 24px;
     border-radius: 8px;
     font-size: 0.875rem;
@@ -68,13 +68,13 @@
 }
 
 .tr-inputform-cancel:hover {
-    background-color: #2e2e2e;
-    color: #ffffff;
+    background-color: #eef2f7;
+    color: #1e293b;
 }
 
 /* ── Submit button ── */
 .tr-inputform-submit {
-  background-color: #c0392b;
+  background-color: #2563eb;
   color: #fff;
   border: none;
   padding: 10px 24px;
@@ -88,7 +88,7 @@
 }
 
 .tr-inputform-submit:hover {
-  background-color: #a93226;
+  background-color: #1d4ed8;
 }
 
 /* ── Input row ── */
@@ -113,7 +113,7 @@
 .tr-inputrow-title {
   font-size: 0.8rem;
   font-weight: 500;
-  color: #aaaaaa;
+  color: #64748b;
   margin: 0;
   line-height: 1.2;
 }

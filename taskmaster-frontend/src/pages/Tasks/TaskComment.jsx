@@ -61,7 +61,6 @@ function TaskComments({
       {isLoading ? (
         <div className="tc-loading">
           <Spinner size={20} strokeWidth={3} />
-          <span>Loading comments...</span>
         </div>
       ) : comments.length === 0 ? (
         <p className="tc-empty">No comments yet. Be the first to say something.</p>

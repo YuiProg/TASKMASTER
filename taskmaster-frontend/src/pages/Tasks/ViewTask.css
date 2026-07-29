@@ -9,7 +9,7 @@
 
 .vt-task-title {
   margin: 0;
-  color: #ffffff;
+  color: #1e293b;
   font-size: 1.1rem;
   font-weight: 600;
 }
@@ -42,35 +42,38 @@
   height: 13px;
 }
 
+/* Status variants tuned for light background contrast */
 .vt-status-blue .tr-dropdown-button {
-  background-color: rgba(59, 130, 246, 0.15);
-  color: #60a5fa;
+  background-color: #eff6ff;
+  color: #2563eb;
+  border: 1px solid #bfdbfe;
 }
 
 .vt-status-blue .tr-dropdown-button:hover:not(.disabled) {
-  background-color: rgba(59, 130, 246, 0.25);
+  background-color: #dbeafe;
 }
 
 .vt-status-blue .tr-dropdown-chevron {
-  color: #60a5fa;
+  color: #2563eb;
 }
 
 .vt-status-green .tr-dropdown-button {
-  background-color: rgba(34, 197, 94, 0.15);
-  color: #4ade80;
+  background-color: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
 }
 
 .vt-status-green .tr-dropdown-button:hover:not(.disabled) {
-  background-color: rgba(34, 197, 94, 0.25);
+  background-color: #dcfce7;
 }
 
 .vt-status-green .tr-dropdown-chevron {
-  color: #4ade80;
+  color: #16a34a;
 }
 
 .vt-description {
   margin: 0;
-  color: #b0b0b0;
+  color: #64748b;
   font-size: 0.9rem;
   line-height: 1.5;
 }
@@ -88,7 +91,7 @@
 }
 
 .vt-assignee-key {
-  color: #757575;
+  color: #94a3b8;
   font-size: 0.85rem;
 }
 
@@ -126,8 +129,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: #1C1C1E;
-  border: 1px solid #2e2e2e;
+  background-color: #ffffff;
+  border: 1px solid #e8edf3;
   padding: 8px 12px;
   border-radius: 8px;
   white-space: nowrap;
@@ -136,7 +139,7 @@
   pointer-events: none;
   transition: opacity 0.15s ease, transform 0.15s ease;
   z-index: 20;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 8px 20px rgba(30, 41, 59, 0.12);
 }
 
 .vt-user-hover:hover .vt-user-tooltip {
@@ -161,7 +164,7 @@
 
 .vt-user-tooltip-email {
   font-size: 0.78rem;
-  color: #d0d0d0;
+  color: #475569;
 }
 
 .vt-member-chips {
@@ -174,16 +177,17 @@
 .vt-member-chip {
   padding: 5px 12px;
   border-radius: 999px;
-  background-color: rgba(192, 57, 43, 0.15);
-  color: #e0574a;
+  background-color: rgba(192, 57, 43, 0.08);
+  color: #c0392b;
   font-size: 0.78rem;
+  font-weight: 500;
 }
 
 .vt-view-project-link {
   margin-top: 16px;
   background: transparent;
   border: none;
-  color: #e0574a;
+  color: #c0392b;
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
@@ -191,7 +195,8 @@
 }
 
 .vt-view-project-link:hover {
-  color: #ffffff;
+  color: #a02e22;
+  text-decoration: underline;
 }
 
 /* TRPanelPage's .tr-panel-container-child has no margin of its own, so

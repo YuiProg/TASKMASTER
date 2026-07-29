@@ -9,10 +9,10 @@ import java.util.List;
 
 public interface TaskRepository extends JpaRepository<Task, String> {
 
-    @Query("SELECT t FROM Task t WHERE t.assignee.id = :id AND t.del = 0 ORDER BY t.createdAt DESC")
+    @Query("SELECT t FROM Task t WHERE t.assignee.id = :id AND t.del = 0 AND t.status <> 'CLOSED' ORDER BY t.createdAt DESC")
     List<Task> findAuthenticatedTaskByAssignee (@Param("id") String id);
 
-    @Query("SELECT t FROM Task t JOIN Project p ON t.project.id = p.id WHERE p.id = :id AND t.status <> 'CLOSED' ORDER BY t.createdAt DESC")
+    @Query("SELECT t FROM Task t JOIN Project p ON t.project.id = p.id WHERE p.id = :id ORDER BY t.createdAt DESC")
     List<Task> getTaskOnProject (@Param("id") String id);
 
     @Query("SELECT t FROM Task t WHERE t.status = 'OPEN' ORDER BY t.createdAt DESC")

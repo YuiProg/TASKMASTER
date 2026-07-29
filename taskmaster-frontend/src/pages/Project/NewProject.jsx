@@ -145,6 +145,7 @@ class NewProject extends React.Component {
                   onClick={() =>
                     this.handleAddMember({ preventDefault: () => {} })
                   }
+                  cancel
                 />
               </div>
 

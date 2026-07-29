@@ -1,7 +1,6 @@
 import React from "react";
 import './TRInputForm.css';
 import PropTypes from "prop-types";
-import Button from "../TRButton/Button";
 
 
 //dito lalagay mga inputfields parang panel tong una

@@ -160,7 +160,7 @@ public class TaskService implements TaskServiceInterface {
         reportClient.postReport(reportDTO);
         Task newTask = taskRepository.save(task);
 
-        taskCacheService.evictTaskCache(taskId);
+        taskCacheService.evictTaskEntriesCache();
 
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.update("TASK UPDATED", "SUCCESS", newTask, oldTask));
     }
@@ -212,7 +212,7 @@ public class TaskService implements TaskServiceInterface {
         Task newTask = taskRepository.save(task);
 
         // Evict from Redis cache
-        taskCacheService.evictTaskCache(taskId);
+        taskCacheService.evictTaskEntriesCache();
 
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.update("TASK UPDATED", "SUCCESS", newTask, oldTask));
     }

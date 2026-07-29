@@ -36,7 +36,6 @@ function TaskReports({ taskId }) {
       {isLoading ? (
         <div className="tr-loading">
           <Spinner size={20} strokeWidth={3} />
-          <span>Loading activity...</span>
         </div>
       ) : reports.length === 0 ? (
         <p className="tr-empty">No activity recorded yet.</p>

@@ -7,7 +7,7 @@
 .tr-count-line {
   margin: 0;
   font-size: 0.78rem;
-  color: #6e6e6e;
+  color: #94a3b8;
 }
 
 .tr-loading {
@@ -16,7 +16,7 @@
   justify-content: center;
   gap: 10px;
   padding: 20px 0;
-  color: #6e6e6e;
+  color: #94a3b8;
   font-size: 0.85rem;
 }
 
@@ -26,7 +26,7 @@
 }
 
 .tr-empty {
-  color: #6e6e6e;
+  color: #94a3b8;
   font-size: 0.85rem;
   margin: 0;
 }
@@ -49,19 +49,19 @@
 }
 
 .tr-list::-webkit-scrollbar-thumb {
-  background: #3a3a3a;
+  background: #cbd5e1;
   border-radius: 4px;
 }
 
 .tr-list::-webkit-scrollbar-thumb:hover {
-  background: #4a4a4a;
+  background: #94a3b8;
 }
 
 .tr-item {
   display: flex;
   gap: 12px;
   padding-bottom: 14px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid #e8edf3;
 }
 
 .tr-item:last-child {
@@ -73,8 +73,8 @@
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background-color: rgba(192, 57, 43, 0.15);
-  color: #e0574a;
+  background-color: rgba(192, 57, 43, 0.08);
+  color: #c0392b;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -88,11 +88,12 @@
 
 .tr-description {
   margin: 0 0 4px 0;
-  color: #d0d0d0;
+  color: #1e293b;
   font-size: 0.85rem;
+  line-height: 1.4;
 }
 
 .tr-meta {
   font-size: 0.75rem;
-  color: #6e6e6e;
+  color: #94a3b8;
 }

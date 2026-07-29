@@ -156,4 +156,26 @@ public class TaskService implements TaskClient {
                             "ERROR"));
         }
     }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<TaskDTO>> updateTaskStatus(String taskId, TaskRequest taskRequest) {
+        try {
+            log.info("updateTaskStatus REQUEST id: {}", taskId);
+            ResponseEntity<ApiResponseModel<TaskDTO>> response = taskClient.updateTaskStatus(taskId, taskRequest);
+            log.info("updateTaskStatus RESPONSE status: {} data: {}", response.getStatusCode(), response.getBody());
+
+            ResponseEntity.BodyBuilder builder = ResponseEntity.status(response.getStatusCode());
+            return builder.body(response.getBody());
+
+        } catch (FeignException e) {
+            log.error("RESPONSE updateTaskStatus (error) -> status: {}, cause: {}",
+                    e.status(), e.getCause() != null ? e.getCause().getMessage() : e.getMessage(), e);
+            HttpStatus status = e.status() > 0 ? HttpStatus.valueOf(e.status()) : HttpStatus.SERVICE_UNAVAILABLE;
+
+            return ResponseEntity.status(status)
+                    .body(ApiResponseModel.error(
+                            e.status() > 0 ? e.contentUTF8() : "Task service unavailable, please try again",
+                            "ERROR"));
+        }
+    }
 }

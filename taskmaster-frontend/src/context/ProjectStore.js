@@ -59,7 +59,7 @@ export const useProjectStore = create((set, get) => ({
 
   getProjectTasks: async (projectId) => {
     try {
-        const res = await api.get(`/getProjectTask/${projectId}`);
+        const res = await gateWayApi.get(`/getProjectTask/${projectId}`);
         const tasksList = res.data.data || [];
         set({ tasks: tasksList });
         return tasksList;
@@ -73,11 +73,11 @@ export const useProjectStore = create((set, get) => ({
 
   getProjectByName: async (projectName) => {
     try {
-        const res = await api.get(`/getProjectByName/${projectName}`);
+        const res = await gateWayApi.get(`/getProjectByName/${projectName}`);
         const projectData = res.data.data;
 
         const projectId = projectData.id;
-
+        console.log(res);
         set({ selectedProject: projectData });
 
         const tasks = await get().getProjectTasks(projectId);

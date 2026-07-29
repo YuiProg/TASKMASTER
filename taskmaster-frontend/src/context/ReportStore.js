@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import reportAxios from '../lib/reportAxios';
+import gateWayApi from '../lib/gateway';
 
 export const useReportStore = create((set) => ({
     reports: [],
@@ -9,7 +9,7 @@ export const useReportStore = create((set) => ({
     getReports: async (taskId) => {
         set({ isLoading: true, error: null });
         try {
-            const response = await reportAxios.get(`/report/getReports/${taskId}`);
+            const response = await gateWayApi.get(`/report/getReports/${taskId}`);
             const list = Array.isArray(response.data?.data) ? response.data.data : [];
             set({ reports: list.reverse(), isLoading: false });
             return list;

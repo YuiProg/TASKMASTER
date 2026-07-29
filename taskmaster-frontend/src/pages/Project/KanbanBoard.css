@@ -1,0 +1,155 @@
+.kb-board {
+  display: grid;
+  /* Automatically fits 5 columns or scrolls horizontally if space is tight */
+  grid-template-columns: repeat(5, minmax(280px, 1fr));
+  gap: 18px;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: auto; /* Enables clean horizontal scrolling when needed */
+  padding-bottom: 12px; /* Extra room for scrollbar */
+}
+
+.kb-column {
+  background-color: #f7f9fc;
+  border: 1px solid #e8edf3;
+  border-radius: 12px;
+  padding: 16px; /* Increased padding */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-height: 500px; /* Taller min-height for a bigger board feel */
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.kb-column-dragover {
+  background-color: #eff6ff;
+  border-color: #93b4f5;
+}
+
+.kb-column-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 4px;
+}
+
+.kb-column-title {
+  font-size: 0.85rem; /* Larger column header title */
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #64748b;
+}
+
+.kb-column-blue .kb-column-title {
+  color: #2563eb;
+}
+
+.kb-column-green .kb-column-title {
+  color: #16a34a;
+}
+
+.kb-column-count {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #64748b;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  padding: 2px 9px;
+  border-radius: 999px;
+}
+
+.kb-column-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* Increased space between cards */
+  flex: 1;
+}
+
+.kb-empty {
+  margin: 0;
+  padding: 24px 0;
+  text-align: center;
+  color: #cbd5e1;
+  font-size: 0.85rem;
+}
+
+.kb-card {
+  background-color: #ffffff;
+  border: 1px solid #e8edf3;
+  border-radius: 10px;
+  padding: 14px 16px; /* Roomier card padding */
+  box-shadow: 0 1px 4px rgba(30, 41, 59, 0.05);
+  cursor: grab;
+  transition: box-shadow 0.15s ease, transform 0.15s ease, opacity 0.15s ease;
+}
+
+.kb-card:hover {
+  box-shadow: 0 6px 14px rgba(30, 41, 59, 0.08);
+}
+
+.kb-card:active {
+  cursor: grabbing;
+}
+
+.kb-card-dragging {
+  opacity: 0.4;
+}
+
+.kb-card-title {
+  margin: 0 0 8px 0;
+  font-size: 0.92rem; /* Larger ticket title */
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.4;
+}
+
+/* ── Clean Card Meta & View Button Styles ── */
+.kb-card-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.kb-view-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  padding: 6px;
+  color: #64748b;
+  cursor: pointer;
+  line-height: 1;
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.kb-view-btn:hover {
+  background-color: #eff6ff;
+  border-color: #bfdbfe;
+  color: #2563eb;
+}
+
+/* Optional custom scrollbar styling for the board */
+.kb-board::-webkit-scrollbar {
+  height: 8px;
+}
+
+.kb-board::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.kb-board::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.kb-board::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}

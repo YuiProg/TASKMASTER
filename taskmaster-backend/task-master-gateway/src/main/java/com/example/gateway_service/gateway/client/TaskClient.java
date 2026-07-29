@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//@FeignClient(name = "backend-task-client", url = "http://localhost:8080/api/v1", configuration = FeignCookieConfig.class)
-@FeignClient(name = "backend-task-client", url = "${services.backend.url}", configuration = FeignCookieConfig.class)
+@FeignClient(name = "backend-task-client", url = "http://localhost:8080/api/v1", configuration = FeignCookieConfig.class)
+//@FeignClient(name = "backend-task-client", url = "${services.backend.url}", configuration = FeignCookieConfig.class)
 public interface TaskClient {
 
     @GetMapping(value = "/getTaskById/{id}", consumes = "application/json", produces = "application/json")
@@ -31,4 +31,8 @@ public interface TaskClient {
 
     @GetMapping("/getProjectTask/{id}")
     ResponseEntity<ApiResponseModel<List<TaskDTO>>> getProjectTask (@PathVariable String id);
+
+    @PutMapping("/updateTask/{taskId}")
+    ResponseEntity<ApiResponseModel<TaskDTO>> updateTaskStatus (@PathVariable String taskId, @RequestBody TaskRequest taskRequest);
+
 }
