@@ -7,8 +7,9 @@ import { useTaskStore } from "../../context/taskStore";
 import navigateTo from "../../lib/navigate";
 import "./NewTask.css";
 
-// Same status list used on ViewTask's dropdown, for consistency.
+// Dropdown options
 const STATUS_OPTIONS = ["OPEN", "IN PROGRESS", "QA CHECK", "DEPLOYED", "CLOSED"];
+const PRIORITY_OPTIONS = ["LOW", "MEDIUM", "HIGH", "CRITICAL"];
 
 class NewTask extends React.Component {
   constructor(props) {
@@ -19,6 +20,7 @@ class NewTask extends React.Component {
       description: "",
       project: "",
       status: "OPEN",
+      priority: "LOW", // Default priority
       cameFromProject: false,
       isCreating: useTaskStore.getState().isCreating,
       error: useTaskStore.getState().error,
@@ -31,8 +33,6 @@ class NewTask extends React.Component {
       this.setState({ isCreating: state.isCreating, error: state.error });
     });
 
-    // Pre-fill the project field if we arrived here via a
-    // "Create Task" link from a specific project's page.
     const params = new URLSearchParams(window.location.search);
     const projectFromQuery = params.get("project");
     if (projectFromQuery) {
@@ -45,7 +45,11 @@ class NewTask extends React.Component {
   }
 
   goBack = () => {
-    navigateTo("/tasks/my-tasks");
+    if (this.state.cameFromProject) {
+        navigateTo(`/projects/${encodeURIComponent(this.state.project.trim())}`);
+    } else {
+      navigateTo("/tasks/my-tasks");
+    }
   };
 
   handleSubmit = async (e) => {
@@ -63,6 +67,7 @@ class NewTask extends React.Component {
       description: this.state.description.trim(),
       project: this.state.project.trim(),
       status: this.state.status,
+      priority: this.state.priority, // Added priority to payload
     };
 
     const newTask = await useTaskStore.getState().createTask(payload);
@@ -82,6 +87,7 @@ class NewTask extends React.Component {
       description,
       project,
       status,
+      priority,
       isCreating,
       error,
       localError,
@@ -137,6 +143,18 @@ class NewTask extends React.Component {
                   options={STATUS_OPTIONS}
                   value={status}
                   onChange={(value) => this.setState({ status: value })}
+                />
+              </div>
+            </div>
+
+            {/* Priority Field */}
+            <div className="new-task-field">
+              <label className="new-task-label">Priority</label>
+              <div className="new-task-status-dropdown">
+                <Dropdown
+                  options={PRIORITY_OPTIONS}
+                  value={priority}
+                  onChange={(value) => this.setState({ priority: value })}
                 />
               </div>
             </div>

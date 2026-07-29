@@ -35,4 +35,10 @@ public class UserController implements UserClient{
         return userService.login(userRequest);
     }
 
+    @Override
+    @PostMapping("/logout")
+    public ResponseEntity<ApiResponseModel<UserDTO>> logout() {
+        return userService.logout();
+    }
+
 }

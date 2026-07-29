@@ -23,4 +23,7 @@ public interface UserClient {
 
     @PostMapping(value = "/login", produces = "application/json")
     ResponseEntity<ApiResponseModel<UserDTO>> login(@RequestBody UserRequest userRequest);
+
+    @PostMapping(value = "/logout", produces = "application/json")
+    ResponseEntity<ApiResponseModel<UserDTO>> logout ();
 }

@@ -19,5 +19,6 @@ public class TaskRequest {
     public Long createdAt;
     public String createdBy;
     public String updatedBy;
+    public String priority;
     public Integer del;
 }

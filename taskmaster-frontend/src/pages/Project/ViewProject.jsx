@@ -123,7 +123,7 @@ class ViewProject extends React.Component {
             <PanelPage titlePage={this.state.project.projectName.toUpperCase()} isLoading={false} subTitle={`Project ID: ${this.state.project.id}`}>
                 <PanelContainer>
                     <div className="vp-action-row">
-                        <Label label="Action" style={{marginTop: '10px'}}/>
+                        <Label label="Action"/>
                         <div className="vp-action-spacer"/>
                         <Button className="vp-action-btn" text={<span><Plus size={10}/> CREATE TASK</span>} onClick={this.goToCreateTask}/>
                         <Button className="vp-action-btn" text={<span><Pencil size={10}/> EDIT PROJECT</span>}/>

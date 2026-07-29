@@ -127,4 +127,29 @@ public class UserService implements UserClient{
                             "ERROR"));
         }
     }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<UserDTO>> logout() {
+        try {
+            log.info("USER LOGGED OUT");
+            ResponseCookie cookie = jwtUtil.deleteCookie();
+            return ResponseEntity.status(HttpStatus.OK)
+                    .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                    .body(ApiResponseModel.success("USER LOGGED OUT", "SUCCESS", null));
+        } catch (FeignException e) {
+            log.error("RESPONSE login (error) -> status: {}, cause: {}",
+                    e.status(), e.getCause() != null ? e.getCause().getMessage() : e.getMessage(), e);
+
+            HttpStatus status = (e.status() > 0)
+                    ? HttpStatus.valueOf(e.status())
+                    : HttpStatus.SERVICE_UNAVAILABLE;
+
+            ResponseCookie responseCookie = jwtUtil.deleteCookie();
+            return ResponseEntity.status(status)
+                    .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                    .body(ApiResponseModel.error(
+                            e.status() > 0 ? e.contentUTF8() : "Backend service unavailable, please try again",
+                            "ERROR"));
+        }
+    }
 }

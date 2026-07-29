@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import api from '../lib/axios';
 import gateWayApi from '../lib/gateway';
 
 export const useAuthStore = create((set) => ({
@@ -64,7 +63,7 @@ export const useAuthStore = create((set) => ({
     set({ isLoading: true });
     try {
       // Hits http://localhost:8080/api/v1/logout via your base Axios configuration
-      await api.post('/logout');
+      await gateWayApi.post('/logout');
     } catch (err) {
       console.error("Backend session cleanup failed:", err);
     } finally {

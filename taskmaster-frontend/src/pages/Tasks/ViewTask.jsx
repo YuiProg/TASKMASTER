@@ -11,23 +11,16 @@ import "./ViewTask.css";
 import TaskComments from "./TaskComment";
 import TaskReports from "./TaskReport";
 import { useCommentStore } from "../../context/commentStore";
-// import Button from "../../components/TRCOMPONENTS/TRButton/Button";
-// import { Pencil } from "lucide-react";
 
-// Display labels shown in the dropdown. Backend enum is assumed to be
-// underscore-separated (e.g. IN_PROGRESS, QA_CHECK) — adjust the
-// toBackendStatus/toDisplayStatus helpers below if the real values differ.
+// Options arrays
 const STATUS_OPTIONS = ["OPEN", "IN PROGRESS", "QA CHECK", "DEPLOYED", "CLOSED"];
+const PRIORITY_OPTIONS = ["LOW", "MEDIUM", "HIGH", "CRITICAL"];
 
 function toDisplayStatus(status) {
   if (!status) return "";
   return status.toUpperCase().replace(/[\s_-]+/g, " ").trim();
 }
 
-
-// OPEN stays the dropdown's normal/neutral color. IN_PROGRESS and QA_CHECK
-// use blue, DEPLOYED and CLOSED use green — matching the blue/green already
-// used elsewhere in the app (e.g. the Dashboard's donut legend).
 function statusColorGroup(status) {
   const normalized = (status || "").toUpperCase().replace(/[\s-]+/g, "_");
 
@@ -43,10 +36,26 @@ function statusColorGroup(status) {
   }
 }
 
+// Color group generator for Priority states
+function priorityColorGroup(priority) {
+  const normalized = (priority || "").toUpperCase();
+
+  switch (normalized) {
+    case "CRITICAL":
+      return "red";
+    case "HIGH":
+      return "amber";
+    case "MEDIUM":
+      return "blue";
+    case "LOW":
+    default:
+      return "gray";
+  }
+}
+
 function formatDate(rawDate) {
   if (!rawDate) return "N/A";
   
-  // Convert numeric strings or numbers into valid timestamps
   const timestamp = Number(rawDate);
   const dateInput = !Number.isNaN(timestamp) ? timestamp : rawDate;
 
@@ -65,9 +74,6 @@ function initialsOf(name) {
   return name.slice(0, 2).toUpperCase();
 }
 
-// Wraps a badge/chip so hovering it shows a small popover with an
-// initials avatar + the user's email. Falls back to rendering the
-// children plain (no hover card) if there's no user data to show.
 function UserHoverCard({ user, children }) {
   if (!user) return children;
 
@@ -123,17 +129,23 @@ class ViewTask extends React.Component {
     console.log("[ViewTask] status changed to:", displayValue);
   };
 
+  handlePriorityChange = async (priorityValue) => {
+    const { updateTask } = useTaskStore.getState();
+    this.setState((prev) => ({
+      task: { ...prev.task, priority: priorityValue },
+    }));
+    const updatedTask = await updateTask({ priority: priorityValue }, this.state.task.id);
+    if (updatedTask) {
+      this.setState({ task: updatedTask });
+    }
+    console.log("[ViewTask] priority changed to:", priorityValue);
+  };
+
   addComment = async (comment) => {
     const taskId = this.state.task.id;
     const { postComment } = useCommentStore.getState();
     postComment(comment, taskId);
-  }
-
-  // --- Generic optimistic field editors ------------------------------
-  // NOTE: these update local state immediately so the label swaps back
-  // right away. None of them are wired to a backend call yet (there's no
-  // generic "updateTask" in taskStore the way there's an updateStatus) —
-  // hook the real persistence call in where marked TODO once that exists.
+  };
 
   handleAssigneeEdit = async (value) => {
     const { updateTask } = useTaskStore.getState();
@@ -141,9 +153,8 @@ class ViewTask extends React.Component {
     this.setState((prev) => ({
       task: { ...prev.task, assignee: value },
     }));
-    const task = await updateTask({assignee: value}, this.state.task.id);
-    this.setState({task});
-
+    const task = await updateTask({ assignee: value }, this.state.task.id);
+    this.setState({ task });
   };
 
   handleDescriptionEdit = async (value) => {
@@ -151,8 +162,8 @@ class ViewTask extends React.Component {
     this.setState((prev) => ({
       task: { ...prev.task, description: value },
     }));
-    const task = await updateTask({description: value}, this.state.task.id);
-    this.setState({task});
+    const task = await updateTask({ description: value }, this.state.task.id);
+    this.setState({ task });
   };
 
   render() {
@@ -175,14 +186,8 @@ class ViewTask extends React.Component {
         <PanelContainer title="Overview">
           <div className="vt-overview-header">
             <h2 className="vt-task-title">{task.taskName}</h2>
-            <div className={`vt-status-dropdown vt-status-${statusColorGroup(task.status)}`}>
-              <Dropdown
-                options={STATUS_OPTIONS}
-                value={toDisplayStatus(task.status)}
-                onChange={this.handleStatusChange}
-              />
-            </div>
           </div>
+
           <Label
             className="vt-description"
             label={task.description || "No description provided."}
@@ -191,72 +196,87 @@ class ViewTask extends React.Component {
             onClick={this.handleDescriptionEdit}
           />
 
-        <InputRow gap={16}>
-          <PanelContainer title="Details">
-            <div className="vt-details-grid">
-              <div className="vt-assignee-row">
-                <span className="vt-assignee-key">Assignee</span>
-                <UserHoverCard user={task.assignee}>
-                 <Label
-                    label={`${task.assignee?.username || "Unassigned"}`}
-                    value={task.assignee?.username || ""}
-                    onClick={(e) => this.handleAssigneeEdit(e)}
-                    placeholder="Assignee"
-                  />
-                </UserHoverCard>
-              </div>
-              <Label label={`Created By: ${task.createdBy?.username || "N/A"}`} />
-              <Label label={`Created At: ${formatDate(task.createdAt)}`} />
-              <Label label={`Updated By: ${task.updatedBy || "N/A"}`} />
-            </div>
-          </PanelContainer>
-
-          <PanelContainer title="Project">
-            <div className="vt-details-grid">
-              <span className="vt-assignee-key">Project Name: {project.projectName?.toUpperCase() || 'NO PROJECT ASSIGNED'}</span>
-              <Label label={`Status: ${project.status || "N/A"}`} />
-              <Label label={`Members: ${members.length}`} />
+          {/* Dropdowns now directly below the description */}
+          <div className="vt-header-dropdowns">
+            <div className={`vt-status-dropdown vt-status-${statusColorGroup(task.status)}`}>
+              <Dropdown
+                options={STATUS_OPTIONS}
+                value={toDisplayStatus(task.status)}
+                onChange={this.handleStatusChange}
+              />
             </div>
 
-            {members.length > 0 && (
-              <div className="vt-member-chips">
-                {members.map((m) => (
-                  <UserHoverCard key={m.id} user={m}>
-                    <span className="vt-member-chip">
-                      {m.username || m.email}
-                    </span>
+            <div className={`vt-priority-dropdown vt-priority-${priorityColorGroup(task.priority)}`}>
+              <Dropdown
+                options={PRIORITY_OPTIONS}
+                value={(task.priority || "LOW").toUpperCase()}
+                onChange={this.handlePriorityChange}
+              />
+            </div>
+          </div>
+
+          <InputRow gap={16}>
+            <PanelContainer title="Details">
+              <div className="vt-details-grid">
+                <div className="vt-assignee-row">
+                  <span className="vt-assignee-key">Assignee</span>
+                  <UserHoverCard user={task.assignee}>
+                    <Label
+                      label={`${task.assignee?.username || "Unassigned"}`}
+                      value={task.assignee?.username || ""}
+                      onClick={(e) => this.handleAssigneeEdit(e)}
+                      placeholder="Assignee"
+                    />
                   </UserHoverCard>
-                ))}
+                </div>
+
+                <Label label={`Created By: ${task.createdBy?.username || "N/A"}`} />
+                <Label label={`Created At: ${formatDate(task.createdAt)}`} />
+                <Label label={`Updated By: ${task.updatedBy || "N/A"}`} />
               </div>
-            )}
-            {/* check kung may project */}
-            {project.projectName && (
-              <button
-                type="button"
-                className="vt-view-project-link"
-                onClick={() => this.goToProject(project.projectName)}
-              >
-                View Project &rarr;
-              </button>
-            )}
-          </PanelContainer>
-        </InputRow>      
-        {/* <PanelContainer title="Actions">
-            <InputRow>
-                <Button onClick={() => console.log(this.state.task)} error text={<span><Pencil size={10}/> EDIT TASK</span>}/>
-            </InputRow>
-        </PanelContainer>   */}
-      </PanelContainer>
+            </PanelContainer>
+
+            <PanelContainer title="Project">
+              <div className="vt-details-grid">
+                <span className="vt-assignee-key">
+                  Project Name: {project.projectName?.toUpperCase() || "NO PROJECT ASSIGNED"}
+                </span>
+                <Label label={`Status: ${project.status || "N/A"}`} />
+                <Label label={`Members: ${members.length}`} />
+              </div>
+
+              {members.length > 0 && (
+                <div className="vt-member-chips">
+                  {members.map((m) => (
+                    <UserHoverCard key={m.id} user={m}>
+                      <span className="vt-member-chip">
+                        {m.username || m.email}
+                      </span>
+                    </UserHoverCard>
+                  ))}
+                </div>
+              )}
+
+              {project.projectName && (
+                <button
+                  type="button"
+                  className="vt-view-project-link"
+                  onClick={() => this.goToProject(project.projectName)}
+                >
+                  View Project &rarr;
+                </button>
+              )}
+            </PanelContainer>
+          </InputRow>
+        </PanelContainer>
 
         <PanelContainer title="Activity Log">
           <TaskReports taskId={task.id} />
         </PanelContainer>
         <PanelContainer title="Comments">
-          <TaskComments taskId={task.id} onAddComment={(e) => this.addComment(e)}/>
+          <TaskComments taskId={task.id} onAddComment={(e) => this.addComment(e)} />
         </PanelContainer>
-
       </PanelPage>
-      
     );
   }
 }

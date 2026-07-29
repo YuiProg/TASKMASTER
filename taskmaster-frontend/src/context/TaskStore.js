@@ -1,6 +1,5 @@
 // context/taskStore.js
 import { create } from "zustand";
-import api from "../lib/axios"; // TODO: confirm this matches projectStore's import
 import { useReportStore } from "./reportStore";
 import { useAuthStore } from "./authStore";
 import gateWayApi from "../lib/gateway";
@@ -79,7 +78,7 @@ export const useTaskStore = create((set, get) => ({
   // `assignee` and `project` are sent as plain strings (email / project
   // name) per the sample payload — adjust if the backend actually expects
   // ids for either of those instead.
-  createTask: async ({ taskName, assignee, description, project, status }) => {
+  createTask: async ({ taskName, assignee, description, project, status, priority }) => {
     set({ isCreating: true, error: null });
     try {
       const res = await gateWayApi.post("/createTask", {
@@ -88,6 +87,7 @@ export const useTaskStore = create((set, get) => ({
         description,
         project,
         status,
+        priority
       });
 
       if (String(res.data.status).toUpperCase() === "SUCCESS") {
@@ -141,7 +141,8 @@ export const useTaskStore = create((set, get) => ({
     try {
       const response = await gateWayApi.put(`/updateTaskDetail/${id}`, {
         assignee: task.assignee || null,
-        description: task.description || null
+        description: task.description || null,
+        priority: task.priority || null
       });
 
       if (task.description) {
@@ -149,6 +150,10 @@ export const useTaskStore = create((set, get) => ({
       }
       if (task.assignee) {
         await get().addLocalReport(`UPDATED ASSIGNEE TO: ${task.assignee}`);
+      }
+
+      if (task.priority) {
+        await get().addLocalReport(`UPDATED PRIORITY TO: ${task.priority}`);
       }
 
       return response.data.data;

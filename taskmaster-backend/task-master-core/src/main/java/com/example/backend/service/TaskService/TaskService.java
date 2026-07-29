@@ -73,6 +73,11 @@ public class TaskService implements TaskServiceInterface {
             }
 
         }
+
+        if (taskRequest.getPriority() != null && !taskRequest.getPriority().trim().isEmpty()) {
+            task.setPriority(taskRequest.getPriority());
+        }
+
         task.setAssignee(assignee);
         task.setProject(project);
         Task newTask = taskRepository.save(task);
@@ -150,6 +155,11 @@ public class TaskService implements TaskServiceInterface {
             }
             task.setAssignee(assignee);
             log = String.format("UPDATED ASSIGNEE TO %s", assignee.getUsername());
+        }
+
+        if (taskRequest.getPriority() != null && !taskRequest.getPriority().trim().isEmpty()) {
+            task.setPriority(taskRequest.getPriority());
+            log = String.format("UPDATE PRIORITY TO %s", taskRequest.getPriority());
         }
 
         ReportDTO reportDTO = new ReportDTO();

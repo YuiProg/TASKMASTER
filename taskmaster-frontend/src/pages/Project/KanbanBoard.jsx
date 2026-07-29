@@ -1,11 +1,12 @@
 import React from "react";
 import "./Kanbanboard.css";
 import { useTaskStore } from "../../context/taskStore";
-import { Eye } from "lucide-react";
+import { Eye, AlertOctagon, AlertTriangle, ArrowUp, ArrowDown } from "lucide-react";
 import navigateTo from "../../lib/navigate";
 
 const COLUMNS = ["OPEN", "IN PROGRESS", "QA CHECK", "DEPLOYED", "CLOSED"];
 
+// Main container for meta info + view button (row layout)
 const metaContainerStyle = {
   display: "flex",
   alignItems: "center",
@@ -14,9 +15,24 @@ const metaContainerStyle = {
   width: "100%",
 };
 
+// Container that stacks Assignee and Priority vertically
+const infoStackStyle = {
+  display: "flex",
+  flexDirection: "column",
+  gap: "2px",
+};
+
 const assigneeTextStyle = {
   fontSize: "0.72rem",
   color: "#94a3b8",
+};
+
+const priorityContainerStyle = {
+  display: "inline-flex",
+  alignItems: "center",
+  gap: "4px",
+  fontSize: "0.72rem",
+  fontWeight: "600",
 };
 
 const viewButtonStyle = {
@@ -52,6 +68,39 @@ function columnColorClass(column) {
   }
 }
 
+// Helper to render priority icon & color dynamically
+function renderPriorityIcon(priority = "LOW") {
+  const normPriority = (priority || "LOW").toUpperCase();
+
+  switch (normPriority) {
+    case "CRITICAL":
+      return (
+        <span style={{ ...priorityContainerStyle, color: "#ef4444" }}>
+          <AlertOctagon size={13} /> CRITICAL
+        </span>
+      );
+    case "HIGH":
+      return (
+        <span style={{ ...priorityContainerStyle, color: "#f59e0b" }}>
+          <AlertTriangle size={13} /> HIGH
+        </span>
+      );
+    case "MEDIUM":
+      return (
+        <span style={{ ...priorityContainerStyle, color: "#3b82f6" }}>
+          <ArrowUp size={13} /> MEDIUM
+        </span>
+      );
+    case "LOW":
+    default:
+      return (
+        <span style={{ ...priorityContainerStyle, color: "#64748b" }}>
+          <ArrowDown size={13} /> LOW
+        </span>
+      );
+  }
+}
+
 class KanbanBoard extends React.Component {
   constructor(props) {
     super(props);
@@ -61,7 +110,6 @@ class KanbanBoard extends React.Component {
       localStatusOverrides: {},
     };
     this.wasDragging = false;
-    this.dragResetTimeout = null;
   }
 
   componentDidUpdate(prevProps) {
@@ -70,15 +118,10 @@ class KanbanBoard extends React.Component {
     }
   }
 
-  componentWillUnmount() {
-    if (this.dragResetTimeout) {
-      clearTimeout(this.dragResetTimeout);
-    }
-  }
-
   logDroppedColumn = (taskId, column) => {
     const { updateStatus } = useTaskStore.getState();
     updateStatus(taskId, column);
+    this.wasDragging = false;
   };
 
   handleDragStart = (task) => (e) => {
@@ -90,14 +133,9 @@ class KanbanBoard extends React.Component {
 
   handleDragEnd = () => {
     this.setState({ draggingTaskId: null, dragOverColumn: null });
-    this.resetDraggingFlag();
-  };
-
-  resetDraggingFlag = () => {
-    if (this.dragResetTimeout) clearTimeout(this.dragResetTimeout);
-    this.dragResetTimeout = setTimeout(() => {
+    setTimeout(() => {
       this.wasDragging = false;
-    }, 100);
+    }, 50);
   };
 
   handleDragOver = (column) => (e) => {
@@ -116,26 +154,18 @@ class KanbanBoard extends React.Component {
 
   handleDrop = (column) => (e) => {
     e.preventDefault();
-    const rawTaskId = e.dataTransfer.getData("text/plain");
+    const taskId = e.dataTransfer.getData("text/plain");
 
-    if (!rawTaskId) {
-      this.resetDraggingFlag();
-      return;
-    }
+    if (!taskId) return;
 
-    // Find task preserving original task.id type
-    const task = this.props.tasks?.find((t) => String(t.id) === String(rawTaskId));
-    const targetTaskId = task ? task.id : rawTaskId;
-
+    const task = this.props.tasks?.find((t) => String(t.id) === String(taskId));
     const currentStatus = this.getTaskStatus(task) || (task ? normalizeStatus(task.status) : "");
 
-    // Check if target column is identical
     if (currentStatus === column) {
       this.setState({
         draggingTaskId: null,
         dragOverColumn: null,
       });
-      this.resetDraggingFlag();
       return;
     }
 
@@ -145,39 +175,29 @@ class KanbanBoard extends React.Component {
       newStatus: column,
     });
 
-    // Send original ID to store update
-    this.logDroppedColumn(targetTaskId, column);
+    this.logDroppedColumn(taskId, column);
 
     this.setState((prevState) => ({
       localStatusOverrides: {
         ...prevState.localStatusOverrides,
-        [targetTaskId]: column,
+        [taskId]: column,
       },
       draggingTaskId: null,
       dragOverColumn: null,
     }));
 
     if (this.props.onStatusChange) {
-      this.props.onStatusChange(targetTaskId, column);
+      this.props.onStatusChange(taskId, column);
     }
-
-    // CRITICAL FIX: Explicitly reset wasDragging state on drop
-    // because DOM node re-rendering prevents handleDragEnd from firing
-    this.resetDraggingFlag();
   };
 
   handleCardClick = (task) => {
     if (this.wasDragging) return;
 
-    const updatedTask = {
-      ...task,
-      status: this.getTaskStatus(task),
-    };
-
     if (this.props.onViewTask) {
-      this.props.onViewTask(updatedTask);
+      this.props.onViewTask(task);
     } else {
-      navigateTo(`/tasks/view/${updatedTask.id}`);
+      navigateTo(`/tasks/view/${task.id}`);
     }
   };
 
@@ -232,10 +252,15 @@ class KanbanBoard extends React.Component {
                       <p className="kb-card-title">{task.taskName}</p>
 
                       <div className="kb-card-meta" style={metaContainerStyle}>
-                        <span style={assigneeTextStyle}>
-                          {task.assignee?.username || "Unassigned"}
-                        </span>
+                        {/* Stacked Assignee & Dynamic Priority with Icon */}
+                        <div style={infoStackStyle}>
+                          <span style={assigneeTextStyle}>
+                            Assignee: {task.assignee?.username || "Unassigned"}
+                          </span>
+                          {renderPriorityIcon(task.priority)}
+                        </div>
 
+                        {/* Action Eye Button */}
                         <button
                           type="button"
                           className="kb-view-btn"

@@ -34,6 +34,9 @@ public class Task {
     @Column(name = "status")
     private String status = "OPEN";
 
+    @Column(name = "priority", nullable = true)
+    private String priority = "LOW";
+
     @Column(nullable = false)
     private Long createdAt;
 
