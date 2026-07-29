@@ -220,7 +220,7 @@ class Sidebar extends React.Component {
                                     icon: <Folder size={20} />,
                                     label: 'Projects',
                                     items: [
-                                        { path: '/projects', title: 'All Projects' },
+                                        { path: '/projects', title: 'Assigned Projects' },
                                         { path: '/projects/new', title: 'New Project' },
                                         { path: '/projects/archived', title: 'Archived' },
                                     ],

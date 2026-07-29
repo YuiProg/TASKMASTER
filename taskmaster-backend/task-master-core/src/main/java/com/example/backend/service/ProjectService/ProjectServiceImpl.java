@@ -73,7 +73,15 @@ public class ProjectServiceImpl implements ProjectServiceInterface{
 
     @Override
     public ResponseEntity<ApiResponseModel<List<Project>>> getProjects() {
-        List<Project> projects = projectCacheService.getProjectsCache();
+        User user = authenticatedUser.getAuthenticatedUser();
+        log.info("userId: {}", user.getId());
+//        List<Project> checkIfUserBelongsInAProject = projectRepository.checkIfUserIsInAProject(user.getId());
+//
+//        if (checkIfUserBelongsInAProject.isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("PROJECTS FOUND", "SUCCESS", null));
+//        }
+
+        List<Project> projects = projectCacheService.getProjectsCache(user.getId());
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("PROJECTS FOUND", "SUCCESS", projects));
     }
 

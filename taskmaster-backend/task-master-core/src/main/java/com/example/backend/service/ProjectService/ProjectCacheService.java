@@ -27,8 +27,8 @@ public class ProjectCacheService {
     }
 
     @Cacheable(value = "projectData")
-    public List<Project> getProjectsCache () {
-        List<Project> projects = projectRepository.getAllProjects();
+    public List<Project> getProjectsCache (String id) {
+        List<Project> projects = projectRepository.checkIfUserIsInAProject(id);
 
         for (Project project : projects) {
             if (project != null && project.getMembers() != null) {

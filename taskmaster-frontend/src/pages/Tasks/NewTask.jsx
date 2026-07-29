@@ -3,7 +3,7 @@ import { PanelPage, PanelContainer } from "../../components/TRCOMPONENTS/TRPanel
 import { InputField } from "../../components/TRCOMPONENTS/TRInputField/InputFIeld";
 import Dropdown from "../../components/TRCOMPONENTS/TRDropDown/Dropdown";
 import Button from "../../components/TRCOMPONENTS/TRButton/Button";
-import { useTaskStore } from "../../context/taskStore";
+import { useTaskStore } from "../../context/TaskStore.js";
 import navigateTo from "../../lib/navigate";
 import "./NewTask.css";
 

@@ -3,7 +3,7 @@ import { Activity } from "lucide-react";
 
 import "./TaskReport.css";
 import Spinner from "../../components/Spinner/Spinner";
-import { useReportStore } from "../../context/reportStore";
+import { useReportStore } from "../../context/ReportStore.js";
 
 function formatReportDate(rawDate) {
   if (!rawDate) return "";

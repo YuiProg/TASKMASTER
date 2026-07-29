@@ -1,6 +1,6 @@
 import React from 'react';
 import { PanelContainer, PanelPage } from '../../components/TRCOMPONENTS/TRPanelPage/TRPanelPage';
-import { useProjectStore } from '../../context/projectStore';
+import { useProjectStore } from '../../context/ProjectStore.js';
 import { InputRow } from '../../components/TRCOMPONENTS/TRInputForm/TRInputForm';
 import { Label } from '../../components/TRCOMPONENTS/TRInputField/InputFIeld';
 import { Table } from '../../components/TRCOMPONENTS/TRTable/TrTable';

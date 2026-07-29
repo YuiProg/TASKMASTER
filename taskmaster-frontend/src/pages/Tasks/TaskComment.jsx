@@ -4,7 +4,7 @@ import { Heart } from "lucide-react";
 import './TaskComment.css'
 import Button from "../../components/TRCOMPONENTS/TRButton/Button";
 import Spinner from "../../components/Spinner/Spinner";
-import { useCommentStore } from "../../context/commentStore";
+import { useCommentStore } from "../../context/CommentStore.js";
 
 function initialsOf(name) {
   if (!name) return "?";

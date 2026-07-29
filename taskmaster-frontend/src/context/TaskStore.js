@@ -1,7 +1,7 @@
 // context/taskStore.js
 import { create } from "zustand";
-import { useReportStore } from "./reportStore";
-import { useAuthStore } from "./authStore";
+import { useReportStore } from "./ReportStore.js";
+import { useAuthStore } from "./AuthStore.js";
 import gateWayApi from "../lib/gateway";
 
 export const useTaskStore = create((set, get) => ({
@@ -44,10 +44,6 @@ export const useTaskStore = create((set, get) => ({
     }
   },
 
-  // Shared by updateStatus/updateTask: grabs the current user (rehydrating
-  // via /getAuthUser if authStore's `user` is null — a fresh session/
-  // refresh can leave it null with no rehydration otherwise), then
-  // appends a report entry locally instead of hitting the network again.
   addLocalReport: async (description) => {
     let { user } = useAuthStore.getState();
     if (!user) {
@@ -64,20 +60,16 @@ export const useTaskStore = create((set, get) => ({
 
   updateStatus: async (id, status) => {
     try {
-      await gateWayApi.put(`/updateTask/${id}`, {
+      const response = await gateWayApi.put(`/updateTask/${id}`, {
         status
       });
-
       await get().addLocalReport(`UPDATED STATUS TO: ${status}`);
+      return response.data.data;
     } catch (error) {
       console.log(error.message);
     }
   },
 
-  // POST /createTask  { taskName, assignee, description, project, status }
-  // `assignee` and `project` are sent as plain strings (email / project
-  // name) per the sample payload — adjust if the backend actually expects
-  // ids for either of those instead.
   createTask: async ({ taskName, assignee, description, project, status, priority }) => {
     set({ isCreating: true, error: null });
     try {
@@ -133,10 +125,6 @@ export const useTaskStore = create((set, get) => ({
     }
   },
 
-  // PUT /updateTaskDetail/{id}  { assignee, description }
-  // Adds one report entry per field that was actually provided —
-  // "UPDATED DESCRIPTION TO: ..." and/or "UPDATED ASSIGNEE TO: ..." —
-  // matching the same naming convention as updateStatus's report.
   updateTask: async (task, id) => {
     try {
       const response = await gateWayApi.put(`/updateTaskDetail/${id}`, {

@@ -10,7 +10,7 @@ export const useProjectStore = create((set, get) => ({
   isCreating: false,
   error: null,
 
-  // GET /getProjects -> returns the list of projects
+
   fetchProjects: async () => {
     set({ isLoading: true, error: null });
     try {
@@ -25,9 +25,6 @@ export const useProjectStore = create((set, get) => ({
     }
   },
 
-  // POST /addProject  { projectName, description, emails } -> prepend the created project to the list
-  // NOTE: "emails" is an assumed field name — confirm against the actual
-  // backend DTO and adjust this key if it's named something else.
   createProject: async (projectName, description, emails = []) => {
     set({ isCreating: true, error: null });
     try {

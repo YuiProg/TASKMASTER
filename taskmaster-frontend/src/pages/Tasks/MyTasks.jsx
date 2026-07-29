@@ -3,7 +3,7 @@ import { PanelPage, PanelContainer } from "../../components/TRCOMPONENTS/TRPanel
 import { Table } from "../../components/TRCOMPONENTS/TRTable/TrTable";
 import Button from "../../components/TRCOMPONENTS/TRButton/Button";
 import { InputField } from "../../components/TRCOMPONENTS/TRInputField/InputFIeld";
-import { useTaskStore } from "../../context/taskStore";
+import { useTaskStore } from "../../context/TaskStore.js";
 import "./MyTasks.css";
 import navigateTo from "../../lib/navigate";
 import formatDate from "../../lib/formatDate";
@@ -47,6 +47,7 @@ class MyTasks extends React.Component {
       Project: t.project?.projectName || "No project",
       Assignee: t.assignee?.username || "Unassigned",
       Status: t.status,
+      Priority: t.priority || 'LOW',
       "REPORTER": t.createdBy?.username || "unknown",
       "Created On": formatDate(t.createdAt),
     };

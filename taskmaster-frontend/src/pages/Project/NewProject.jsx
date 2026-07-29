@@ -2,7 +2,7 @@ import React from "react";
 import { PanelPage, PanelContainer } from "../../components/TRCOMPONENTS/TRPanelPage/TRPanelPage";
 import { InputField } from "../../components/TRCOMPONENTS/TRInputField/InputFIeld";
 import Button from "../../components/TRCOMPONENTS/TRButton/Button";
-import { useProjectStore } from "../../context/projectStore";
+import { useProjectStore } from "../../context/ProjectStore.js";
 import navigateTo from "../../lib/navigate";
 import "./NewProject.css";
 

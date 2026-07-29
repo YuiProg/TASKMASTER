@@ -23,9 +23,6 @@ export const useReportStore = create((set) => ({
         }
     },
 
-    // Appends a report entry directly to local state instead of
-    // re-fetching from the server. The sample response comes back
-    // oldest-first, so new entries go at the end to match that order.
     addReport: (report) =>
         set((state) => ({ reports: [report, ...state.reports] })),
 }));

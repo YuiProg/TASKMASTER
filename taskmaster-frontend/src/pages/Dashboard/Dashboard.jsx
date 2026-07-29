@@ -2,8 +2,8 @@ import React from 'react';
 import { PanelContainer, PanelPage } from '../../components/TRCOMPONENTS/TRPanelPage/TRPanelPage';
 import { Table } from '../../components/TRCOMPONENTS/TRTable/TrTable';
 import Button from '../../components/TRCOMPONENTS/TRButton/Button';
-import { useProjectStore } from '../../context/projectStore';
-import { useTaskStore } from '../../context/taskStore';
+import { useProjectStore } from '../../context/ProjectStore.js';
+import { useTaskStore } from '../../context/TaskStore.js';
 import './Dashboard.css';
 import formatDate from '../../lib/formatDate';
 import navigateTo from '../../lib/navigate';
@@ -44,6 +44,14 @@ class Dashboard extends React.Component {
     navigateTo('/tasks/new');
   };
 
+  goToProject = (selected) => {
+    navigateTo(`/projects/${selected["Project Name"]}`)
+  }
+
+  goToTask = (selected) => {
+    navigateTo(`/tasks/view/${selected.id}`);
+  }
+
   render() {
     const { projects, isLoadingProjects, tasks, isLoadingTasks } = this.state;
 
@@ -56,20 +64,43 @@ class Dashboard extends React.Component {
 
     // Table headers are derived directly from these object keys, so keep
     // the keys human-readable — that's what shows up as column titles.
-    const projectRows = projects.slice(0, 5).map((p) => ({
-      'Project Name': p.projectName,
-      Status: p.status,
-      'Created By': p.createdBy?.username || 'unknown',
-      'Created On': formatDate(p.createdAt),
-    }));
 
-    const taskRows = tasks.slice(0, 5).map((t) => ({
-      'Task Name': t.taskName,
-      Project: t.project?.projectName || 'No project',
-      Assignee: t.assignee?.username || 'Unassigned',
-      Status: t.status,
-      'Created On': formatDate(t.createdAt),
-    }));
+    const projectRows = projects.slice(0, 5).map((p) => {
+      const row = {
+        'Project Name': p.projectName,
+        Status: p.status,
+        'Created By': p.createdBy?.username || 'unknown',
+        'Created On': formatDate(p.createdAt),
+      };
+
+      Object.defineProperty(row, "id", {
+        value: p.id,
+        enumerable: false,
+        writable: false
+      });
+      return row;
+    });
+
+
+    const taskRows = tasks.slice(0, 5).map((t) => {
+      const row = {
+        'Task Name': t.taskName,
+        Project: t.project?.projectName || 'No project',
+        Assignee: t.assignee?.username || 'Unassigned',
+        Status: t.status,
+        Priority: t.priority || 'LOW',
+        'Created On': formatDate(t.createdAt),
+      };
+
+      Object.defineProperty(
+        row, "id", {
+          value: t.id,
+          enumerable: false,
+          writable: false
+        }
+      );
+      return row;
+    })
 
     return (
       <PanelPage titlePage="Dashboard" subTitle="Welcome to TaskMaster!">
@@ -115,7 +146,7 @@ class Dashboard extends React.Component {
             onDelete={() => {}}
             onEdit={() => {}}
             onView={() => {}}
-            onRowSelect={() => {}}
+            onRowSelect={(e) => this.goToTask(e)}
           />
         </PanelContainer>
 
@@ -140,7 +171,7 @@ class Dashboard extends React.Component {
             onDelete={() => {}}
             onEdit={() => {}}
             onView={() => {}}
-            onRowSelect={() => {}}
+            onRowSelect={(e) => this.goToProject(e)}
           />
         </PanelContainer>
       </PanelPage>

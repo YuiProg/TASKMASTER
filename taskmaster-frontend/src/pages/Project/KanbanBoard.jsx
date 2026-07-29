@@ -1,6 +1,6 @@
 import React from "react";
-import "./Kanbanboard.css";
-import { useTaskStore } from "../../context/taskStore";
+import "./KanbanBoard.css";
+import { useTaskStore } from "../../context/TaskStore.js";
 import { Eye, AlertOctagon, AlertTriangle, ArrowUp, ArrowDown } from "lucide-react";
 import navigateTo from "../../lib/navigate";
 

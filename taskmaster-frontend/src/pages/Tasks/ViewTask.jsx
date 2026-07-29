@@ -5,12 +5,12 @@ import { Label } from "../../components/TRCOMPONENTS/TRInputField/InputFIeld";
 import Dropdown from "../../components/TRCOMPONENTS/TRDropDown/Dropdown";
 
 import Spinner from "../../components/Spinner/Spinner";
-import { useTaskStore } from "../../context/taskStore";
+import { useTaskStore } from "../../context/TaskStore.js";
 import navigateTo from "../../lib/navigate";
 import "./ViewTask.css";
 import TaskComments from "./TaskComment";
 import TaskReports from "./TaskReport";
-import { useCommentStore } from "../../context/commentStore";
+import { useCommentStore } from "../../context/CommentStore.js";
 
 // Options arrays
 const STATUS_OPTIONS = ["OPEN", "IN PROGRESS", "QA CHECK", "DEPLOYED", "CLOSED"];
@@ -125,7 +125,8 @@ class ViewTask extends React.Component {
     this.setState((prev) => ({
       task: { ...prev.task, status: displayValue },
     }));
-    await updateStatus(this.state.task.id, displayValue);
+    const updatedTask = await updateStatus(this.state.task.id, displayValue);
+    this.setState({task: updatedTask});
     console.log("[ViewTask] status changed to:", displayValue);
   };
 

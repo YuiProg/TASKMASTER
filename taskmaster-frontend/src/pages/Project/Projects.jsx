@@ -3,7 +3,7 @@ import { PanelPage, PanelContainer } from "../../components/TRCOMPONENTS/TRPanel
 import { Table } from "../../components/TRCOMPONENTS/TRTable/TrTable";
 import Button from "../../components/TRCOMPONENTS/TRButton/Button";
 import{ InputField }from "../../components/TRCOMPONENTS/TRInputField/InputFIeld";
-import { useProjectStore } from "../../context/projectStore";
+import { useProjectStore } from "../../context/ProjectStore.js";
 import "./Projects.css";
 import navigateTo from "../../lib/navigate";
 import formatDate from "../../lib/formatDate";
