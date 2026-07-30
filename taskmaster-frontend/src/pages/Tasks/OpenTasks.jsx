@@ -64,7 +64,7 @@ class OpenTasks extends React.Component {
     return (
       <PanelPage
         titlePage="Open Tasks"
-        subTitle="Open tasks."
+        subTitle="Open and Unassigned tasks."
       >
         <PanelContainer>
           <div className="tasks-page-header">

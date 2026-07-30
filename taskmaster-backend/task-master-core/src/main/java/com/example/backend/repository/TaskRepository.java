@@ -17,8 +17,8 @@ public interface TaskRepository extends JpaRepository<Task, String> {
     @Query("SELECT t FROM Task t JOIN Project p ON t.project.id = p.id WHERE p.id = :id AND t.del = 0 ORDER BY t.createdAt DESC")
     List<Task> getTaskOnProject (@Param("id") String id);
 
-    @Query("SELECT t FROM Task t WHERE t.status = 'OPEN' AND t.del = 0 ORDER BY t.createdAt DESC")
-    List<Task> getAllOpenTask ();
+    @Query("SELECT t FROM Task t WHERE (t.status = 'OPEN' OR t.assignee IS NULL) AND t.del = 0 ORDER BY t.createdAt DESC")
+    List<Task> getAllOpenTask();
 
     @Modifying
     @Transactional
