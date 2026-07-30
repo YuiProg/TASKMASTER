@@ -119,6 +119,20 @@ public class TaskService implements TaskServiceInterface {
         oldTask.setCreatedAt(task.getCreatedAt());
         oldTask.setAssignee(task.getAssignee());
 
+        String userId = authUser != null ? authUser.getId() : null;
+        String assigneeId = task.getAssignee() != null ? task.getAssignee().getId() : null;
+        String createdById = task.getCreatedBy() != null ? task.getCreatedBy().getId() : null;
+
+
+        boolean isAssignee = Objects.equals(assigneeId, userId);
+        boolean isCreator = Objects.equals(createdById, userId);
+
+
+        if (!isAssignee && !isCreator) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(ApiResponseModel.error("You are not authorized to update this task.", "ERROR"));
+        }
+
         if (taskRequest.getTaskName() != null && !taskRequest.getTaskName().trim().isEmpty()) {
             task.setTaskName(taskRequest.getTaskName());
         }
