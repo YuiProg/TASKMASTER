@@ -3,7 +3,7 @@ import "./KanbanBoard.css";
 import { useTaskStore } from "../../context/TaskStore.js";
 import { Eye, AlertOctagon, AlertTriangle, ArrowUp, ArrowDown, Loader2 } from "lucide-react";
 import navigateTo from "../../lib/navigate";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 const COLUMNS = ["OPEN", "IN PROGRESS", "QA CHECK", "DEPLOYED", "CLOSED"];
 
@@ -253,10 +253,10 @@ class KanbanBoard extends React.Component {
       this.setState({ columnOrder: previousColumnOrder });
 
       // Show toast error message
-      toast.error(result?.message, {
-        position: "bottom-right",
-        duration: 4000,
-      });
+      // toast.error(result?.message, {
+      //   position: "bottom-right",
+      //   duration: 4000,
+      // });
       this.wasDragging = false;
       return;
     }
