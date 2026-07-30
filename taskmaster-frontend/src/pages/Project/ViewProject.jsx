@@ -161,7 +161,14 @@ class ViewProject extends React.Component {
                         <Label label={`TASKS: ${taskCount}`} style={{marginTop: '10px', marginBottom: '20px'}}/>
                         {this.viewTasks()}
                     </PanelContainer> */}
-                    <PanelContainer title="Project Members">
+                </InputRow>
+                </PanelContainer>
+
+                <PanelContainer title="Task Board">
+                    <div style={{marginTop: '10px'}}/>
+                    <KanbanBoard tasks={this.state.tasks}/>
+                </PanelContainer>
+                <PanelContainer title="Project Members">
                         <Label label={`Members: ${memberCount}`} style={{marginTop: '10px', marginBottom: '20px'}}/>
 
                         <div className="vp-add-member-row">
@@ -186,13 +193,6 @@ class ViewProject extends React.Component {
 
                         {this.projectMembers()}
                     </PanelContainer>
-                </InputRow>
-                </PanelContainer>
-
-                <PanelContainer title="Task Board">
-                    <div style={{marginTop: '10px'}}/>
-                    <KanbanBoard tasks={this.state.tasks}/>
-                </PanelContainer>
             </PanelPage>
         );
     }

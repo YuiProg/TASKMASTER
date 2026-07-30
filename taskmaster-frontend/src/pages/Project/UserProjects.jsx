@@ -59,8 +59,8 @@ class UserProjects extends React.Component {
 
     return (
       <PanelPage
-        titlePage="Projects"
-        subTitle="Every project your branch is currently tracking."
+        titlePage="Your Projects"
+        subTitle="Every project you created."
       >
         <PanelContainer>
           <div className="projects-page-header">

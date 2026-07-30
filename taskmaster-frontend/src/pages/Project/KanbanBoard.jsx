@@ -87,6 +87,32 @@ function columnColorClass(column) {
   }
 }
 
+// Groups task ids by column, preserving the order they appear in `tasks`.
+// This becomes the single source of truth for both which column a task
+// is in AND where it sits within that column — plain array filtering
+// alone can't guarantee a dropped card lands at the bottom, since it
+// would just fall back to wherever it happened to sit in the original
+// unsorted `tasks` array.
+function buildColumnOrder(tasks) {
+  const order = {};
+  COLUMNS.forEach((c) => {
+    order[c] = [];
+  });
+
+  tasks.forEach((t) => {
+    const status = normalizeStatus(t.status);
+    if (order[status]) {
+      order[status].push(t.id);
+    } else {
+      // Unrecognized/legacy status value — default it into OPEN rather
+      // than silently dropping the card from the board entirely.
+      order.OPEN.push(t.id);
+    }
+  });
+
+  return order;
+}
+
 // Helper to render priority icon & color dynamically
 function renderPriorityIcon(priority = "LOW") {
   const normPriority = (priority || "LOW").toUpperCase();
@@ -126,7 +152,7 @@ class KanbanBoard extends React.Component {
     this.state = {
       draggingTaskId: null,
       dragOverColumn: null,
-      localStatusOverrides: {},
+      columnOrder: buildColumnOrder(props.tasks || []),
       updatingTaskId: null,
     };
     this.wasDragging = false;
@@ -145,8 +171,16 @@ class KanbanBoard extends React.Component {
 
   componentDidUpdate(prevProps) {
     if (prevProps.tasks !== this.props.tasks) {
-      this.setState({ localStatusOverrides: {} });
+      // Fresh data from the parent (e.g. after a real refetch) — rebuild
+      // column order from scratch rather than trying to merge it with
+      // whatever local drag state existed before.
+      this.setState({ columnOrder: buildColumnOrder(this.props.tasks || []) });
     }
+  }
+
+  findTaskColumn(taskId) {
+    const { columnOrder } = this.state;
+    return COLUMNS.find((c) => columnOrder[c].includes(taskId)) || null;
   }
 
   handleDragStart = (task) => (e) => {
@@ -188,29 +222,27 @@ class KanbanBoard extends React.Component {
 
     if (!taskId) return;
 
-    const task = this.props.tasks?.find((t) => String(t.id) === String(taskId));
-    const currentStatus = this.getTaskStatus(task) || (task ? normalizeStatus(task.status) : "");
+    const currentColumn = this.findTaskColumn(taskId);
 
-    if (currentStatus === column) {
-      this.setState({
-        draggingTaskId: null,
-        dragOverColumn: null,
-      });
+    if (currentColumn === column) {
+      this.setState({ draggingTaskId: null, dragOverColumn: null });
       return;
     }
 
-    // Save current override to restore it if API fails
-    const previousOverride = this.state.localStatusOverrides[taskId];
+    // Snapshot so we can restore exact prior order if the API call fails.
+    const previousColumnOrder = this.state.columnOrder;
 
-    // Optimistically move card to new column
-    this.setState((prevState) => ({
-      localStatusOverrides: {
-        ...prevState.localStatusOverrides,
-        [taskId]: column,
-      },
+    // Optimistically move the card to the END of the target column.
+    const nextColumnOrder = Object.fromEntries(
+      COLUMNS.map((c) => [c, previousColumnOrder[c].filter((id) => id !== taskId)])
+    );
+    nextColumnOrder[column] = [...nextColumnOrder[column], taskId];
+
+    this.setState({
+      columnOrder: nextColumnOrder,
       draggingTaskId: null,
       dragOverColumn: null,
-    }));
+    });
 
     // Trigger update in Zustand Store
     const { updateStatus } = useTaskStore.getState();
@@ -218,15 +250,7 @@ class KanbanBoard extends React.Component {
 
     // IF API Call Failed / Status ERROR: Revert card and show toast notification
     if (!result || !result.success) {
-      this.setState((prevState) => {
-        const updatedOverrides = { ...prevState.localStatusOverrides };
-        if (previousOverride !== undefined) {
-          updatedOverrides[taskId] = previousOverride;
-        } else {
-          delete updatedOverrides[taskId]; // Reverts to original status
-        }
-        return { localStatusOverrides: updatedOverrides };
-      });
+      this.setState({ columnOrder: previousColumnOrder });
 
       // Show toast error message
       toast.error(result?.message, {
@@ -254,16 +278,11 @@ class KanbanBoard extends React.Component {
     }
   };
 
-  getTaskStatus(task) {
-    if (!task) return "";
-    return (
-      this.state.localStatusOverrides[task.id] || normalizeStatus(task.status)
-    );
-  }
-
   render() {
     const { tasks = [] } = this.props;
-    const { draggingTaskId, dragOverColumn, updatingTaskId } = this.state;
+    const { draggingTaskId, dragOverColumn, updatingTaskId, columnOrder } = this.state;
+
+    const tasksById = Object.fromEntries(tasks.map((t) => [t.id, t]));
 
     return (
       <div className="kb-board">
@@ -271,9 +290,9 @@ class KanbanBoard extends React.Component {
         <Toaster />
 
         {COLUMNS.map((column) => {
-          const columnTasks = tasks.filter(
-            (t) => this.getTaskStatus(t) === column
-          );
+          const columnTasks = columnOrder[column]
+            .map((id) => tasksById[id])
+            .filter(Boolean);
 
           return (
             <div
