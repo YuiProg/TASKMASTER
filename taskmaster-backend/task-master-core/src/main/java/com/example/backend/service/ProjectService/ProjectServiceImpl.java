@@ -126,7 +126,7 @@ public class ProjectServiceImpl implements ProjectServiceInterface{
 
             project.setMembers(members);
             Project updatedProject = projectRepository.save(project);
-
+            projectCacheService.evictUserViewProjectCache(project.getProjectName());
             return ResponseEntity.ok(
                     ApiResponseModel.success("MEMBER ADDED TO PROJECT", "SUCCESS", updatedProject));
 

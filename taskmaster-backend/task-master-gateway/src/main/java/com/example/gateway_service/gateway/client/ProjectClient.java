@@ -4,13 +4,11 @@ package com.example.gateway_service.gateway.client;
 import com.example.gateway_service.gateway.config.FeignCookieConfig;
 import com.example.gateway_service.gateway.dto.ApiResponseModel;
 import com.example.gateway_service.gateway.dto.ProjectDTO;
+import com.example.gateway_service.gateway.request.AddMemberToProjectRequest;
 import com.example.gateway_service.gateway.request.ProjectRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,4 +27,7 @@ public interface ProjectClient {
 
     @GetMapping("/getUserCreatedProjects")
     ResponseEntity<ApiResponseModel<List<ProjectDTO>>> getUserCreatedProjects ();
+
+    @PutMapping("addProjectMembers/{projectId}")
+    ResponseEntity<ApiResponseModel<ProjectDTO>> addMemberToProject (@PathVariable String projectId, @RequestBody AddMemberToProjectRequest addMemberToProjectRequest);
 }

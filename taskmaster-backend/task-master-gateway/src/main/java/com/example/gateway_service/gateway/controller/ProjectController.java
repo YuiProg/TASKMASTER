@@ -3,6 +3,7 @@ package com.example.gateway_service.gateway.controller;
 import com.example.gateway_service.gateway.client.ProjectClient;
 import com.example.gateway_service.gateway.dto.ApiResponseModel;
 import com.example.gateway_service.gateway.dto.ProjectDTO;
+import com.example.gateway_service.gateway.request.AddMemberToProjectRequest;
 import com.example.gateway_service.gateway.request.ProjectRequest;
 import com.example.gateway_service.gateway.service.ProjectService;
 import lombok.AllArgsConstructor;
@@ -40,5 +41,11 @@ public class ProjectController implements ProjectClient {
     @GetMapping("/getUserCreatedProjects")
     public ResponseEntity<ApiResponseModel<List<ProjectDTO>>> getUserCreatedProjects() {
         return projectService.getUserCreatedProjects();
+    }
+
+    @Override
+    @PutMapping("addProjectMembers/{projectId}")
+    public ResponseEntity<ApiResponseModel<ProjectDTO>> addMemberToProject(@PathVariable String projectId, @RequestBody AddMemberToProjectRequest addMemberToProjectRequest) {
+        return projectService.addMemberToProject(projectId, addMemberToProjectRequest);
     }
 }

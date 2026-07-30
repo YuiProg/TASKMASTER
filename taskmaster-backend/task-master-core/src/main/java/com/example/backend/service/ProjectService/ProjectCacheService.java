@@ -54,4 +54,7 @@ public class ProjectCacheService {
 
     @CacheEvict(value = "userCreatedProjects", key = "#userId")
     public void evictUserCreatedProjects (String userId) {}
+
+    @CacheEvict(value = "projectByName", key = "#name")
+    public void evictUserViewProjectCache(String name) {}
 }

@@ -4,6 +4,7 @@ import com.example.gateway_service.gateway.client.ProjectClient;
 import com.example.gateway_service.gateway.config.JwtUtil;
 import com.example.gateway_service.gateway.dto.ApiResponseModel;
 import com.example.gateway_service.gateway.dto.ProjectDTO;
+import com.example.gateway_service.gateway.request.AddMemberToProjectRequest;
 import com.example.gateway_service.gateway.request.ProjectRequest;
 import feign.FeignException;
 import lombok.AllArgsConstructor;
@@ -105,6 +106,23 @@ public class ProjectService implements ProjectClient {
             return builder.body(response.getBody());
         } catch (FeignException e) {
             log.info("getUserCreatedProjects FAILED status: {} message: {}", e.status(), e.contentUTF8());
+            HttpStatus status = e.status() > 0 ? HttpStatus.valueOf(e.status()) : HttpStatus.SERVICE_UNAVAILABLE;
+
+            return ResponseEntity.status(status)
+                    .body(ApiResponseModel.error(e.status() > 0 ? e.contentUTF8() : "PROJECT SERVICE UNAVAILABLE", "ERROR"));
+        }
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<ProjectDTO>> addMemberToProject(String projectId, AddMemberToProjectRequest addMemberToProjectRequest) {
+        try {
+
+            ResponseEntity<ApiResponseModel<ProjectDTO>> response = projectClient.addMemberToProject(projectId, addMemberToProjectRequest);
+            ResponseEntity.BodyBuilder builder = ResponseEntity.status(response.getStatusCode());
+
+            return builder.body(response.getBody());
+        } catch (FeignException e) {
+            log.info("addMemberToProject FAILED status: {} message: {}", e.status(), e.contentUTF8());
             HttpStatus status = e.status() > 0 ? HttpStatus.valueOf(e.status()) : HttpStatus.SERVICE_UNAVAILABLE;
 
             return ResponseEntity.status(status)
