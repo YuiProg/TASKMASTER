@@ -123,12 +123,12 @@ public class ProjectServiceImpl implements ProjectServiceInterface{
                     members.add(user);
                 }
             }
-
             project.setMembers(members);
             Project updatedProject = projectRepository.save(project);
             projectCacheService.evictUserViewProjectCache(project.getProjectName());
+            projectCacheService.evictUserProjectsCache();
             return ResponseEntity.ok(
-                    ApiResponseModel.success("MEMBER ADDED TO PROJECT", "SUCCESS", updatedProject));
+                    ApiResponseModel.success("MEMBER/s ADDED TO PROJECT", "SUCCESS", updatedProject));
 
         } catch (Exception e) {
             return ResponseEntity.internalServerError()
