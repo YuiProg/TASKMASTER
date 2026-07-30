@@ -1,4 +1,3 @@
-// context/taskStore.js
 import { create } from "zustand";
 import { useReportStore } from "./ReportStore.js";
 import { useAuthStore } from "./AuthStore.js";
@@ -10,6 +9,7 @@ export const useTaskStore = create((set, get) => ({
   myTasks: [],
   isLoadingMyTasks: false,
   isCreating: false,
+  updatingTaskId: null, // Track currently updating task ID
   error: null,
   openTasks: [],
 
@@ -59,14 +59,57 @@ export const useTaskStore = create((set, get) => ({
   },
 
   updateStatus: async (id, status) => {
+    set({ updatingTaskId: id, error: null });
     try {
-      const response = await gateWayApi.put(`/updateTask/${id}`, {
-        status
-      });
+      const response = await gateWayApi.put(`/updateTask/${id}`, { status });
+      const resData = response.data;
+
+      // Check if backend returned status: "ERROR" (even with HTTP 200)
+      if (String(resData?.status).toUpperCase() === "ERROR") {
+        let errorMsg = "Failed to update status";
+
+        // Unpack nested stringified JSON in resData.message
+        if (resData.message) {
+          try {
+            const parsed = JSON.parse(resData.message);
+            errorMsg = parsed.message || errorMsg;
+          } catch {
+            errorMsg = resData.message;
+          }
+        }
+
+        set({ error: errorMsg });
+        return { success: false, message: errorMsg };
+      }
+
+      // Successful update
       await get().addLocalReport(`UPDATED STATUS TO: ${status}`);
-      return response.data.data;
+      return { 
+        success: true, 
+        data: resData?.data 
+      };
+
     } catch (error) {
-      console.log(error.message);
+      console.error("Update task status failed:", error);
+
+      let errorMsg = "Something went wrong. Please try again.";
+
+      if (error.response?.data) {
+        const resData = error.response.data;
+        if (resData.message) {
+          try {
+            const parsed = JSON.parse(resData.message);
+            errorMsg = parsed.message || errorMsg;
+          } catch {
+            errorMsg = resData.message;
+          }
+        }
+      }
+
+      set({ error: errorMsg });
+      return { success: false, message: errorMsg };
+    } finally {
+      set({ updatingTaskId: null });
     }
   },
 
@@ -79,7 +122,7 @@ export const useTaskStore = create((set, get) => ({
         description,
         project,
         status,
-        priority
+        priority,
       });
 
       if (String(res.data.status).toUpperCase() === "SUCCESS") {
@@ -130,7 +173,7 @@ export const useTaskStore = create((set, get) => ({
       const response = await gateWayApi.put(`/updateTaskDetail/${id}`, {
         assignee: task.assignee || null,
         description: task.description || null,
-        priority: task.priority || null
+        priority: task.priority || null,
       });
 
       if (task.description) {
@@ -155,5 +198,5 @@ export const useTaskStore = create((set, get) => ({
       });
       return null;
     }
-  }
+  },
 }));

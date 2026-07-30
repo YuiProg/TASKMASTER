@@ -234,7 +234,8 @@ class Sidebar extends React.Component {
                                     items: [
                                         { path: '/tasks/my-tasks', title: 'Assigned to Me' },
                                         { path: '/tasks/open-tasks', title: 'Open Tasks' },
-                                        { path: '/tasks/backlog', title: 'Backlog' },
+                                        { path: '/tasks/created-tasks', title: 'Filed Tasks' },
+                                        { path: '/tasks/backlog', title: 'Backlog'}
                                     ],
                                 })}
                                 {this.renderSimpleItem({ path: '/branches', icon: <GitBranch size={20} />, label: 'Branches', pathname })}

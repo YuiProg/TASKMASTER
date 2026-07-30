@@ -1,4 +1,4 @@
-package com.example.gateway_service.gateway.config;
+package com.example.scheduler_service.scheduler.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;

@@ -66,4 +66,10 @@ public class TaskController implements TaskServiceInterface {
     public ResponseEntity<ApiResponseModel<List<Task>>> getAllOpenTask() {
         return taskServiceInterface.getAllOpenTask();
     }
+
+    @Override
+    @PutMapping("/api/v1/archiveTasks")
+    public ResponseEntity<ApiResponseModel<List<Task>>> archiveTasks() {
+        return taskServiceInterface.archiveTasks();
+    }
 }

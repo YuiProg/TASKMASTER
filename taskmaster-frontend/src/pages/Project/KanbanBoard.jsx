@@ -1,8 +1,9 @@
 import React from "react";
 import "./KanbanBoard.css";
 import { useTaskStore } from "../../context/TaskStore.js";
-import { Eye, AlertOctagon, AlertTriangle, ArrowUp, ArrowDown } from "lucide-react";
+import { Eye, AlertOctagon, AlertTriangle, ArrowUp, ArrowDown, Loader2 } from "lucide-react";
 import navigateTo from "../../lib/navigate";
+import toast, { Toaster } from "react-hot-toast";
 
 const COLUMNS = ["OPEN", "IN PROGRESS", "QA CHECK", "DEPLOYED", "CLOSED"];
 
@@ -48,6 +49,24 @@ const viewButtonStyle = {
   outline: "none",
   lineHeight: 1,
   margin: 0,
+};
+
+const cardLoadingOverlayStyle = {
+  position: "absolute",
+  top: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  backgroundColor: "rgba(255, 255, 255, 0.85)",
+  borderRadius: "8px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  zIndex: 10,
+  gap: "6px",
+  fontSize: "0.75rem",
+  fontWeight: "600",
+  color: "#2563eb",
 };
 
 function normalizeStatus(status) {
@@ -108,8 +127,20 @@ class KanbanBoard extends React.Component {
       draggingTaskId: null,
       dragOverColumn: null,
       localStatusOverrides: {},
+      updatingTaskId: null,
     };
     this.wasDragging = false;
+  }
+
+  componentDidMount() {
+    // Subscribe to Zustand store changes for updatingTaskId
+    this.unsubscribe = useTaskStore.subscribe((state) => {
+      this.setState({ updatingTaskId: state.updatingTaskId });
+    });
+  }
+
+  componentWillUnmount() {
+    if (this.unsubscribe) this.unsubscribe();
   }
 
   componentDidUpdate(prevProps) {
@@ -118,13 +149,12 @@ class KanbanBoard extends React.Component {
     }
   }
 
-  logDroppedColumn = (taskId, column) => {
-    const { updateStatus } = useTaskStore.getState();
-    updateStatus(taskId, column);
-    this.wasDragging = false;
-  };
-
   handleDragStart = (task) => (e) => {
+    // Prevent dragging if the task is currently updating
+    if (String(this.state.updatingTaskId) === String(task.id)) {
+      e.preventDefault();
+      return;
+    }
     this.wasDragging = true;
     e.dataTransfer.setData("text/plain", task.id);
     e.dataTransfer.effectAllowed = "move";
@@ -152,7 +182,7 @@ class KanbanBoard extends React.Component {
     }
   };
 
-  handleDrop = (column) => (e) => {
+  handleDrop = (column) => async (e) => {
     e.preventDefault();
     const taskId = e.dataTransfer.getData("text/plain");
 
@@ -169,14 +199,10 @@ class KanbanBoard extends React.Component {
       return;
     }
 
-    console.log("Ticket dropped into new status:", {
-      ticket: task,
-      previousStatus: currentStatus,
-      newStatus: column,
-    });
+    // Save current override to restore it if API fails
+    const previousOverride = this.state.localStatusOverrides[taskId];
 
-    this.logDroppedColumn(taskId, column);
-
+    // Optimistically move card to new column
     this.setState((prevState) => ({
       localStatusOverrides: {
         ...prevState.localStatusOverrides,
@@ -185,6 +211,32 @@ class KanbanBoard extends React.Component {
       draggingTaskId: null,
       dragOverColumn: null,
     }));
+
+    // Trigger update in Zustand Store
+    const { updateStatus } = useTaskStore.getState();
+    const result = await updateStatus(taskId, column);
+
+    // IF API Call Failed / Status ERROR: Revert card and show toast notification
+    if (!result || !result.success) {
+      this.setState((prevState) => {
+        const updatedOverrides = { ...prevState.localStatusOverrides };
+        if (previousOverride !== undefined) {
+          updatedOverrides[taskId] = previousOverride;
+        } else {
+          delete updatedOverrides[taskId]; // Reverts to original status
+        }
+        return { localStatusOverrides: updatedOverrides };
+      });
+
+      // Show toast error message
+      toast.error(result?.message || "THIS TASK IS NOT ASSIGNED TO YOU", {
+        position: "bottom-right",
+        duration: 4000,
+      });
+      return;
+    }
+
+    this.wasDragging = false;
 
     if (this.props.onStatusChange) {
       this.props.onStatusChange(taskId, column);
@@ -210,10 +262,13 @@ class KanbanBoard extends React.Component {
 
   render() {
     const { tasks = [] } = this.props;
-    const { draggingTaskId, dragOverColumn } = this.state;
+    const { draggingTaskId, dragOverColumn, updatingTaskId } = this.state;
 
     return (
       <div className="kb-board">
+        {/* Toast Container to render toasts */}
+        <Toaster />
+
         {COLUMNS.map((column) => {
           const columnTasks = tasks.filter(
             (t) => this.getTaskStatus(t) === column
@@ -238,44 +293,59 @@ class KanbanBoard extends React.Component {
                 {columnTasks.length === 0 ? (
                   <p className="kb-empty">No tickets</p>
                 ) : (
-                  columnTasks.map((task) => (
-                    <div
-                      key={task.id}
-                      className={`kb-card ${
-                        draggingTaskId === task.id ? "kb-card-dragging" : ""
-                      }`}
-                      draggable
-                      onDragStart={this.handleDragStart(task)}
-                      onDragEnd={this.handleDragEnd}
-                      onClick={(e) => this.handleCardClick(task, e)}
-                    >
-                      <p className="kb-card-title">{task.taskName}</p>
+                  columnTasks.map((task) => {
+                    const isUpdating = String(updatingTaskId) === String(task.id);
 
-                      <div className="kb-card-meta" style={metaContainerStyle}>
-                        {/* Stacked Assignee & Dynamic Priority with Icon */}
-                        <div style={infoStackStyle}>
-                          <span style={assigneeTextStyle}>
-                            Assignee: {task.assignee?.username || "Unassigned"}
-                          </span>
-                          {renderPriorityIcon(task.priority)}
+                    return (
+                      <div
+                        key={task.id}
+                        className={`kb-card ${
+                          draggingTaskId === task.id ? "kb-card-dragging" : ""
+                        }`}
+                        style={{ position: "relative" }}
+                        draggable={!isUpdating}
+                        onDragStart={this.handleDragStart(task)}
+                        onDragEnd={this.handleDragEnd}
+                        onClick={(e) => this.handleCardClick(task, e)}
+                      >
+                        {/* Task Loading Overlay */}
+                        {isUpdating && (
+                          <div style={cardLoadingOverlayStyle}>
+                            <Loader2 size={16} className="kb-spinner" />
+                            <span>Updating...</span>
+                          </div>
+                        )}
+
+                        <p className="kb-card-title">{task.taskName}</p>
+
+                        <div className="kb-card-meta" style={metaContainerStyle}>
+                          <div style={infoStackStyle}>
+                            <span style={assigneeTextStyle}>
+                              Assignee: {task.assignee?.username || "Unassigned"}
+                            </span>
+                            <span style={assigneeTextStyle}>
+                              Reporter: {task.createdBy?.username || "Unassigned"}
+                            </span>
+                            {renderPriorityIcon(task.priority)}
+                          </div>
+
+                          <button
+                            type="button"
+                            className="kb-view-btn"
+                            title="View Ticket"
+                            style={viewButtonStyle}
+                            disabled={isUpdating}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              this.handleCardClick(task, e);
+                            }}
+                          >
+                            <Eye size={14} />
+                          </button>
                         </div>
-
-                        {/* Action Eye Button */}
-                        <button
-                          type="button"
-                          className="kb-view-btn"
-                          title="View Ticket"
-                          style={viewButtonStyle}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            this.handleCardClick(task, e);
-                          }}
-                        >
-                          <Eye size={14} />
-                        </button>
                       </div>
-                    </div>
-                  ))
+                    );
+                  })
                 )}
               </div>
             </div>

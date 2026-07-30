@@ -11,6 +11,7 @@ import "./ViewTask.css";
 import TaskComments from "./TaskComment";
 import TaskReports from "./TaskReport";
 import { useCommentStore } from "../../context/CommentStore.js";
+import toast, { Toaster } from "react-hot-toast";
 
 // Options arrays
 const STATUS_OPTIONS = ["OPEN", "IN PROGRESS", "QA CHECK", "DEPLOYED", "CLOSED"];
@@ -121,23 +122,61 @@ class ViewTask extends React.Component {
   };
 
   handleStatusChange = async (displayValue) => {
+    const previousStatus = this.state.task.status;
     const { updateStatus } = useTaskStore.getState();
+
+    // Optimistically update status UI
     this.setState((prev) => ({
       task: { ...prev.task, status: displayValue },
     }));
-    const updatedTask = await updateStatus(this.state.task.id, displayValue);
-    this.setState({task: updatedTask});
+
+    const result = await updateStatus(this.state.task.id, displayValue);
+
+    // Revert state + trigger toast on failure
+    if (!result || result.success === false) {
+      this.setState((prev) => ({
+        task: { ...prev.task, status: previousStatus },
+      }));
+
+      toast.error(result?.message || "THIS TASK IS NOT ASSIGNED TO YOU", {
+        position: "bottom-right",
+        duration: 4000,
+      });
+      return;
+    }
+
+    if (result.data) {
+      this.setState({ task: result.data });
+    }
     console.log("[ViewTask] status changed to:", displayValue);
   };
 
   handlePriorityChange = async (priorityValue) => {
+    const previousPriority = this.state.task.priority;
     const { updateTask } = useTaskStore.getState();
+
+    // Optimistically update priority UI
     this.setState((prev) => ({
       task: { ...prev.task, priority: priorityValue },
     }));
-    const updatedTask = await updateTask({ priority: priorityValue }, this.state.task.id);
-    if (updatedTask) {
-      this.setState({ task: updatedTask });
+
+    const result = await updateTask({ priority: priorityValue }, this.state.task.id);
+
+    // Revert state + trigger toast on failure
+    if (!result || result.success === false) {
+      this.setState((prev) => ({
+        task: { ...prev.task, priority: previousPriority },
+      }));
+
+      toast.error(result?.message || "THIS TASK IS NOT ASSIGNED TO YOU", {
+        position: "bottom-right",
+        duration: 4000,
+      });
+      return;
+    }
+
+    if (result.data || result) {
+      this.setState({ task: result.data || result });
     }
     console.log("[ViewTask] priority changed to:", priorityValue);
   };
@@ -149,22 +188,58 @@ class ViewTask extends React.Component {
   };
 
   handleAssigneeEdit = async (value) => {
-    const { updateTask } = useTaskStore.getState();
     if (!value) return;
+    const previousAssignee = this.state.task.assignee;
+    const { updateTask } = useTaskStore.getState();
+
     this.setState((prev) => ({
       task: { ...prev.task, assignee: value },
     }));
-    const task = await updateTask({ assignee: value }, this.state.task.id);
-    this.setState({ task });
+
+    const result = await updateTask({ assignee: value }, this.state.task.id);
+
+    if (!result || result.success === false) {
+      this.setState((prev) => ({
+        task: { ...prev.task, assignee: previousAssignee },
+      }));
+
+      toast.error(result?.message || "THIS TASK IS NOT ASSIGNED TO YOU", {
+        position: "bottom-right",
+        duration: 4000,
+      });
+      return;
+    }
+
+    if (result.data || result) {
+      this.setState({ task: result.data || result });
+    }
   };
 
   handleDescriptionEdit = async (value) => {
+    const previousDescription = this.state.task.description;
     const { updateTask } = useTaskStore.getState();
+
     this.setState((prev) => ({
       task: { ...prev.task, description: value },
     }));
-    const task = await updateTask({ description: value }, this.state.task.id);
-    this.setState({ task });
+
+    const result = await updateTask({ description: value }, this.state.task.id);
+
+    if (!result || result.success === false) {
+      this.setState((prev) => ({
+        task: { ...prev.task, description: previousDescription },
+      }));
+
+      toast.error(result?.message || "THIS TASK IS NOT ASSIGNED TO YOU", {
+        position: "bottom-right",
+        duration: 4000,
+      });
+      return;
+    }
+
+    if (result.data || result) {
+      this.setState({ task: result.data || result });
+    }
   };
 
   render() {
@@ -184,6 +259,9 @@ class ViewTask extends React.Component {
         titlePage={task.taskName.toUpperCase()}
         subTitle={`Task ID: ${task.id}`}
       >
+        {/* Toast Container to display errors */}
+        <Toaster />
+
         <PanelContainer title="Overview">
           <div className="vt-overview-header">
             <h2 className="vt-task-title">{task.taskName}</h2>
@@ -224,7 +302,7 @@ class ViewTask extends React.Component {
                   <UserHoverCard user={task.assignee}>
                     <Label
                       label={`${task.assignee?.username || "Unassigned"}`}
-                      value={task.assignee?.username || ""}
+                      value={task.assignee?.email || ""}
                       onClick={(e) => this.handleAssigneeEdit(e)}
                       placeholder="Assignee"
                     />

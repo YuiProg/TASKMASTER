@@ -55,30 +55,32 @@ public class TaskService implements TaskServiceInterface {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponseModel.error("PROJECT NOT FOUND", "ERROR"));
         }
 
-        List<User> members = project.getMembers();
-        User assignee = userRepository.findByEmail(taskRequest.getAssignee()).orElse(null);
+        if (taskRequest.getAssignee() != null && !taskRequest.getAssignee().trim().isEmpty()) {
+            List<User> members = project.getMembers();
+            User assignee = userRepository.findByEmail(taskRequest.getAssignee()).orElse(null);
 
-        if (assignee == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                    .body(ApiResponseModel.error("USER NOT FOUND", "ERROR"));
-        }
-
-        for (User users : members) {
-            boolean isMember = project.getMembers().stream()
-                    .anyMatch(member -> Objects.equals(member.getId(), assignee.getId()));
-
-            if (!isMember) {
-                return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                        .body(ApiResponseModel.error("USER IS NOT A MEMBER OF PROJECT", "ERROR"));
+            if (assignee == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(ApiResponseModel.error("USER NOT FOUND", "ERROR"));
             }
 
+            for (User users : members) {
+                boolean isMember = project.getMembers().stream()
+                        .anyMatch(member -> Objects.equals(member.getId(), assignee.getId()));
+
+                if (!isMember) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body(ApiResponseModel.error("USER IS NOT A MEMBER OF PROJECT", "ERROR"));
+                }
+
+            }
+            task.setAssignee(assignee);
         }
 
         if (taskRequest.getPriority() != null && !taskRequest.getPriority().trim().isEmpty()) {
             task.setPriority(taskRequest.getPriority());
         }
 
-        task.setAssignee(assignee);
         task.setProject(project);
         Task newTask = taskRepository.save(task);
 
@@ -188,8 +190,23 @@ public class TaskService implements TaskServiceInterface {
     public ResponseEntity<ApiResponseModel<Task>> updateTaskStatus(String taskId, TaskRequest taskRequest) {
         Task task = taskRepository.findById(taskId).orElse(null);
 
+        User user = authenticatedUser.getAuthenticatedUser();
         if (task == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponseModel.error("TASK NOT FOUND", "ERROR"));
+        }
+
+
+        String userId = user != null ? user.getId() : null;
+        String assigneeId = task.getAssignee() != null ? task.getAssignee().getId() : null;
+        String createdById = task.getCreatedBy() != null ? task.getCreatedBy().getId() : null;
+
+
+        boolean isAssignee = Objects.equals(assigneeId, userId);
+        boolean isCreator = Objects.equals(createdById, userId);
+
+        if (!isAssignee && !isCreator) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                    .body(ApiResponseModel.error("You are not authorized to update this task.", "ERROR"));
         }
 
         Task oldTask = new Task();
@@ -203,7 +220,7 @@ public class TaskService implements TaskServiceInterface {
         oldTask.setCreatedAt(task.getCreatedAt());
         oldTask.setAssignee(task.getAssignee());
 
-        User user = authenticatedUser.getAuthenticatedUser();
+        assert user != null;
         task.setUpdatedBy(user.getUsername());
         task.setStatus(taskRequest.getStatus());
         task.setDescription(taskRequest.getDescription());
@@ -251,5 +268,12 @@ public class TaskService implements TaskServiceInterface {
     public ResponseEntity<ApiResponseModel<List<Task>>> getAllOpenTask() {
         List<Task> tasks = taskCacheService.getAllOpenTaskCache();
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("TASKS FOUND", "SUCCESS", tasks));
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<List<Task>>> archiveTasks() {
+        taskRepository.archiveTask();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponseModel.success("TASKS ARCHIVED BY SCHEDULER", "SUCCESS", null));
     }
 }

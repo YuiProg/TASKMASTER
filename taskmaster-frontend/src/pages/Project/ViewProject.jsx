@@ -2,15 +2,14 @@ import React from 'react';
 import { PanelContainer, PanelPage } from '../../components/TRCOMPONENTS/TRPanelPage/TRPanelPage';
 import { useProjectStore } from '../../context/ProjectStore.js';
 import { InputRow } from '../../components/TRCOMPONENTS/TRInputForm/TRInputForm';
-import { Label } from '../../components/TRCOMPONENTS/TRInputField/InputFIeld';
+import { Label, InputField } from '../../components/TRCOMPONENTS/TRInputField/InputFIeld';
 import { Table } from '../../components/TRCOMPONENTS/TRTable/TrTable';
 import Spinner from '../../components/Spinner/Spinner';
 import Button from '../../components/TRCOMPONENTS/TRButton/Button';
-import { Pencil, Plus } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import navigateTo from '../../lib/navigate';
 
 import './ViewProject.css';
-import './KanbanBoard.jsx';
 import KanbanBoard from './KanbanBoard.jsx';
 
 class ViewProject extends React.Component {
@@ -18,7 +17,10 @@ class ViewProject extends React.Component {
         super(props);
         this.state = {
             project: null,
-            tasks: []
+            tasks: [],
+            newMemberEmail: '',
+            isAddingMember: false,
+            addMemberError: null
         };
     }
 
@@ -70,6 +72,29 @@ class ViewProject extends React.Component {
         );
     }
 
+    handleAddMember = async () => {
+        const email = this.state.newMemberEmail.trim();
+        if (!email) return;
+
+        this.setState({ isAddingMember: true, addMemberError: null });
+
+        const { addProjectMembers } = useProjectStore.getState();
+        const success = await addProjectMembers(this.state.project.id, [email]);
+
+        if (success) {
+            this.setState({ newMemberEmail: '', isAddingMember: false });
+            // Re-fetch so the members table/count reflect the real
+            // backend state rather than patching it in locally.
+            await this.initProjectData();
+        } else {
+            const { error } = useProjectStore.getState();
+            this.setState({
+                isAddingMember: false,
+                addMemberError: error || 'Could not add that member.',
+            });
+        }
+    };
+
 
     viewTasks = () => {
         const tasks = this.state.tasks;
@@ -118,6 +143,7 @@ class ViewProject extends React.Component {
 
         //const taskCount = this.state.tasks ? this.state.tasks.length : 0;
         const memberCount = this.state.project.members ? this.state.project.members.length : 0;
+        const { newMemberEmail, isAddingMember, addMemberError } = this.state;
 
         return (
             <PanelPage titlePage={this.state.project.projectName.toUpperCase()} isLoading={false} subTitle={`Project ID: ${this.state.project.id}`}>
@@ -126,7 +152,6 @@ class ViewProject extends React.Component {
                         <Label label="Action"/>
                         <div className="vp-action-spacer"/>
                         <Button className="vp-action-btn" text={<span><Plus size={10}/> CREATE TASK</span>} onClick={this.goToCreateTask}/>
-                        <Button className="vp-action-btn" text={<span><Pencil size={10}/> EDIT PROJECT</span>}/>
                     </div>
                 </PanelContainer>
                 <PanelContainer title="Project Details">
@@ -138,6 +163,27 @@ class ViewProject extends React.Component {
                     </PanelContainer> */}
                     <PanelContainer title="Project Members">
                         <Label label={`Members: ${memberCount}`} style={{marginTop: '10px', marginBottom: '20px'}}/>
+
+                        <div className="vp-add-member-row">
+                            <InputField
+                                placeholder="Add member by email"
+                                email
+                                value={newMemberEmail}
+                                onChange={(value) => this.setState({ newMemberEmail: value })}
+                                onEnterDown={this.handleAddMember}
+                            />
+                            <Button
+                                className="vp-action-btn"
+                                text={isAddingMember ? "ADDING..." : "ADD"}
+                                disabled={isAddingMember}
+                                customWidth={90}
+                                onClick={this.handleAddMember}
+                            />
+                        </div>
+                        {addMemberError && (
+                            <p className="vp-add-member-error">{addMemberError}</p>
+                        )}
+
                         {this.projectMembers()}
                     </PanelContainer>
                 </InputRow>

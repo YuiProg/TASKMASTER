@@ -17,4 +17,5 @@ public interface TaskServiceInterface {
     ResponseEntity<ApiResponseModel<Task>> getTaskById (String id);
     ResponseEntity<ApiResponseModel<List<Task>>> getProjectTask (String id);
     ResponseEntity<ApiResponseModel<List<Task>>> getAllOpenTask ();
+    ResponseEntity<ApiResponseModel<List<Task>>> archiveTasks ();
 }

@@ -68,6 +68,19 @@ services:
       - SPRING_DATASOURCE_USERNAME=${DB_USER}
       - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
 
+  scheduler-service:
+    build:
+      context: ./task-master-scheduler
+    ports:
+      - "8084:8084"
+    env_file:
+      - .env
+    environment:
+      - SERVER_PORT=8084
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=require&channel_binding=require
+      - SPRING_DATASOURCE_USERNAME=${DB_USER}
+      - SPRING_DATASOURCE_PASSWORD=${DB_PASSWORD}
+
   redis:
     image: redis:7-alpine
     container_name: task-master-redis

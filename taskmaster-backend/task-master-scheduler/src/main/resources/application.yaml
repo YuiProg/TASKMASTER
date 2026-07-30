@@ -1,0 +1,62 @@
+server:
+  # Render automatically injects PORT (10000). Falling back to 8080 for local dev.
+  port: ${PORT:8084}
+  compression:
+    enabled: true
+    mime-types: "application/json"
+
+spring:
+  application:
+    name: task-master-scheduler
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=require&channel_binding=require&prepareThreshold=0
+    username: ${DB_USER}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      pool-name: TaskMasterHikariPoolScheduler
+      maximum-pool-size: 10
+      minimum-idle: 2
+      idle-timeout: 30000
+      connection-timeout: 20000
+      max-lifetime: 1800000
+      validation-timeout: 5000
+      leak-detection-threshold: 30000
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD}
+      # Increased from 2000ms to 10000ms to allow TLS handshake & cloud latency
+      timeout: 10000ms
+      # Optional: enable SSL if using Upstash or managed cloud Redis with TLS
+      ssl:
+        enabled: ${REDIS_SSL_ENABLED:false}
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 2
+          # Increased max-wait to give pool acquisition breathing room
+          max-wait: 10000ms
+
+  cache:
+    type: redis
+    redis:
+      time-to-live: 600000
+
+app:
+  jwt:
+    secret: ${SECRET_KEY}
+    expiration: ${EXPIRATION_TIME}

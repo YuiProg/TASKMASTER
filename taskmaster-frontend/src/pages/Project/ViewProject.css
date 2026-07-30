@@ -39,3 +39,20 @@
 .tr-panel-container-child .tr-inputrow {
   margin-top: 16px;
 }
+
+.vp-add-member-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.vp-add-member-row .input-container {
+  flex: 1;
+}
+
+.vp-add-member-error {
+  margin: -10px 0 12px 0;
+  font-size: 0.78rem;
+  color: #EF4444;
+}
