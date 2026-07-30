@@ -93,13 +93,16 @@ export const useTaskStore = create((set, get) => ({
       console.error("Update task status failed:", error);
 
       let errorMsg = "Something went wrong. Please try again.";
-
       if (error.response?.data) {
         const resData = error.response.data;
         if (resData.message) {
           try {
             const parsed = JSON.parse(resData.message);
             errorMsg = parsed.message || errorMsg;
+            toast.error(errorMsg, {
+              position: "bottom-right",
+              duration: 4000,
+            });
           } catch {
             errorMsg = resData.message;
           }
