@@ -35,4 +35,10 @@ public class ProjectController implements ProjectClient {
     public ResponseEntity<ApiResponseModel<ProjectDTO>> getProjectByName(@PathVariable String name) {
         return projectService.getProjectByName(name);
     }
+
+    @Override
+    @GetMapping("/getUserCreatedProjects")
+    public ResponseEntity<ApiResponseModel<List<ProjectDTO>>> getUserCreatedProjects() {
+        return projectService.getUserCreatedProjects();
+    }
 }

@@ -10,6 +10,7 @@ import Tasks from "./pages/Tasks/MyTasks";
 import ViewTask from "./pages/Tasks/ViewTask";
 import NewTask from "./pages/Tasks/NewTask";
 import OpenTasks from "./pages/Tasks/OpenTasks";
+import UserProjects from "./pages/Project/UserProjects";
 
 function App() {
   return (
@@ -30,6 +31,11 @@ function App() {
         <Route path="/projects" element={
           <Sidebar>
             <Projects/>
+          </Sidebar>
+        }/>
+        <Route path="/projects/my-projects" element={
+          <Sidebar>
+            <UserProjects/>
           </Sidebar>
         }/>
         <Route path="/projects/:id" element={

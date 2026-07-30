@@ -70,7 +70,7 @@ public class TaskService implements TaskServiceInterface {
 
                 if (!isMember) {
                     return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                            .body(ApiResponseModel.error("USER IS NOT A MEMBER OF PROJECT", "ERROR"));
+                            .body(ApiResponseModel.error("User is not a member of this project.", "ERROR"));
                 }
 
             }
@@ -151,7 +151,7 @@ public class TaskService implements TaskServiceInterface {
 
                     if (!isMember) {
                         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                                .body(ApiResponseModel.error("USER IS NOT A MEMBER OF THIS PROJECT", "ERROR"));
+                                .body(ApiResponseModel.error("User is not a member of this project.", "ERROR"));
                     }
                 }
             }

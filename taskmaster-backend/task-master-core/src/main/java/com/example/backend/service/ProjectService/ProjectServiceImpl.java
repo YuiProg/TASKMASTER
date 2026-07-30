@@ -35,7 +35,7 @@ public class ProjectServiceImpl implements ProjectServiceInterface{
     @Transactional
     public ResponseEntity<ApiResponseModel<Project>> createProject(ProjectRequest projectRequest) {
         User user = userRepository.findById(projectRequest.getCreatedBy()).orElse(null);
-
+        User authUser = authenticatedUser.getAuthenticatedUser();
         if (user == null) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(ApiResponseModel.error("NOT LOGGED IN", "ERROR"));
         }
@@ -65,7 +65,7 @@ public class ProjectServiceImpl implements ProjectServiceInterface{
             }
             project.setMembers(members);
         }
-
+        projectCacheService.evictUserCreatedProjects(authUser.getId());
         Project newProject = projectRepository.save(project);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseModel.success("PROJECT CREATED", "SUCCESS", newProject));
@@ -186,5 +186,15 @@ public class ProjectServiceImpl implements ProjectServiceInterface{
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponseModel.error("PROJECT NOT FOUND", "ERROR"));
         }
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("PROJECT FOUND", "SUCCESS", project));
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<List<Project>>> getUserCreatedProject() {
+        User user = authenticatedUser.getAuthenticatedUser();
+        List<Project> projects = projectCacheService.getUserCreatedProjectsInCache(user.getId());
+        if (projects.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponseModel.error("PROJECT NOT FOUND", "ERROR"));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("PROJECT FOUND", "SUCCESS", projects));
     }
 }

@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { useReportStore } from "./ReportStore.js";
 import { useAuthStore } from "./AuthStore.js";
 import gateWayApi from "../lib/gateway";
+import toast from "react-hot-toast";
 
 export const useTaskStore = create((set, get) => ({
   tasks: [],
@@ -84,11 +85,10 @@ export const useTaskStore = create((set, get) => ({
 
       // Successful update
       await get().addLocalReport(`UPDATED STATUS TO: ${status}`);
-      return { 
-        success: true, 
-        data: resData?.data 
+      return {
+        success: true,
+        data: resData?.data,
       };
-
     } catch (error) {
       console.error("Update task status failed:", error);
 
@@ -113,7 +113,14 @@ export const useTaskStore = create((set, get) => ({
     }
   },
 
-  createTask: async ({ taskName, assignee, description, project, status, priority }) => {
+  createTask: async ({
+    taskName,
+    assignee,
+    description,
+    project,
+    status,
+    priority,
+  }) => {
     set({ isCreating: true, error: null });
     try {
       const res = await gateWayApi.post("/createTask", {
@@ -177,7 +184,9 @@ export const useTaskStore = create((set, get) => ({
       });
 
       if (task.description) {
-        await get().addLocalReport(`UPDATED DESCRIPTION TO: ${task.description}`);
+        await get().addLocalReport(
+          `UPDATED DESCRIPTION TO: ${task.description}`,
+        );
       }
       if (task.assignee) {
         await get().addLocalReport(`UPDATED ASSIGNEE TO: ${task.assignee}`);
@@ -189,13 +198,18 @@ export const useTaskStore = create((set, get) => ({
 
       return response.data.data;
     } catch (error) {
-      console.log(error.message);
-      set({
-        isCreating: false,
-        error:
-          error.response?.data?.message ||
-          "Something went wrong. Please try again.",
+      const response = JSON.parse(error.response.data.message);
+
+      toast.error(response.message, {
+        position: "bottom-right",
+        duration: 4000,
       });
+      // set({
+      //   isCreating: false,
+      //   error:
+      //     error.response?.data?.message ||
+      //     "Something went wrong. Please try again.",
+      // });
       return null;
     }
   },

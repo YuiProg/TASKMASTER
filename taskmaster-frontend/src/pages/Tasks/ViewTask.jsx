@@ -11,7 +11,7 @@ import "./ViewTask.css";
 import TaskComments from "./TaskComment";
 import TaskReports from "./TaskReport";
 import { useCommentStore } from "../../context/CommentStore.js";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 // Options arrays
 const STATUS_OPTIONS = ["OPEN", "IN PROGRESS", "QA CHECK", "DEPLOYED", "CLOSED"];
@@ -138,10 +138,10 @@ class ViewTask extends React.Component {
         task: { ...prev.task, status: previousStatus },
       }));
 
-      toast.error(result?.message || "THIS TASK IS NOT ASSIGNED TO YOU", {
-        position: "bottom-right",
-        duration: 4000,
-      });
+      // toast.error(result?.message, {
+      //   position: "bottom-right",
+      //   duration: 4000,
+      // });
       return;
     }
 
@@ -168,10 +168,10 @@ class ViewTask extends React.Component {
         task: { ...prev.task, priority: previousPriority },
       }));
 
-      toast.error(result?.message || "THIS TASK IS NOT ASSIGNED TO YOU", {
-        position: "bottom-right",
-        duration: 4000,
-      });
+      // toast.error(result?.message, {
+      //   position: "bottom-right",
+      //   duration: 4000,
+      // });
       return;
     }
 
@@ -203,10 +203,10 @@ class ViewTask extends React.Component {
         task: { ...prev.task, assignee: previousAssignee },
       }));
 
-      toast.error(result?.message || "THIS TASK IS NOT ASSIGNED TO YOU", {
-        position: "bottom-right",
-        duration: 4000,
-      });
+      // toast.error(result?.message, {
+      //   position: "bottom-right",
+      //   duration: 4000,
+      // });
       return;
     }
 
@@ -229,11 +229,7 @@ class ViewTask extends React.Component {
       this.setState((prev) => ({
         task: { ...prev.task, description: previousDescription },
       }));
-
-      toast.error(result?.message || "THIS TASK IS NOT ASSIGNED TO YOU", {
-        position: "bottom-right",
-        duration: 4000,
-      });
+      
       return;
     }
 

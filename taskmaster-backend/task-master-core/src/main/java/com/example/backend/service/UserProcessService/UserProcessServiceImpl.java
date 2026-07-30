@@ -171,7 +171,7 @@ public class UserProcessServiceImpl implements UserProcessService{
     @Override
     public ResponseEntity<ApiResponseModel<User>> logoutUser () {
         ResponseCookie cookie = jwtUtil.deleteCookie();
-
+        userCacheService.evictUserCache();
         return ResponseEntity.status(HttpStatus.OK)
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(ApiResponseModel.success("SUCCESSFUL LOG OUT", StringCodes.SUCCESS.getPath(),null));

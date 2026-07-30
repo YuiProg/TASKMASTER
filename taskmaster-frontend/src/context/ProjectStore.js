@@ -9,7 +9,7 @@ export const useProjectStore = create((set, get) => ({
   isLoading: false,
   isCreating: false,
   error: null,
-
+  userProjects: [],
 
   fetchProjects: async () => {
     set({ isLoading: true, error: null });
@@ -114,6 +114,23 @@ export const useProjectStore = create((set, get) => ({
           err.response?.data?.message ||
           'Something went wrong adding those members.',
       });
+      return false;
+    }
+  },
+
+  fetchUserCreatedProjects: async () => {
+    try {
+      set({isLoading: true});
+      const res = await gateWayApi.get("/getUserCreatedProjects");
+      const list = Array.isArray(res.data?.data) ? res.data.data : [];
+      set({ userProjects: list, isLoading: false });
+    } catch (err) {
+      set({
+        error:
+          err.response?.data?.message ||
+          'Something went wrong fetching projects.',
+      });
+      set({ userProjects: [], isLoading: false });
       return false;
     }
   },

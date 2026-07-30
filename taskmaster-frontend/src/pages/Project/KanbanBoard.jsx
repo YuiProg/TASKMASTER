@@ -229,10 +229,11 @@ class KanbanBoard extends React.Component {
       });
 
       // Show toast error message
-      toast.error(result?.message || "THIS TASK IS NOT ASSIGNED TO YOU", {
+      toast.error(result?.message, {
         position: "bottom-right",
         duration: 4000,
       });
+      this.wasDragging = false;
       return;
     }
 

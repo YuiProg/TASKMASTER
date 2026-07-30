@@ -19,7 +19,7 @@ public class TaskService implements TaskClient {
     private final TaskClient taskClient;
 
     @Override
-    @Scheduled(cron = "0 0 8 * * ?")
+    @Scheduled(cron = "0 59 11 * * ?")
     public ResponseEntity<ApiResponseModel<TaskDTO>> archiveTasks() {
         try {
             log.info("ARCHIVING TASKS");

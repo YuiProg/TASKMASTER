@@ -221,6 +221,7 @@ class Sidebar extends React.Component {
                                     label: 'Projects',
                                     items: [
                                         { path: '/projects', title: 'Assigned Projects' },
+                                        { path: '/projects/my-projects', title: 'Your Projects' },
                                         { path: '/projects/new', title: 'New Project' },
                                         { path: '/projects/archived', title: 'Archived' },
                                     ],
