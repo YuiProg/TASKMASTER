@@ -176,7 +176,7 @@ services:
         value: https://task-master-reports.onrender.com/api/v1
 
   - type: web
-    name: task-master-schjeduler
+    name: task-master-scheduler
     runtime: docker
     dockerContext: ./taskmaster-backend/task-master-scheduler
     dockerfilePath: ./taskmaster-backend/task-master-scheduler/Dockerfile
