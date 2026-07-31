@@ -175,6 +175,49 @@ services:
       - key: SERVICES_REPORT_URL
         value: https://task-master-reports.onrender.com/api/v1
 
+  - type: web
+    name: task-master-schjeduler
+    runtime: docker
+    dockerContext: ./taskmaster-backend/task-master-scheduler
+    dockerfilePath: ./taskmaster-backend/task-master-scheduler/Dockerfile
+    region: oregon
+    plan: free
+    envVars:
+      - key: SERVER_PORT
+        value: 10000
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "6543"
+      - key: DB_NAME
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: SECRET_KEY
+        sync: false
+      - key: EXPIRATION_TIME
+        sync: false
+      - key: REDIS_HOST
+        fromService:
+          type: keyvalue
+          name: task-master-redis
+          property: host
+      - key: REDIS_PORT
+        fromService:
+          type: keyvalue
+          name: task-master-redis
+          property: port
+      - key: REDIS_PASSWORD
+        sync: false
+      - key: SERVICES_BACKEND_URL
+        value: https://task-master-core.onrender.com/api/v1
+      - key: SERVICES_COMMENT_URL
+        value: https://task-master-comment.onrender.com/api/v1
+      - key: SERVICES_REPORT_URL
+        value: https://task-master-reports.onrender.com/api/v1
+
   # ── Redis — managed Key Value instance ──────────────────────────────────
   - type: keyvalue
     name: task-master-redis
