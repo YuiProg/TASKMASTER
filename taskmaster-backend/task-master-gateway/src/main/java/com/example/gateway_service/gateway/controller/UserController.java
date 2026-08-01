@@ -43,6 +43,12 @@ public class UserController implements UserClient{
         return userService.logout();
     }
 
+    @Override
+    @PostMapping("/addUser")
+    public ResponseEntity<ApiResponseModel<UserDTO>> registerUser(@RequestBody UserRequest userRequest) {
+        return userService.registerUser(userRequest);
+    }
+
     @GetMapping("/ping")
     public ResponseEntity<Map<String, String>> pingGateway () {
         return ResponseEntity.ok(Map.of(

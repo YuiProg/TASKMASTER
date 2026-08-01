@@ -152,4 +152,44 @@ public class UserService implements UserClient{
                             "ERROR"));
         }
     }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<UserDTO>> registerUser(UserRequest userRequest) {
+        log.info("REQUEST register -> email: {} password: {}", userRequest.getEmail(), userRequest.getPassword());
+
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        if (attributes != null) {
+            HttpServletRequest request = attributes.getRequest();
+
+            String existingToken = jwtUtil.extractTokenFromCookie(request);
+            if (existingToken != null) {
+                ResponseCookie deleteCookie = jwtUtil.deleteCookie();
+                return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                        .header(HttpHeaders.SET_COOKIE, deleteCookie.toString())
+                        .body(ApiResponseModel.error("You are currently logged in. Please try again", "ERROR"));
+            }
+        }
+        try {
+            ResponseEntity<ApiResponseModel<UserDTO>> response = userClient.registerUser(userRequest);
+            log.info("register RESPONSE status: {} data: {}", response.getStatusCode(), response.getBody());
+            ResponseEntity.BodyBuilder builder = ResponseEntity.status(response.getStatusCode());
+
+            return builder.body(response.getBody());
+
+        } catch (FeignException e) {
+            log.error("RESPONSE register (error) -> status: {}, cause: {}",
+                    e.status(), e.getCause() != null ? e.getCause().getMessage() : e.getMessage(), e);
+
+            HttpStatus status = (e.status() > 0)
+                    ? HttpStatus.valueOf(e.status())
+                    : HttpStatus.SERVICE_UNAVAILABLE;
+
+            ResponseCookie responseCookie = jwtUtil.deleteCookie();
+            return ResponseEntity.status(status)
+                    .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                    .body(ApiResponseModel.error(
+                            e.status() > 0 ? e.contentUTF8() : "Backend service unavailable, please try again",
+                            "ERROR"));
+        }
+    }
 }

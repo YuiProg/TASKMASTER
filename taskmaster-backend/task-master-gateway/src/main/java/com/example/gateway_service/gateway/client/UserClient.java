@@ -26,4 +26,7 @@ public interface UserClient {
 
     @PostMapping(value = "/logout", produces = "application/json")
     ResponseEntity<ApiResponseModel<UserDTO>> logout ();
+
+    @PostMapping("/addUser")
+    ResponseEntity<ApiResponseModel<UserDTO>> registerUser (@RequestBody UserRequest userRequest);
 }
