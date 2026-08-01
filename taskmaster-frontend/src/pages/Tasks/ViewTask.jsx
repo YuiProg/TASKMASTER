@@ -11,7 +11,7 @@ import "./ViewTask.css";
 import TaskComments from "./TaskComment";
 import TaskReports from "./TaskReport";
 import { useCommentStore } from "../../context/CommentStore.js";
-import toast, { Toaster } from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 // Options arrays
 const STATUS_OPTIONS = ["OPEN", "IN PROGRESS", "QA CHECK", "DEPLOYED", "CLOSED"];
