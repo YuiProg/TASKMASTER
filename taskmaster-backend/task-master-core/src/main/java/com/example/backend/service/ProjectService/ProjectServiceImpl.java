@@ -66,6 +66,7 @@ public class ProjectServiceImpl implements ProjectServiceInterface{
             project.setMembers(members);
         }
         projectCacheService.evictUserCreatedProjects(authUser.getId());
+        projectCacheService.evictUserProjectsCache();
         Project newProject = projectRepository.save(project);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseModel.success("PROJECT CREATED", "SUCCESS", newProject));
