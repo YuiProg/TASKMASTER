@@ -42,6 +42,13 @@ export const useAuthStore = create((set) => ({
   register: async (username, email, password, confirmPassword) => {
     set({ isLoading: true, error: null });
     try {
+      if (!username || !email || !password) {
+        set({
+          isLoading: false,
+          error: 'Please fill in all fields.',
+        });
+        return false;
+      }
 
       if (password !== confirmPassword) {
         set({
@@ -63,18 +70,25 @@ export const useAuthStore = create((set) => ({
         navigateTo('/');
         return true;
       }
-    
+
+      set({
+        isLoading: false,
+        error: res.data.message || 'Registration failed.',
+      });
+      return false;
+
     } catch (err) {
+      const data = JSON.parse(err.response?.data?.message);
+
       set({
         isLoading: false,
         error:
-          err.response?.data?.message ||
+          data.message ||
           'Something went wrong. Please try again.',
       });
       return false;
     }
   },
-
 
   fetchCurrentUser: async () => {
     try {
@@ -93,12 +107,10 @@ export const useAuthStore = create((set) => ({
   logout: async () => {
     set({ isLoading: true });
     try {
-
       await gateWayApi.post('/logout');
     } catch (err) {
       console.error("Backend session cleanup failed:", err);
     } finally {
-
       set({ 
         user: null, 
         isAuthenticated: false, 

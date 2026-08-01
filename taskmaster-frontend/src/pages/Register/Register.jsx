@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './Register.css';
 import { InputForm, TRInputFormPanel } from '../../components/TRCOMPONENTS/TRInputForm/TRInputForm';
 import Button from '../../components/TRCOMPONENTS/TRButton/Button';
@@ -12,9 +12,17 @@ function Register() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
+  // Extract store values reactively so component re-renders when they change
+  const { register, isLoading, error, clearError } = useAuthStore();
+
+  // Clear errors when leaving the page/mounting
+  useEffect(() => {
+    clearError();
+  }, [clearError]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const { register } = useAuthStore.getState();
+    if (isLoading) return;
     register(username, email, password, confirmPassword);
   };
 
@@ -41,31 +49,52 @@ function Register() {
             noBtn
           >
             <InputForm noBtn>
+              {/* Display Error Banner if Error Exists */}
+              {error && (
+                <div style={{
+                  backgroundColor: '#rgba(255, 0, 0, 0.1)',
+                  color: '#ff4d4f',
+                  border: '1px solid #ff4d4f',
+                  borderRadius: '6px',
+                  padding: '8px 12px',
+                  marginBottom: '16px',
+                  fontSize: '14px',
+                  textAlign: 'center'
+                }}>
+                  {error}
+                </div>
+              )}
+
               <InputField
                 placeholder="Username"
                 text
                 onChange={setUsername}
+                disabled={isLoading}
               />
               <InputField
                 placeholder="Email address"
                 email
                 onChange={setEmail}
+                disabled={isLoading}
               />
               <InputField
                 placeholder="Password"
                 password
                 onChange={setPassword}
+                disabled={isLoading}
               />
               <InputField
                 placeholder="Confirm password"
                 password
                 onChange={setConfirmPassword}
+                disabled={isLoading}
               />
 
               <Button
                 submit
                 maxWidth
-                text="CREATE ACCOUNT"
+                text={isLoading ? "CREATING ACCOUNT..." : "CREATE ACCOUNT"}
+                disabled={isLoading}
                 customBorder="none"
                 className="tr-login-btn"
                 onClick={handleSubmit}
@@ -75,7 +104,7 @@ function Register() {
         </div>
 
         <p className="tr-signup-hint">
-          Already have an account? <Link to="/">Log in</Link>
+          Already have an account? <Link to="/" onClick={clearError}>Log in</Link>
         </p>
       </div>
     </div>
