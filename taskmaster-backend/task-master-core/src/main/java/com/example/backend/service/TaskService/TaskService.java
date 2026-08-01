@@ -127,8 +127,10 @@ public class TaskService implements TaskServiceInterface {
         boolean isAssignee = Objects.equals(assigneeId, userId);
         boolean isCreator = Objects.equals(createdById, userId);
 
+        boolean isMembers = task.getProject().getMembers()
+                .stream().anyMatch(member -> Objects.equals(member.getEmail(), taskRequest.getAssignee()));
 
-        if (!isAssignee && !isCreator) {
+        if (!isAssignee && !isCreator && !isMembers) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(ApiResponseModel.error("You are not authorized to update this task.", "ERROR"));
         }
@@ -209,6 +211,9 @@ public class TaskService implements TaskServiceInterface {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponseModel.error("TASK NOT FOUND", "ERROR"));
         }
 
+        boolean isMember = task.getProject().getMembers()
+                .stream().anyMatch(member -> Objects.equals(member.getEmail(), taskRequest.getAssignee()));
+
 
         String userId = user != null ? user.getId() : null;
         String assigneeId = task.getAssignee() != null ? task.getAssignee().getId() : null;
@@ -218,7 +223,7 @@ public class TaskService implements TaskServiceInterface {
         boolean isAssignee = Objects.equals(assigneeId, userId);
         boolean isCreator = Objects.equals(createdById, userId);
 
-        if (!isAssignee && !isCreator) {
+        if (!isAssignee && !isCreator && !isMember) {
             return ResponseEntity.status(HttpStatus.FORBIDDEN)
                     .body(ApiResponseModel.error("You are not authorized to update this task.", "ERROR"));
         }
