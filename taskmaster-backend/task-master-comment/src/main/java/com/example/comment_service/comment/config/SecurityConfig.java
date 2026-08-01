@@ -28,6 +28,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/api/v1/comments/ping").permitAll()
                         .requestMatchers("/api/v1/comments/**").authenticated()
                         .anyRequest().permitAll()
                 )
