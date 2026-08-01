@@ -77,7 +77,7 @@ public class AuthController implements UserProcessService {
         return userProcessService.getAuthUser();
     }
 
-    @GetMapping("/ping")
+    @GetMapping("/api/v1/ping")
     public ResponseEntity<Map<String, String>> pingCore () {
         return ResponseEntity.ok(Map.of(
                 "status", "UP",
