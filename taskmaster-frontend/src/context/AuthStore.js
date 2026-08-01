@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import gateWayApi from '../lib/gateway';
+import navigateTo from '../lib/navigate.js';
 
 export const useAuthStore = create((set) => ({
   user: null,
@@ -27,6 +28,42 @@ export const useAuthStore = create((set) => ({
         error: res.data.message || 'Login failed.',
       });
       return false;
+    } catch (err) {
+      set({
+        isLoading: false,
+        error:
+          err.response?.data?.message ||
+          'Something went wrong. Please try again.',
+      });
+      return false;
+    }
+  },
+
+  register: async (username, email, password, confirmPassword) => {
+    set({ isLoading: true, error: null });
+    try {
+
+      if (password !== confirmPassword) {
+        set({
+          isLoading: false,
+          error: 'Passwords do not match.',
+        });
+        return false;
+      }
+
+      const res = await gateWayApi.post('/addUser', { username, email, password });
+
+      if (res.data.status === 'SUCCESS') {
+        set({
+          user: res.data.data,
+          isAuthenticated: true,
+          isLoading: false,
+          error: null,
+        });
+        navigateTo('/');
+        return true;
+      }
+    
     } catch (err) {
       set({
         isLoading: false,

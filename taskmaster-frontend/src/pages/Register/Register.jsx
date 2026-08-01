@@ -4,16 +4,18 @@ import { InputForm, TRInputFormPanel } from '../../components/TRCOMPONENTS/TRInp
 import Button from '../../components/TRCOMPONENTS/TRButton/Button';
 import { InputField } from '../../components/TRCOMPONENTS/TRInputField/InputFIeld';
 import { Link } from 'react-router-dom';
+import { useAuthStore } from '../../context/AuthStore';
 
 function Register() {
-  const [fullName, setFullName] = useState('');
+  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log({ fullName, email, password, confirmPassword });
+    const { register } = useAuthStore.getState();
+    register(username, email, password, confirmPassword);
   };
 
   return (
@@ -40,9 +42,9 @@ function Register() {
           >
             <InputForm noBtn>
               <InputField
-                placeholder="Full name"
+                placeholder="Username"
                 text
-                onChange={setFullName}
+                onChange={setUsername}
               />
               <InputField
                 placeholder="Email address"
