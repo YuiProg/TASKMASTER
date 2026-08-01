@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/report")
@@ -28,5 +29,13 @@ public class ReportController implements ReportServiceInterface {
     @GetMapping("/getReports/{id}")
     public ResponseEntity<ApiResponseModel<List<ReportResponseDTO>>> getTaskReports(@PathVariable String id) {
         return reportServiceInterface.getTaskReports(id);
+    }
+
+    @GetMapping("/ping")
+    public ResponseEntity<Map<String, String>> pingReportsService() {
+        return ResponseEntity.ok(Map.of(
+                "status", "UP",
+                "service", "reports-service"
+        ));
     }
 }

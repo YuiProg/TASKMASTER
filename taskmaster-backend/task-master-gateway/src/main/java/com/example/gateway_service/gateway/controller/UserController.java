@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/v1")
 @AllArgsConstructor
@@ -39,6 +41,14 @@ public class UserController implements UserClient{
     @PostMapping("/logout")
     public ResponseEntity<ApiResponseModel<UserDTO>> logout() {
         return userService.logout();
+    }
+
+    @GetMapping("/ping")
+    public ResponseEntity<Map<String, String>> pingGateway () {
+        return ResponseEntity.ok(Map.of(
+                "status", "UP",
+                "service", "gateway"
+        ));
     }
 
 }

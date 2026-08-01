@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.backend.request.UserRequest;
 
 import java.util.List;
+import java.util.Map;
 
 
 @RestController
@@ -74,5 +75,13 @@ public class AuthController implements UserProcessService {
     @GetMapping("/api/v1/getAuthUser")
     public ResponseEntity<ApiResponseModel<User>> getAuthUser() {
         return userProcessService.getAuthUser();
+    }
+
+    @GetMapping("/ping")
+    public ResponseEntity<Map<String, String>> pingCore () {
+        return ResponseEntity.ok(Map.of(
+                "status", "UP",
+                "service", "core"
+        ));
     }
 }

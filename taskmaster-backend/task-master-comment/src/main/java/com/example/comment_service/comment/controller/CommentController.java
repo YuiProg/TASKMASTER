@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import com.example.comment_service.comment.service.CommentServiceInterface;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/comments")
@@ -43,5 +44,13 @@ public class CommentController implements CommentServiceInterface {
     public ResponseEntity<ApiResponseModel<UserDTO>> testFeignConnection(@PathVariable String id) {
         // This directly calls your Feign client interface
         return ResponseEntity.ok(userClient.getUserById(id));
+    }
+
+    @GetMapping("/ping")
+    public ResponseEntity<Map<String, String>> pingComment () {
+        return ResponseEntity.ok(Map.of(
+                "status", "UP",
+                "service", "comment-service"
+        ));
     }
 }
