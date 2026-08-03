@@ -1,5 +1,5 @@
 import React from 'react';
-import './TRPanelPage.css';
+import './TRPanelPage.scss';
 import DropDown from '../TRDropDown/Dropdown';
 import PropTypes from 'prop-types';
 import Button from '../TRButton/Button';
@@ -8,7 +8,7 @@ import Button from '../TRButton/Button';
 export class RightPanel extends React.Component {
   render() {
     return (
-      <div className='tr-panel-right-side'>
+      <div className='tr-right-panel'>
         {this.props.children}
       </div>
     );
@@ -50,20 +50,20 @@ export class PanelPage extends React.Component {
     );
 
     return (
-      <div className="tr-panel-container">
-        <header className="tr-panel-topbar">
-          <div className="tr-panel-header">
-            <h1 className="tr-panel-bigtitle">{titlePage}</h1>
-            {subTitle && <p className="tr-panel-sentence">{subTitle}</p>}
+      <div className="tr-panel-page">
+        <header className="tr-panel-page__topbar">
+          <div className="tr-panel-page__header">
+            <h1 className="tr-panel-page__title">{titlePage}</h1>
+            {subTitle && <p className="tr-panel-page__subtitle">{subTitle}</p>}
           </div>
 
-          <div className="tr-panel-top-right">
+          <div className="tr-panel-page__top-right">
             {hasBranch && user && user.role.toLowerCase() !== 'clerk' && (
-              <div className="iv-branch-dropdown-wrapper">
-                <span className="iv-branch-label-inline">Branch</span>
+              <div className="tr-panel-page__branch-dropdown">
+                <span className="tr-panel-page__branch-label">Branch</span>
                 <DropDown
                   isHeader
-                  className="iv-branch-dd"
+                  className="tr-panel-page__branch-select"
                   defaultValue={selectedBranch}
                   onChange={(e) => dropDownFunc(e)}
                   options={branchNames}
@@ -73,20 +73,20 @@ export class PanelPage extends React.Component {
           </div>
         </header>
 
-        <div className="tr-panel-body">
-          <div className="tr-panel-main">
+        <div className="tr-panel-page__body">
+          <div className="tr-panel-page__main">
             {mainChildren}
           </div>
           {filtersOpen && hasTableFilters && (
-            <div className="tr-panel-right-wrapper">
+            <div className="tr-panel-page__right-wrapper">
               {rightPanel}
             </div>
           )}
         </div>
 
         {hasStepper && (
-          <div className='tr-panel-stepper-container'>
-            <div className="tr-panel-stepper-inner">
+          <div className='tr-panel-page__stepper'>
+            <div className="tr-panel-page__stepper-inner">
               <Button error text={backButtonLabel ? backButtonLabel : 'Back'} onClick={() => onClickBack()} />
               <Button success text={nextButtonLabel ? nextButtonLabel : 'Next'} onClick={() => onClickNext()} />
             </div>
@@ -101,12 +101,12 @@ export class PanelContainer extends React.Component {
   render() {
     const { currentStep, totalSteps, title, maxHeight } = this.props;
     return (
-      <div className='tr-panel-container-child' style={maxHeight && {height: '100%'}}>
+      <div className='tr-panel-card' style={maxHeight && {height: '100%'}}>
         {(currentStep && totalSteps) && (
-          <p className='tr-panel-step'>{`Step ${currentStep} of ${totalSteps}`}</p>
+          <p className='tr-panel-card__step'>{`Step ${currentStep} of ${totalSteps}`}</p>
         )}
         {title && (
-          <h2 className='tr-panel-container-title' style={{marginBottom: '0px'}}>{title}</h2>
+          <h2 className='tr-panel-card__title' style={{marginBottom: '0px'}}>{title}</h2>
         )}
         {this.props.children}
       </div>

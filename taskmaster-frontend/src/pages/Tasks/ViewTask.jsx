@@ -7,7 +7,7 @@ import Dropdown from "../../components/TRCOMPONENTS/TRDropDown/Dropdown";
 import Spinner from "../../components/Spinner/Spinner";
 import { useTaskStore } from "../../context/TaskStore.js";
 import navigateTo from "../../lib/navigate";
-import "./ViewTask.css";
+import "./ViewTask.scss";
 import TaskComments from "./TaskComment";
 import TaskReports from "./TaskReport";
 import { useCommentStore } from "../../context/CommentStore.js";
@@ -36,6 +36,7 @@ function statusColorGroup(status) {
       return "default";
   }
 }
+
 
 // Color group generator for Priority states
 function priorityColorGroup(priority) {
@@ -79,13 +80,13 @@ function UserHoverCard({ user, children }) {
   if (!user) return children;
 
   return (
-    <span className="vt-user-hover">
+    <span className="view-task__user-hover">
       {children}
-      <span className="vt-user-tooltip">
-        <span className="vt-user-tooltip-avatar">
+      <span className="view-task__user-tooltip">
+        <span className="view-task__user-tooltip-avatar">
           {initialsOf(user.username)}
         </span>
-        <span className="vt-user-tooltip-email">
+        <span className="view-task__user-tooltip-email">
           {user.email || "No email on file"}
         </span>
       </span>
@@ -259,12 +260,12 @@ class ViewTask extends React.Component {
         <Toaster />
 
         <PanelContainer title="Overview">
-          <div className="vt-overview-header">
-            <h2 className="vt-task-title">{task.taskName}</h2>
+          <div className="view-task__overview-header">
+            <h2 className="view-task__title">{task.taskName}</h2>
           </div>
 
           <Label
-            className="vt-description"
+            className="view-task__description"
             label={task.description || "No description provided."}
             value={task.description || ""}
             placeholder="Add a description..."
@@ -272,8 +273,8 @@ class ViewTask extends React.Component {
           />
 
           {/* Dropdowns now directly below the description */}
-          <div className="vt-header-dropdowns">
-            <div className={`vt-status-dropdown vt-status-${statusColorGroup(task.status)}`}>
+          <div className="view-task__header-dropdowns">
+            <div className={`view-task__status-dropdown view-task__status-dropdown--${statusColorGroup(task.status)}`}>
               <Dropdown
                 options={STATUS_OPTIONS}
                 value={toDisplayStatus(task.status)}
@@ -281,7 +282,7 @@ class ViewTask extends React.Component {
               />
             </div>
 
-            <div className={`vt-priority-dropdown vt-priority-${priorityColorGroup(task.priority)}`}>
+            <div className={`view-task__priority-dropdown view-task__priority-dropdown--${priorityColorGroup(task.priority)}`}>
               <Dropdown
                 options={PRIORITY_OPTIONS}
                 value={(task.priority || "LOW").toUpperCase()}
@@ -292,9 +293,9 @@ class ViewTask extends React.Component {
 
           <InputRow gap={16}>
             <PanelContainer title="Details">
-              <div className="vt-details-grid">
-                <div className="vt-assignee-row">
-                  <span className="vt-assignee-key">Assignee</span>
+              <div className="view-task__details-grid">
+                <div className="view-task__assignee-row">
+                  <span className="view-task__assignee-key">Assignee</span>
                   <UserHoverCard user={task.assignee}>
                     <Label
                       label={`${task.assignee?.username || "Unassigned"}`}
@@ -312,8 +313,8 @@ class ViewTask extends React.Component {
             </PanelContainer>
 
             <PanelContainer title="Project">
-              <div className="vt-details-grid">
-                <span className="vt-assignee-key">
+              <div className="view-task__details-grid">
+                <span className="view-task__assignee-key">
                   Project Name: {project.projectName?.toUpperCase() || "NO PROJECT ASSIGNED"}
                 </span>
                 <Label label={`Status: ${project.status || "N/A"}`} />
@@ -321,10 +322,10 @@ class ViewTask extends React.Component {
               </div>
 
               {members.length > 0 && (
-                <div className="vt-member-chips">
+                <div className="view-task__member-chips">
                   {members.map((m) => (
                     <UserHoverCard key={m.id} user={m}>
-                      <span className="vt-member-chip">
+                      <span className="view-task__member-chip">
                         {m.username || m.email}
                       </span>
                     </UserHoverCard>
@@ -335,7 +336,7 @@ class ViewTask extends React.Component {
               {project.projectName && (
                 <button
                   type="button"
-                  className="vt-view-project-link"
+                  className="view-task__view-project-link"
                   onClick={() => this.goToProject(project.projectName)}
                 >
                   View Project &rarr;

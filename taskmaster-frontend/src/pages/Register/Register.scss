@@ -1,0 +1,76 @@
+@use '../../styles/abstracts' as *;
+
+.tr-login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-10;
+
+  &__shell {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: $space-5;
+    justify-content: center;
+    margin-bottom: $space-11;
+  }
+
+  &__brand-mark {
+    width: 34px;
+    height: 34px;
+    border-radius: $radius-lg;
+    background: $accent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  &__brand-name {
+    font-size: 18px;
+    font-weight: $fw-bold;
+    color: $white;
+    letter-spacing: $letter-spacing-tight;
+  }
+
+  &__card {
+    background-color: $dark-surface;
+    border-radius: $radius-2xl;
+    box-shadow: $shadow-login-card;
+
+    .tr-inputform-panel {
+      background-color: transparent;
+    }
+
+    .tr-inputform {
+      gap: $space-8;
+    }
+  }
+
+  &__btn {
+    background: $accent;
+    font-weight: $fw-semibold;
+    margin-top: 4px;
+  }
+
+  &__signup-hint {
+    text-align: center;
+    font-size: $fs-sm;
+    color: $dark-muted-text;
+    margin-top: 18px;
+
+    a {
+      color: $accent-light;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}

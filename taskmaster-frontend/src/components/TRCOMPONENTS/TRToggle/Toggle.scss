@@ -1,0 +1,74 @@
+@use '../../../styles/abstracts' as *;
+
+.tr-toggle {
+  @include flex-column($space-4);
+
+  &__row {
+    display: flex;
+    flex-direction: row;
+    gap: $space-4;
+  }
+
+  &__control {
+    position: relative;
+    display: inline-flex;
+    cursor: pointer;
+
+    input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  &__switch {
+    position: relative;
+    display: block;
+    width: 50px;
+    height: 28px;
+    background: $switch-track-neutral;
+    border-radius: $radius-pill;
+    transition: all 0.3s ease;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      width: 24px;
+      height: 24px;
+      border-radius: $radius-circle;
+      left: 2px;
+      top: 2px;
+      background: $white;
+      transition: all 0.3s ease;
+      box-shadow: $shadow-sm;
+    }
+  }
+
+  &__control input:checked + &__switch {
+    background: $green-500;
+
+    &::before {
+      left: 24px;
+    }
+  }
+
+  &__control input:disabled + &__switch {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &__subtitle {
+    font-size: $fs-md;
+    margin-top: 5px;
+    font-weight: $fw-medium;
+
+    &--active {
+      color: $green-500;
+    }
+
+    &--inactive {
+      color: $error-red;
+    }
+  }
+}

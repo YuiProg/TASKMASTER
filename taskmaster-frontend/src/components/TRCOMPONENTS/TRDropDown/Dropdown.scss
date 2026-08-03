@@ -1,0 +1,138 @@
+@use '../../../styles/abstracts' as *;
+
+.tr-dropdown {
+  position: relative;
+  display: inline-block;
+  width: 100%;
+
+  &__button {
+    background-color: $input-bg-light; /* Matches your dashboard input background color */
+    color: $slate-800;
+    height: 50px; /* Aligns smoothly with InputField height sizing lines */
+    border-radius: $radius-md;
+    border: 1px solid $slate-200;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: $space-6;
+    padding: 0 $space-8;
+    cursor: pointer;
+    outline: none;
+    font-family: $font-family-fallback;
+    transition: background-color $transition-med ease;
+
+    &:hover:not(.tr-dropdown__button--disabled) {
+      background-color: $input-bg-hover;
+    }
+
+    &--active {
+      background-color: $input-bg-hover;
+    }
+
+    &--disabled {
+      background-color: $slate-100;
+      color: $slate-400;
+      cursor: not-allowed;
+    }
+
+    /* Loading looks distinct from a plain disabled state — keeps the
+       button's normal background instead of dimming it, so it reads as
+       "in progress" rather than "unavailable". */
+    &--loading {
+      background-color: $input-bg-light;
+      color: $slate-800;
+      cursor: wait;
+    }
+  }
+
+  &__icon {
+    width: 16px;
+    height: 16px;
+    color: $slate-400;
+    flex-shrink: 0;
+  }
+
+  &__text {
+    flex: 1;
+    text-align: left;
+    font-size: $fs-md;
+    @include truncate;
+  }
+
+  &__chevron {
+    width: 16px;
+    height: 16px;
+    color: $slate-400;
+    flex-shrink: 0;
+    transition: transform $transition-med $ease-out-standard;
+
+    &--open {
+      transform: rotate(180deg);
+    }
+  }
+
+  &__spinner {
+    width: 16px;
+    height: 16px;
+    color: $blue-600;
+    flex-shrink: 0;
+    animation: tr-dropdown-spin 0.7s linear infinite;
+  }
+
+  /* ── Portal Container Architecture ── */
+  &__list {
+    position: absolute !important; /* Managed cleanly via component matrix coordinates */
+    background-color: $white; /* Card surface matching design system light accents */
+    border: 1px solid $slate-200;
+    border-radius: $radius-lg;
+    list-style: none;
+    margin: 0;
+    padding: $space-3 0;
+    z-index: $z-portal !important;
+    box-shadow: $shadow-popover;
+    max-height: 240px;
+    overflow-y: auto;
+    box-sizing: border-box;
+    font-family: $font-family-fallback;
+
+    /* ── Webkit Scrollbar Controls ── */
+    @include custom-scrollbar($width: 6px, $thumb: $slate-300, $thumb-hover: $slate-400, $radius: 20px);
+  }
+
+  &__item {
+    background-color: transparent; /* Allows inheritance of container body background safely */
+    color: $slate-700;
+    padding: $space-6 $space-8;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+    font-size: $fs-base;
+    line-height: $line-height-normal;
+
+    &:hover {
+      background-color: $input-bg-light;
+      color: $slate-800;
+    }
+
+    &--active {
+      background-color: $blue-active-bg;
+      color: $blue-600;
+      font-weight: $fw-semibold;
+    }
+
+    &--all {
+      border-bottom: 1px solid $border-lighter;
+      margin-bottom: $space-2;
+      padding-bottom: $space-6;
+      color: $slate-400;
+    }
+  }
+}
+
+@keyframes tr-dropdown-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

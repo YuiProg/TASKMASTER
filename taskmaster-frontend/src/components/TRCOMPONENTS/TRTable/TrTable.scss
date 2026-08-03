@@ -1,0 +1,344 @@
+@use '../../../styles/abstracts' as *;
+
+.tr-table {
+  @include card-surface($radius: $radius-2xl);
+  width: 100%;
+  box-sizing: border-box;
+  padding: $space-9;
+
+  /* ── Header Row ── */
+  &__header {
+    @include flex-between($gap: $space-6);
+    margin-bottom: $space-9;
+
+    &--isolated {
+      margin-bottom: $space-6;
+    }
+  }
+
+  &__title-area {
+    @include flex-column;
+  }
+
+  &__eyebrow {
+    font-size: $fs-2xs;
+    font-weight: $fw-semibold;
+    color: $slate-400;
+    letter-spacing: $letter-spacing-wide;
+    text-transform: uppercase;
+    margin: 0;
+  }
+
+  &__title {
+    font-size: 18px;
+    font-weight: $fw-semibold;
+    color: $slate-800;
+    margin: $space-2 0 0 0;
+    line-height: $line-height-tight;
+  }
+
+  &__header-actions {
+    display: flex;
+    align-items: center;
+    gap: $space-6;
+  }
+
+  /* ── Table Container ── */
+  &__scroll {
+    width: 100%;
+    border: 1px solid $border-light;
+    border-radius: $radius-lg;
+    overflow-x: auto;
+    background-color: transparent;
+  }
+
+  /* ── Table Base ── */
+  &__table {
+    width: 100%;
+    border-collapse: collapse;
+    border-spacing: 0;
+    font-size: $fs-sm;
+    color: $slate-800;
+    text-align: left; /* Changes text alignments to match natural table layouts */
+  }
+
+  /* ── Headers ── */
+  &__head-row {
+    border-bottom: 1px solid $slate-200;
+  }
+
+  &__th {
+    padding: $space-6 $space-8;
+    text-align: left;
+    color: $slate-400;
+    background-color: $table-header-bg;
+    font-weight: $fw-semibold;
+    font-size: $fs-2xs;
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+
+    &--check {
+      width: 50px;
+      text-align: center;
+      padding-right: 0;
+    }
+
+    &--action {
+      width: 90px;
+      text-align: center;
+    }
+
+    &--sortable {
+      cursor: pointer;
+      user-select: none;
+
+      &:hover {
+        color: $slate-800;
+      }
+    }
+  }
+
+  &__th-content {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-3;
+  }
+
+  &__sort-icon {
+    display: flex;
+    align-items: center;
+    color: $blue-600;
+
+    &--inactive {
+      color: $slate-300;
+    }
+  }
+
+  /* ── Rows & Columns ── */
+  &__row {
+    border-bottom: 1px solid $border-lighter;
+    transition: background-color $transition-fast ease;
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &:hover {
+      background-color: $surface-app;
+    }
+
+    &--selected {
+      background-color: $blue-50;
+    }
+  }
+
+  &__td {
+    padding: $space-6 $space-8;
+    text-align: left;
+    color: $slate-700;
+    white-space: nowrap;
+    vertical-align: middle;
+
+    &--check {
+      text-align: center;
+      padding-right: 0;
+    }
+
+    &--action {
+      text-align: center;
+    }
+
+    &--nodata {
+      padding: 0;
+    }
+  }
+
+  &__id-link {
+    cursor: pointer;
+    color: $slate-800;
+    font-weight: $fw-semibold;
+    transition: color 0.1s ease;
+
+    &:hover {
+      color: $blue-600; /* Brand Accent highlight color */
+    }
+  }
+
+  /* ── Checkboxes ── */
+  &__checkbox {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid $slate-300;
+    border-radius: $radius-sm;
+    background-color: transparent;
+    cursor: pointer;
+    position: relative;
+    transition: border-color $transition-fast ease, background-color $transition-fast ease;
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0;
+
+    &:hover {
+      border-color: $blue-600;
+    }
+
+    &:checked {
+      background-color: $blue-600;
+      border-color: $blue-600;
+
+      &::after {
+        content: '';
+        position: absolute;
+        left: 4px;
+        top: 1px;
+        width: 4px;
+        height: 7px;
+        border: 2px solid $white;
+        border-top: none;
+        border-left: none;
+        transform: rotate(45deg);
+      }
+    }
+  }
+
+  /* ── Action Buttons ── */
+  &__action-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: $space-3;
+    border-radius: $radius-md;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color $transition-fast ease, color $transition-fast ease;
+
+    &--delete {
+      color: $slate-icon-muted;
+
+      &:hover {
+        background-color: $red-hover-bg;
+        color: $red-hover;
+      }
+    }
+
+    &--edit {
+      color: $slate-icon-muted;
+
+      &:hover {
+        background-color: $blue-50;
+        color: $blue-600;
+      }
+    }
+  }
+
+  /* ── Pagination Area ── */
+  &__pagination {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: $space-7 $space-2 0 $space-2;
+    margin-top: $space-6;
+  }
+
+  &__pagination-info {
+    font-size: $fs-xs;
+    color: $slate-400;
+  }
+
+  &__pagination-controls {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+  }
+
+  &__pagination-btn,
+  &__pagination-page {
+    background: transparent;
+    border: 1px solid $slate-200;
+    color: $slate-500;
+    width: 32px;
+    height: 32px;
+    border-radius: $radius-md;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: $fs-sm;
+    transition: border-color $transition-fast ease, color $transition-fast ease, background-color $transition-fast ease;
+  }
+
+  &__pagination-btn {
+    &:hover:not(:disabled) {
+      border-color: $slate-400;
+      color: $slate-800;
+    }
+
+    &:disabled {
+      opacity: 0.35;
+      cursor: not-allowed;
+    }
+  }
+
+  &__pagination-page {
+    &:hover {
+      border-color: $slate-400;
+      color: $slate-800;
+    }
+
+    &--active {
+      background-color: $blue-600;
+      border-color: $blue-600;
+      color: $white;
+      font-weight: $fw-semibold;
+
+      &:hover {
+        background-color: $blue-600;
+        border-color: $blue-600;
+      }
+    }
+  }
+
+  &__pagination-dots {
+    color: $slate-300;
+    font-size: 18px;
+    padding: 0 $space-2;
+    user-select: none;
+    line-height: 1;
+  }
+
+  /* ── No Data / Loading states ── */
+  &__empty {
+    @include flex(column, center, center, $space-6);
+    padding: 48px $space-10;
+  }
+
+  &__empty-icon {
+    color: $slate-300;
+  }
+
+  &__empty-title {
+    color: $slate-400;
+    font-size: $fs-sm;
+    font-weight: $fw-medium;
+    margin: 0;
+  }
+
+  &__spinner {
+    width: 24px;
+    height: 24px;
+    border: 2.5px solid $slate-200;
+    border-top-color: $blue-600;
+    border-radius: $radius-circle;
+    animation: spinner-rotate 0.7s $ease-standard infinite;
+  }
+}
+
+@keyframes spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}

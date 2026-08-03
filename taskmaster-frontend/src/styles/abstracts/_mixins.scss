@@ -1,0 +1,101 @@
+@use 'colors' as c;
+@use 'spacing' as s;
+@use 'variables' as v;
+
+@mixin flex($direction: row, $align: stretch, $justify: flex-start, $gap: null) {
+  display: flex;
+  flex-direction: $direction;
+  align-items: $align;
+  justify-content: $justify;
+  @if $gap != null {
+    gap: $gap;
+  }
+}
+
+@mixin flex-center($gap: null) {
+  @include flex(row, center, center, $gap);
+}
+
+@mixin flex-column($gap: null) {
+  @include flex(column, stretch, flex-start, $gap);
+}
+
+@mixin flex-between($align: center, $gap: null) {
+  @include flex(row, $align, space-between, $gap);
+}
+
+// Frosted card surface used by tables, panels and kanban cards
+@mixin card-surface($radius: s.$radius-xl, $shadow: v.$shadow-card) {
+  background-color: c.$white;
+  border: 1px solid c.$border-light;
+  border-radius: $radius;
+  box-shadow: $shadow;
+}
+
+@mixin truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+// Slim, theme-able scrollbar (webkit) used by several scrollable lists
+@mixin custom-scrollbar($width: 6px, $thumb: c.$slate-300, $thumb-hover: c.$slate-400, $track: transparent, $radius: s.$radius-sm) {
+  &::-webkit-scrollbar {
+    width: $width;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: $track;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: $thumb;
+    border-radius: $radius;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: $thumb-hover;
+  }
+}
+
+@mixin hidden-scrollbar {
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@mixin respond-to($breakpoint) {
+  @if $breakpoint == tablet {
+    @media (max-width: s.$bp-tablet) {
+      @content;
+    }
+  } @else if $breakpoint == mobile {
+    @media (max-width: s.$bp-mobile) {
+      @content;
+    }
+  } @else {
+    @media (max-width: $breakpoint) {
+      @content;
+    }
+  }
+}
+
+// Small round avatar/icon badge with a solid or gradient background
+@mixin avatar($size, $bg: c.$blue-600, $color: c.$white) {
+  width: $size;
+  height: $size;
+  min-width: $size;
+  border-radius: s.$radius-circle;
+  background: $bg;
+  color: $color;
+  @include flex-center;
+  flex-shrink: 0;
+}
+
+@mixin pill-badge($bg, $color) {
+  background-color: $bg;
+  color: $color;
+  border-radius: s.$radius-pill;
+}

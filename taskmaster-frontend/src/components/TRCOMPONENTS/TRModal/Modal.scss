@@ -1,0 +1,270 @@
+@use '../../../styles/abstracts' as *;
+
+/* GLOBAL MODAL STYLES
+   NOTE: the confirm/error/generic overlay variants carried duplicate,
+   fully-redundant rules in the original CSS (same properties as the base,
+   re-declared) — consolidated into one rule here with identical resulting
+   behavior. */
+.tr-modal__overlay {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  background-color: rgba($overlay-color, 0.5);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: $z-modal;
+  color: $white;
+  animation: fadeIn 0.15s ease-in-out;
+
+  &--closing {
+    animation: fadeOut 0.15s ease-in-out forwards;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+}
+
+[class*='modal'] {
+  animation: fadeIn 0.15s ease-in-out;
+
+  &.closing {
+    animation: fadeOut 0.15s ease-in-out forwards;
+  }
+}
+
+/* ── Panel — the plain <Modal> body, plus the confirm/error variants that
+   also fade in on their own (the Yes/No panel doesn't, matching original) ── */
+.tr-modal__panel,
+.tr-modal__panel--confirm,
+.tr-modal__panel--error {
+  animation: fadeIn 0.15s ease-in-out;
+}
+
+.tr-modal__panel--closing,
+.tr-modal__panel--confirm.closing,
+.tr-modal__panel--error.closing {
+  animation: fadeOut 0.15s ease-in-out forwards;
+}
+
+.tr-modal__actions {
+  display: flex;
+  justify-content: center;
+  gap: $space-9;
+}
+
+.tr-modal__action-btn {
+  &--no {
+    background-color: transparent;
+    border: 1px solid $dark-border;
+
+    &:hover {
+      background-color: $dark-border;
+    }
+  }
+
+  &--yes {
+    background-color: $accent;
+  }
+}
+
+.tr-modal__actions .tr-button {
+  width: 100px !important;
+}
+
+.tr-modal__panel--error {
+  width: 450px;
+  height: auto;
+  background-color: $dark-surface;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-2xl;
+  flex-direction: column;
+  gap: $space-9;
+  padding: 50px;
+}
+
+.tr-modal__error-icon {
+  background-color: $error-red;
+  border-radius: 100%;
+  padding: $space-5;
+}
+
+.tr-modal__error-title {
+  font-weight: $fw-extralight;
+  text-align: center;
+}
+
+.tr-modal__error-text {
+  font-weight: $fw-extralight;
+  color: $dark-muted-text;
+  text-align: center;
+  margin: 0;
+}
+
+.tr-modal__panel--confirm {
+  width: 450px;
+  height: auto;
+  background-color: $dark-surface;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-2xl;
+  flex-direction: column;
+  gap: $space-9;
+  padding: 50px;
+}
+
+.tr-modal__confirm-icon {
+  background-color: $green-500;
+  border-radius: 100%;
+  padding: $space-5;
+}
+
+.tr-modal__confirm-texts {
+  @include flex-column($space-9);
+}
+
+.tr-modal__confirm-title {
+  font-weight: $fw-extralight;
+  text-align: center;
+  margin: 0;
+}
+
+.tr-modal__confirm-subtitle {
+  font-weight: $fw-extralight;
+  color: $dark-muted-text;
+  text-align: center;
+  margin: 0;
+}
+
+.tr-modal__panel {
+  width: 80%;
+  height: auto;
+  max-height: 95vh;
+  background-color: $dark-surface;
+  border-radius: $radius-2xl;
+  padding: $space-9;
+  box-shadow: $shadow-sm;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-shadow: $shadow-modal;
+}
+
+.tr-modal__title {
+  font-weight: $fw-extralight;
+}
+
+.tr-modal__subtitle {
+  font-weight: $fw-extralight;
+  color: $dark-muted-text;
+  margin-top: 0;
+}
+
+.tr-addfile {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  &:has(img) .tr-addfile__details {
+    width: 40% !important;
+    background: $dark-surface-alt;
+  }
+}
+
+.tr-modal__panel:has(.tr-addfile img) {
+  overflow-y: auto;
+  width: 60% !important;
+}
+
+.tr-modal__panel--yesno {
+  width: 30%;
+  height: 25%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  background: $dark-surface;
+  padding: $space-9;
+  border-radius: 25px;
+}
+
+/* edit modal */
+
+.tr-modal__edit-panel {
+  width: 400px;
+  height: 400px;
+  background-color: $dark-surface;
+}
+
+.tr-modal__time-details {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tr-modal__time-name {
+  font-size: 2rem;
+  font-weight: $fw-medium;
+}
+
+.tr-modal__time-total {
+  font-size: 1rem;
+  font-weight: $fw-light;
+  color: $dark-muted-text;
+  padding-top: $space-5;
+}
+
+.tr-modal__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: $space-5;
+}
+
+.tr-modal__close-btn {
+  background: none;
+  border: none;
+  color: $white;
+  cursor: pointer;
+  padding: $space-2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $radius-sm;
+  transition: background-color $transition-med ease;
+  flex-shrink: 0;
+
+  &:hover {
+    background-color: rgba($white, 0.1);
+  }
+
+  &:active {
+    background-color: rgba($white, 0.2);
+  }
+}

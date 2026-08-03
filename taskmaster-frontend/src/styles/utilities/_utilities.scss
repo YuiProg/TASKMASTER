@@ -1,0 +1,46 @@
+@use '../abstracts/spacing' as s;
+@use '../abstracts/mixins' as m;
+
+.u-flex {
+  display: flex;
+}
+
+.u-flex-center {
+  @include m.flex-center;
+}
+
+.u-flex-column {
+  @include m.flex-column;
+}
+
+.u-flex-between {
+  @include m.flex-between;
+}
+
+.u-truncate {
+  @include m.truncate;
+}
+
+.u-hidden {
+  display: none !important;
+}
+
+.u-visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.u-full-width {
+  width: 100%;
+}
+
+.u-full-height {
+  height: 100%;
+}

@@ -1,7 +1,7 @@
 import React from "react";
 import { useAuthStore } from "../../context/AuthStore";
 import { Link } from "react-router-dom";
-import './Sidebar.css';
+import './Sidebar.scss';
 import {
     LayoutDashboard, Folder, CheckSquare, GitBranch, Users,
     LogOut, Menu, ChevronDown
@@ -129,25 +129,25 @@ class Sidebar extends React.Component {
     renderAccordion({ key, expanded, active, icon, label, tooltip, items }) {
         const { collapsed } = this.state;
         return (
-            <li className={`sb-row sb-dropdown-wrapper ${expanded ? 'is-expanded' : ''} ${active ? 'parent-active' : ''}`}>
-                <a href={`#${key}`} onClick={this.toggleMenu(`${key}Expanded`)} className="sb-dropdown-trigger">
-                    <div className="sb-trigger-left">
-                        <span className="sb-icon-wrap">{icon}</span>
-                        <span className="sb-title">{label}</span>
+            <li className={`sidebar__row${expanded ? ' sidebar__row--expanded' : ''}${active ? ' sidebar__row--parent-active' : ''}`}>
+                <a href={`#${key}`} onClick={this.toggleMenu(`${key}Expanded`)} className="sidebar__dropdown-trigger">
+                    <div className="sidebar__trigger-left">
+                        <span className="sidebar__icon-wrap">{icon}</span>
+                        <span className="sidebar__title">{label}</span>
                     </div>
                     {!collapsed && (
-                        <ChevronDown className={`sb-chevron ${expanded ? 'rotated' : ''}`} size={16} />
+                        <ChevronDown className={`sidebar__chevron${expanded ? ' sidebar__chevron--rotated' : ''}`} size={16} />
                     )}
                 </a>
-                {collapsed && <span className="sb-tooltip">{tooltip || label}</span>}
-                <ul className="sb-submenu-list">
+                {collapsed && <span className="sidebar__tooltip">{tooltip || label}</span>}
+                <ul className="sidebar__submenu-list">
                     {items.map(({ path, title }) => {
                         const pathname = window.location.pathname;
                         return (
-                            <li key={path} className={`sb-sub-row${pathname === path ? ' sub-active' : ''}`}>
+                            <li key={path} className={`sidebar__sub-row${pathname === path ? ' sidebar__sub-row--active' : ''}`}>
                                 <Link to={path}>
-                                    <span className="sb-sub-dot"></span>
-                                    <span className="sb-sub-title">{title}</span>
+                                    <span className="sidebar__sub-dot"></span>
+                                    <span className="sidebar__sub-title">{title}</span>
                                 </Link>
                             </li>
                         );
@@ -160,12 +160,12 @@ class Sidebar extends React.Component {
     renderSimpleItem({ path, icon, label, pathname }) {
         const { collapsed } = this.state;
         return (
-            <li className={`sb-row${pathname === path ? ' active' : ''}`}>
+            <li className={`sidebar__row${pathname === path ? ' sidebar__row--active' : ''}`}>
                 <Link to={path}>
-                    <span className="sb-icon-wrap">{icon}</span>
-                    <span className="sb-title">{label}</span>
+                    <span className="sidebar__icon-wrap">{icon}</span>
+                    <span className="sidebar__title">{label}</span>
                 </Link>
-                {collapsed && <span className="sb-tooltip">{label}</span>}
+                {collapsed && <span className="sidebar__tooltip">{label}</span>}
             </li>
         );
     }
@@ -186,33 +186,33 @@ class Sidebar extends React.Component {
         const isAnyTasksActive = ["/tasks/my-tasks", "/tasks/backlog"].includes(pathname);
 
         return (
-            <div className="sidebar-container">
-                <aside className={`sidebar-aside${collapsed ? ' collapsed' : ''}`}>
+            <div className="sidebar">
+                <aside className={`sidebar__aside${collapsed ? ' sidebar__aside--collapsed' : ''}`}>
 
                     {/* Top Section */}
-                    <div className="sb-top">
-                        <div className="sb-logo-area">
-                            {!collapsed && <span className="sb-logo-text">Task Master</span>}
+                    <div className="sidebar__top">
+                        <div className="sidebar__logo-area">
+                            {!collapsed && <span className="sidebar__logo-text">Task Master</span>}
                         </div>
-                        <button className="sb-burger" onClick={this.toggleSidebar} aria-label="Toggle sidebar">
+                        <button className="sidebar__burger" onClick={this.toggleSidebar} aria-label="Toggle sidebar">
                             <Menu size={20} />
                         </button>
                     </div>
 
-                    <nav className="sb-nav">
+                    <nav className="sidebar__nav">
 
                         {/* ── OVERVIEW ── */}
-                        <div className="sb-section">
-                            <p className="sb-section-label">Overview</p>
-                            <ul className="sidebar-list">
+                        <div className="sidebar__section">
+                            <p className="sidebar__section-label">Overview</p>
+                            <ul className="sidebar__list">
                                 {this.renderSimpleItem({ path: '/dashboard', icon: <LayoutDashboard size={20} />, label: 'Dashboard', pathname })}
                             </ul>
                         </div>
 
                         {/* ── WORKSPACE ── */}
-                        <div className="sb-section">
-                            <p className="sb-section-label">Workspace</p>
-                            <ul className="sidebar-list">
+                        <div className="sidebar__section">
+                            <p className="sidebar__section-label">Workspace</p>
+                            <ul className="sidebar__list">
                                 {this.renderAccordion({
                                     key: 'projects',
                                     expanded: projectsExpanded,
@@ -244,26 +244,26 @@ class Sidebar extends React.Component {
                         </div>
 
                         {/* ── TEAM ── */}
-                        <div className="sb-section">
-                            <p className="sb-section-label">Team</p>
-                            <ul className="sidebar-list">
+                        <div className="sidebar__section">
+                            <p className="sidebar__section-label">Team</p>
+                            <ul className="sidebar__list">
                                 {this.renderSimpleItem({ path: '/team', icon: <Users size={20} />, label: 'Members', pathname })}
                             </ul>
                         </div>
                     </nav>
 
                     {/* Bottom User Profile Section */}
-                    <div className="user-panel">
-                        <div className="user-row">
+                    <div className="sidebar__user-panel">
+                        <div className="sidebar__user-row">
                             {user ? (
                                 <>
-                                    <div className="sb-avatar">{initials}</div>
+                                    <div className="sidebar__avatar">{initials}</div>
                                     {!collapsed && (
-                                        <div className="user-info">
-                                            <p className="userName">{displayName}</p>
-                                            <p className="userRole">{displayEmail}</p>
+                                        <div className="sidebar__user-info">
+                                            <p className="sidebar__user-name">{displayName}</p>
+                                            <p className="sidebar__user-role">{displayEmail}</p>
                                             <a
-                                                className="change-password"
+                                                className="sidebar__change-password"
                                                 onClick={() => this.setState({ showChangePasswordModal: true })}
                                             >
                                                 Change password
@@ -273,17 +273,17 @@ class Sidebar extends React.Component {
                                 </>
                             ) : (
                                 <>
-                                    <div className="sb-skeleton sb-skeleton-avatar" />
+                                    <div className="sidebar__skeleton sidebar__skeleton-avatar" />
                                     {!collapsed && (
-                                        <div className="user-info">
-                                            <div className="sb-skeleton sb-skeleton-line sb-skeleton-line-name" />
-                                            <div className="sb-skeleton sb-skeleton-line sb-skeleton-line-email" />
+                                        <div className="sidebar__user-info">
+                                            <div className="sidebar__skeleton sidebar__skeleton-line sidebar__skeleton-line--name" />
+                                            <div className="sidebar__skeleton sidebar__skeleton-line sidebar__skeleton-line--email" />
                                         </div>
                                     )}
                                 </>
                             )}
                             {!collapsed && user && (
-                                <button className="sb-logout-btn" onClick={this.handleLogout} aria-label="Log out">
+                                <button className="sidebar__logout-btn" onClick={this.handleLogout} aria-label="Log out">
                                     <LogOut size={16} />
                                 </button>
                             )}
@@ -291,7 +291,7 @@ class Sidebar extends React.Component {
                     </div>
                 </aside>
 
-                <main className="children">
+                <main className="sidebar__content">
                     {this.passProps()}
                 </main>
             </div>

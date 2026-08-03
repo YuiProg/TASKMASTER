@@ -1,0 +1,478 @@
+@use '../../styles/abstracts' as *;
+
+/* ── Layout ──────────────────────────────────────────────── */
+body {
+  margin: 0;
+  overflow: hidden;
+  height: 100vh;
+}
+
+#root {
+  height: 100vh;
+  overflow: hidden;
+}
+
+.sidebar {
+  @include flex(row);
+  height: 100vh;
+  overflow: hidden;
+
+  /* ── Sidebar shell ───────────────────────────────────────── */
+  &__aside {
+    width: $sidebar-width; /* Bumped base width slightly to comfortably handle larger items */
+    min-width: $sidebar-width;
+    @include flex-column;
+    background-color: $white;
+    height: 100vh;
+    flex-shrink: 0;
+    overflow: hidden;
+    border-right: 1px solid $border-light;
+    transition: width $transition-slow $ease-standard,
+                min-width $transition-slow $ease-standard;
+
+    &--collapsed {
+      width: $sidebar-width-collapsed; /* Adjusted to balance larger icons when collapsed */
+      min-width: $sidebar-width-collapsed;
+    }
+  }
+
+  /* ── Top bar ─────────────────────────────────────────────── */
+  &__top {
+    @include flex-between;
+    padding: 0 $space-8;
+    height: $topbar-height;
+    min-height: $topbar-height;
+    border-bottom: 1px solid $border-light;
+    box-sizing: border-box;
+    flex-shrink: 0;
+
+    .sidebar__aside--collapsed & {
+      justify-content: center;
+      padding: 0;
+    }
+  }
+
+  &__logo-area {
+    @include flex(row, center, flex-start, $space-6);
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  &__logo-img {
+    width: 30px;
+    height: 30px;
+    min-width: 30px;
+    object-fit: contain;
+    border-radius: $radius-md;
+  }
+
+  &__logo-text {
+    font-size: $fs-md;
+    font-weight: $fw-semibold;
+    color: $slate-800;
+    letter-spacing: $letter-spacing-tighter;
+  }
+
+  &__burger {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: $slate-400;
+    padding: $space-3;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    transition: color $transition-fast, background $transition-fast;
+    flex-shrink: 0;
+
+    &:hover {
+      color: $blue-600;
+      background: $blue-50;
+    }
+  }
+
+  /* ── Nav list & Sections ─────────────────────────────────── */
+  &__nav {
+    flex: 1;
+    overflow-y: auto;
+    padding: $space-9 0;
+    @include hidden-scrollbar;
+    @include flex-column($space-9);
+  }
+
+  &__section {
+    @include flex-column;
+  }
+
+  &__section-label {
+    font-size: $fs-2xs;
+    font-weight: $fw-bold;
+    text-transform: uppercase;
+    color: $slate-icon-muted;
+    letter-spacing: $letter-spacing-wider;
+    padding: 0 $space-8;
+    margin: 0 0 $space-4 0;
+    transition: opacity $transition-fast, height $transition-fast, margin $transition-fast;
+    white-space: nowrap;
+
+    .sidebar__aside--collapsed & {
+      opacity: 0;
+      height: 0;
+      margin: 0;
+      padding: 0;
+      pointer-events: none;
+    }
+  }
+
+  &__list {
+    list-style: none;
+    margin: 0;
+    padding: 0 $space-5;
+    @include flex-column($space-2); /* Slightly wider spacing footprint */
+  }
+
+  &__row {
+    position: relative;
+    border-radius: $radius-lg;
+    overflow: visible;
+
+    a {
+      display: flex;
+      align-items: center;
+      gap: $space-6;
+      padding: 11px $space-6; /* Increased vertical and horizontal breathing room */
+      border-radius: $radius-lg;
+      text-decoration: none;
+      color: $slate-500;
+      font-size: $fs-md; /* Bumped size from 13px */
+      white-space: nowrap;
+      overflow: hidden;
+      transition: background $transition-fast, color $transition-fast;
+    }
+
+    &:hover > a {
+      background: $input-bg-light;
+      color: $slate-800;
+    }
+
+    &--active > a {
+      background: $blue-active-bg;
+      color: $blue-600;
+      font-weight: $fw-medium;
+    }
+
+    &--active .sidebar__icon-wrap::before {
+      content: '';
+      position: absolute;
+      left: -12px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 22px; /* Scaled line indicator height */
+      border-radius: 0 3px 3px 0;
+      background: $blue-600;
+    }
+
+    &:hover .sidebar__tooltip {
+      display: block;
+    }
+
+    &:hover .sidebar__chevron {
+      color: $blue-600;
+    }
+
+    &--parent-active > a {
+      color: $blue-600;
+    }
+  }
+
+  &__icon-wrap {
+    @include flex-center;
+    width: 22px; /* Enlarged wrapper boundaries */
+    min-width: 22px;
+    position: relative;
+  }
+
+  &__title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: opacity $transition-fast;
+
+    .sidebar__aside--collapsed & {
+      opacity: 0;
+      width: 0;
+      pointer-events: none;
+    }
+  }
+
+  /* ── Collapsed tooltip ───────────────────────────────────── */
+  &__tooltip {
+    display: none;
+    position: absolute;
+    left: 56px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: $slate-800;
+    color: $white;
+    font-size: $fs-sm;
+    padding: $space-3 $space-6;
+    border-radius: 7px;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: $z-tooltip;
+    box-shadow: $shadow-tooltip;
+  }
+
+  /* ── Accordion Dropdown Submenu ──────────────────────────── */
+  &__dropdown-trigger {
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  &__trigger-left {
+    display: flex;
+    align-items: center;
+    gap: $space-6;
+  }
+
+  &__chevron {
+    color: $slate-chevron;
+    transition: transform $transition-med $ease-standard, color $transition-fast;
+    flex-shrink: 0;
+
+    &--rotated {
+      transform: rotate(180deg);
+      color: $blue-600;
+    }
+  }
+
+  &__submenu-list {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 $space-8; /* Indented further to maintain alignment symmetry */
+    max-height: 0;
+    overflow: hidden;
+    @include flex-column($space-1 * 1.5);
+    transition: max-height $transition-slow $ease-standard, margin $transition-slow;
+
+    .sidebar__aside--collapsed & {
+      max-height: 0 !important;
+      margin: 0 !important;
+      padding: 0;
+    }
+  }
+
+  &__row--expanded &__submenu-list {
+    max-height: 160px; /* Accommodates larger sizes safely */
+    margin-top: $space-3;
+    margin-bottom: $space-3;
+  }
+
+  &__sub-row {
+    a {
+      padding: 9px $space-6; /* Increased padded touch targets */
+      border-radius: $radius-md;
+      display: flex;
+      align-items: center;
+      gap: $space-5;
+      background: transparent;
+    }
+
+    &:hover a .sidebar__sub-title {
+      color: $slate-800;
+    }
+
+    &:hover .sidebar__sub-dot {
+      background-color: $blue-400;
+    }
+
+    &--active a {
+      background: $blue-50;
+    }
+
+    &--active a .sidebar__sub-title {
+      color: $blue-600;
+      font-weight: $fw-medium;
+    }
+
+    &--active .sidebar__sub-dot {
+      background-color: $blue-600;
+      transform: scale(1.2);
+    }
+  }
+
+  &__sub-title {
+    font-size: $fs-sm; /* Bumped from 12px */
+    color: $slate-400;
+    transition: color $transition-fast;
+  }
+
+  &__sub-dot {
+    width: 5px; /* Scaled up submenu point indicator */
+    height: 5px;
+    border-radius: $radius-circle;
+    background-color: $slate-300;
+    transition: background-color $transition-fast, transform $transition-fast;
+    flex-shrink: 0;
+  }
+
+  /* ── User panel ──────────────────────────────────────────── */
+  &__user-panel {
+    border-top: 1px solid $border-light;
+    padding: $space-8 $space-5; /* Extra padding structure */
+    flex-shrink: 0;
+    @include flex-column($space-5);
+  }
+
+  &__clock-in {
+    display: flex;
+    align-items: center;
+    gap: $space-5;
+    padding: $space-4 $space-6;
+    border: 1px solid $border-light;
+    border-radius: $radius-lg;
+    color: $slate-500;
+  }
+
+  &__clock-icon {
+    flex-shrink: 0;
+  }
+
+  &__clock-in-texts {
+    @include flex-column;
+  }
+
+  &__clock-label {
+    font-size: $fs-2xs;
+    color: $slate-400;
+    margin: 0;
+  }
+
+  &__clock-value {
+    font-size: $fs-sm;
+    font-weight: $fw-medium;
+    color: $green-600;
+    margin: 0;
+  }
+
+  &__user-row {
+    display: flex;
+    align-items: center;
+    gap: $space-6;
+    overflow: hidden;
+  }
+
+  &__avatar {
+    @include avatar(34px, linear-gradient(135deg, $blue-gradient-start, $blue-600));
+    font-size: $fs-xs;
+    font-weight: $fw-medium;
+  }
+
+  &__user-info {
+    @include flex-column($space-1);
+    overflow: hidden;
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__user-name {
+    font-size: $fs-base;
+    font-weight: $fw-medium;
+    color: $slate-800;
+    margin: 0;
+    @include truncate;
+  }
+
+  &__user-role {
+    font-size: $fs-xs;
+    color: $slate-400;
+    margin: 0;
+  }
+
+  &__change-password {
+    font-size: $fs-2xs;
+    color: $slate-chevron;
+    text-decoration: none;
+    cursor: pointer;
+    margin-top: $space-1;
+    transition: color $transition-fast;
+
+    &:hover {
+      color: $blue-600;
+    }
+  }
+
+  &__logout-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: $slate-icon-muted;
+    padding: $space-3;
+    border-radius: 7px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    transition: color $transition-fast, background $transition-fast;
+
+    &:hover {
+      color: $red-hover;
+      background: $red-hover-bg;
+    }
+  }
+
+  /* ── Main content area ───────────────────────────────────── */
+  &__content {
+    flex: 1;
+    height: 100vh;
+    overflow-y: auto;
+    width: 100%;
+    background-color: $surface-app;
+  }
+
+  &__avatar-loading {
+    @include flex-center;
+    padding: 0;
+
+    .spinner {
+      width: auto;
+      flex: 0 0 auto;
+    }
+  }
+
+  &__skeleton {
+    background-color: $border-light;
+    border-radius: $radius-sm;
+    animation: sb-skeleton-pulse 1.4s ease-in-out infinite;
+  }
+
+  &__skeleton-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: $radius-circle;
+    flex-shrink: 0;
+  }
+
+  &__skeleton-line {
+    height: 10px;
+    margin: $space-3 0;
+
+    &--name {
+      width: 70%;
+    }
+
+    &--email {
+      width: 90%;
+    }
+  }
+}
+
+@keyframes sb-skeleton-pulse {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}

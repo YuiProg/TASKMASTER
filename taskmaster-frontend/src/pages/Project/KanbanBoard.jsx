@@ -1,5 +1,5 @@
 import React from "react";
-import "./KanbanBoard.css";
+import "./KanbanBoard.scss";
 import { useTaskStore } from "../../context/TaskStore.js";
 import { Eye, AlertOctagon, AlertTriangle, ArrowUp, ArrowDown, Loader2 } from "lucide-react";
 import navigateTo from "../../lib/navigate";
@@ -78,10 +78,10 @@ function columnColorClass(column) {
   switch (column) {
     case "IN PROGRESS":
     case "QA CHECK":
-      return "kb-column-blue";
+      return "kb-board__column--blue";
     case "DEPLOYED":
     case "CLOSED":
-      return "kb-column-green";
+      return "kb-board__column--green";
     default:
       return "";
   }
@@ -297,21 +297,21 @@ class KanbanBoard extends React.Component {
           return (
             <div
               key={column}
-              className={`kb-column ${columnColorClass(column)} ${
-                dragOverColumn === column ? "kb-column-dragover" : ""
+              className={`kb-board__column ${columnColorClass(column)} ${
+                dragOverColumn === column ? "kb-board__column--dragover" : ""
               }`}
               onDragOver={this.handleDragOver(column)}
               onDragLeave={this.handleDragLeave(column)}
               onDrop={this.handleDrop(column)}
             >
-              <div className="kb-column-header">
-                <span className="kb-column-title">{column}</span>
-                <span className="kb-column-count">{columnTasks.length}</span>
+              <div className="kb-board__column-header">
+                <span className="kb-board__column-title">{column}</span>
+                <span className="kb-board__column-count">{columnTasks.length}</span>
               </div>
 
-              <div className="kb-column-body">
+              <div className="kb-board__column-body">
                 {columnTasks.length === 0 ? (
-                  <p className="kb-empty">No tickets</p>
+                  <p className="kb-board__empty">No tickets</p>
                 ) : (
                   columnTasks.map((task) => {
                     const isUpdating = String(updatingTaskId) === String(task.id);
@@ -319,8 +319,8 @@ class KanbanBoard extends React.Component {
                     return (
                       <div
                         key={task.id}
-                        className={`kb-card ${
-                          draggingTaskId === task.id ? "kb-card-dragging" : ""
+                        className={`kb-board__card ${
+                          draggingTaskId === task.id ? "kb-board__card--dragging" : ""
                         }`}
                         style={{ position: "relative" }}
                         draggable={!isUpdating}
@@ -331,14 +331,14 @@ class KanbanBoard extends React.Component {
                         {/* Task Loading Overlay */}
                         {isUpdating && (
                           <div style={cardLoadingOverlayStyle}>
-                            <Loader2 size={16} className="kb-spinner" />
+                            <Loader2 size={16} className="kb-board__spinner" />
                             <span>Updating...</span>
                           </div>
                         )}
 
-                        <p className="kb-card-title">{task.taskName}</p>
+                        <p className="kb-board__card-title">{task.taskName}</p>
 
-                        <div className="kb-card-meta" style={metaContainerStyle}>
+                        <div className="kb-board__card-meta" style={metaContainerStyle}>
                           <div style={infoStackStyle}>
                             <span style={assigneeTextStyle}>
                               Assignee: {task.assignee?.username || "Unassigned"}
@@ -351,7 +351,7 @@ class KanbanBoard extends React.Component {
 
                           <button
                             type="button"
-                            className="kb-view-btn"
+                            className="kb-board__view-btn"
                             title="View Ticket"
                             style={viewButtonStyle}
                             disabled={isUpdating}

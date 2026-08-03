@@ -1,4 +1,4 @@
-import './Spinner.css';
+import './Spinner.scss';
 
 const Spinner = ({ size = 40, strokeWidth = 4, color = '#ff4d4d', trackColor = '#2a2a2a' }) => {
   const spinnerStyle = {
@@ -9,8 +9,8 @@ const Spinner = ({ size = 40, strokeWidth = 4, color = '#ff4d4d', trackColor = '
   };
 
   return (
-    <div className="spinner-container">
-      <div className="spinner-ring" style={spinnerStyle}></div>
+    <div className="spinner">
+      <div className="spinner__ring" style={spinnerStyle}></div>
     </div>
   );
 };

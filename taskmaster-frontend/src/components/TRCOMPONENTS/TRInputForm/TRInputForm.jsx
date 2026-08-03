@@ -1,5 +1,5 @@
 import React from "react";
-import './TRInputForm.css';
+import './TRInputForm.scss';
 import PropTypes from "prop-types";
 
 
@@ -37,10 +37,10 @@ export class TRInputFormPanel extends React.Component {
         const { header, subHeader } = this.props;
 
         return (
-            <div className="tr-inputform-panel-container">
-                <div className="tr-inputform-panel-headers">
-                    <h1 className="tr-header">{header}</h1>
-                    <p className="tr-subheader">{subHeader}</p>
+            <div className="tr-inputform-panel">
+                <div className="tr-inputform-panel__headers">
+                    <h1 className="tr-inputform-panel__title">{header}</h1>
+                    <p className="tr-inputform-panel__subtitle">{subHeader}</p>
                 </div>
                 <div>
                     {this.passPropsToChildren()}
@@ -76,13 +76,13 @@ export class InputForm extends React.Component {
         return (
             <form className="tr-inputform" onSubmit={(e) => onSubmit(e)} style={noBorder && {border: '0'}}>
                 {this.passPropsToChildren()}
-                <div className="tr-inputform-actions">
+                <div className="tr-inputform__actions">
                     {hasCancel && !noBtn ? (
-                        <button className="tr-inputform-cancel" type="button" onClick={() => onCancel()}>
+                        <button className="tr-inputform__cancel-btn" type="button" onClick={() => onCancel()}>
                             {cancelTXT || 'CANCEL'}
                         </button>
                     ) : null}
-                    {!noBtn && (<button disabled={btnDisabled} style={btnDisabled ? { cursor: 'not-allowed' } : {}} className="tr-inputform-submit" type="submit">{btnTXT || 'SUBMIT'}</button>)}
+                    {!noBtn && (<button disabled={btnDisabled} style={btnDisabled ? { cursor: 'not-allowed' } : {}} className="tr-inputform__submit-btn" type="submit">{btnTXT || 'SUBMIT'}</button>)}
                 </div>
             </form>
         );
@@ -111,10 +111,10 @@ export class InputRow extends React.Component {
         return (
             <div className="tr-inputrow" style={bottomMargin ? { gap: `${gap}px`, marginBottom: '10px' } :{ gap: `${gap}px` }}>
                 {React.Children.map(children, (child, i) => (
-                    <div className="tr-inputrow-field" key={i}>
+                    <div className="tr-inputrow__field" key={i}>
                         {titles
-                            ? <p className="tr-inputrow-title">{titles[i]}</p>
-                            : <span className="tr-inputrow-title-spacer" />
+                            ? <p className="tr-inputrow__title">{titles[i]}</p>
+                            : <span className="tr-inputrow__title-spacer" />
                         }
                         {child}
                     </div>

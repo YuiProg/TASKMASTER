@@ -1,5 +1,5 @@
 import React from 'react'
-import './TrTable.css'
+import './TrTable.scss'
 import {
   Trash2,
   SquarePen,
@@ -201,15 +201,15 @@ export class Table extends React.Component {
     const colCount = (headers ? headers.length : 0) + (hasSelect ? 1 : 0) + (hasAction ? 1 : 0)
 
     return (
-      <div className="table-wrapper">
+      <div className="tr-table">
         {isDetailed && data ? (
-          <div className="table-header">
-            <div className="table-title-area">
-              <span className="table-subtitle">Management Console</span>
-              <h1 className="table-title">{isDetailed.header}</h1>
+          <div className="tr-table__header">
+            <div className="tr-table__title-area">
+              <span className="tr-table__eyebrow">Management Console</span>
+              <h1 className="tr-table__title">{isDetailed.header}</h1>
             </div>
-            <div className="table-header-right">
-              <div className="table-search">{isDetailed.search}</div>
+            <div className="tr-table__header-actions">
+              <div className="tr-table__search">{isDetailed.search}</div>
               {isDetailed.hasButton && isDetailed.hasDelete ? (
                 <>
                   <Button error text={isDetailed.buttonInfo} onClick={(e) => isDetailed.CB(e)} />
@@ -239,8 +239,8 @@ export class Table extends React.Component {
           </div>
         ) : (
           hasTableFilters && (
-            <div className="table-header table-header--isolated">
-              <div className="table-header-right" style={{ marginLeft: 'auto' }}>
+            <div className="tr-table__header tr-table__header--isolated">
+              <div className="tr-table__header-actions" style={{ marginLeft: 'auto' }}>
                 <Button
                   cancel
                   text={
@@ -256,14 +256,14 @@ export class Table extends React.Component {
           )
         )}
 
-        <div className="table-container" ref={this.tableContainerRef}>
-          <table className="table">
-            <thead className="table-thead">
-              <tr className="table-thead-row">
+        <div className="tr-table__scroll" ref={this.tableContainerRef}>
+          <table className="tr-table__table">
+            <thead className="tr-table__thead">
+              <tr className="tr-table__head-row">
                 {hasSelect && data && data.length > 0 ? (
-                  <th className="table-th table-th--check">
+                  <th className="tr-table__th tr-table__th--check">
                     <input
-                      className="table-checkbox"
+                      className="tr-table__checkbox"
                       type="checkbox"
                       checked={selectAll}
                       onChange={this.selectAll}
@@ -272,13 +272,13 @@ export class Table extends React.Component {
                 ) : null}
                 {headers.map((h, i) => (
                   <th
-                    className="table-th table-th--sortable"
+                    className="tr-table__th tr-table__th--sortable"
                     key={i}
                     onClick={() => this.handleSort(h)}
                   >
-                    <span className="table-th-content">
+                    <span className="tr-table__th-content">
                       {h.toUpperCase()}
-                      <span className="table-sort-icon">
+                      <span className="tr-table__sort-icon">
                         {sortKey === h ? (
                           sortDir === 'asc' ? (
                             <ChevronUp size={14} />
@@ -286,18 +286,18 @@ export class Table extends React.Component {
                             <ChevronDown size={14} />
                           )
                         ) : (
-                          <ChevronDown size={14} className="table-sort-icon--inactive" />
+                          <ChevronDown size={14} className="tr-table__sort-icon--inactive" />
                         )}
                       </span>
                     </span>
                   </th>
                 ))}
                 {hasAction && data && data.length > 0 ? (
-                  <th className="table-th table-th--action">ACTIONS</th>
+                  <th className="tr-table__th tr-table__th--action">ACTIONS</th>
                 ) : null}
               </tr>
             </thead>
-            <tbody className="table-tbody">
+            <tbody className="tr-table__tbody">
               {isLoading ? (
                 <TableLoading colCount={colCount} />
               ) : hasData ? (
@@ -321,16 +321,16 @@ export class Table extends React.Component {
         </div>
 
         {shouldPaginate && (
-          <div className="pagination">
-            <span className="pagination-info">
+          <div className="tr-table__pagination">
+            <span className="tr-table__pagination-info">
               {sortedData
                 ? `Showing ${Math.min(startIndex + this.rowsPerPage, sortedData.length)} of ${sortedData.length} results`
                 : null}
             </span>
-            <div className="pagination-controls">
+            <div className="tr-table__pagination-controls">
               <button
                 type="button"
-                className="pagination-btn"
+                className="tr-table__pagination-btn"
                 onClick={() => this.goToPage(currentPage - 1)}
                 disabled={currentPage === 1}
               >
@@ -350,13 +350,13 @@ export class Table extends React.Component {
                 if (showLeftDots) {
                   return (
                     <React.Fragment key={page}>
-                      <span className="pagination-dots">...</span>
+                      <span className="tr-table__pagination-dots">...</span>
                       <button
                         type="button"
                         className={
                           currentPage === page
-                            ? 'pagination-page pagination-page--active'
-                            : 'pagination-page'
+                            ? 'tr-table__pagination-page tr-table__pagination-page--active'
+                            : 'tr-table__pagination-page'
                         }
                         onClick={() => this.goToPage(page)}
                       >
@@ -373,14 +373,14 @@ export class Table extends React.Component {
                         type="button"
                         className={
                           currentPage === page
-                            ? 'pagination-page pagination-page--active'
-                            : 'pagination-page'
+                            ? 'tr-table__pagination-page tr-table__pagination-page--active'
+                            : 'tr-table__pagination-page'
                         }
                         onClick={() => this.goToPage(page)}
                       >
                         {page}
                       </button>
-                      <span className="pagination-dots">...</span>
+                      <span className="tr-table__pagination-dots">...</span>
                     </React.Fragment>
                   )
                 }
@@ -392,8 +392,8 @@ export class Table extends React.Component {
                       key={page}
                       className={
                         currentPage === page
-                          ? 'pagination-page pagination-page--active'
-                          : 'pagination-page'
+                          ? 'tr-table__pagination-page tr-table__pagination-page--active'
+                          : 'tr-table__pagination-page'
                       }
                       onClick={() => this.goToPage(page)}
                     >
@@ -406,7 +406,7 @@ export class Table extends React.Component {
 
               <button
                 type="button"
-                className="pagination-btn"
+                className="tr-table__pagination-btn"
                 onClick={() => this.goToPage(currentPage + 1)}
                 disabled={currentPage === totalPages}
               >
@@ -425,9 +425,9 @@ export class TableLoading extends React.Component {
     const { colCount } = this.props
     return (
       <tr>
-        <td colSpan={colCount} className="table-td--nodata">
-          <div className="no-data-wrapper">
-            <div className="table-spinner" />
+        <td colSpan={colCount} className="tr-table__td--nodata">
+          <div className="tr-table__empty">
+            <div className="tr-table__spinner" />
           </div>
         </td>
       </tr>
@@ -476,14 +476,14 @@ export class TableData extends React.Component {
         {data.map((row, rowIndex) => {
           return (
             <tr
-              className={selected[rowIndex] === true ? 'table-row table-row--selected' : 'table-row'}
+              className={selected[rowIndex] === true ? 'tr-table__row tr-table__row--selected' : 'tr-table__row'}
               key={rowIndex}
               onClick={() => rowCB(row)}
             >
               {hasSelect ? (
-                <td className="table-td table-td--check" onClick={(e) => e.stopPropagation()}>
+                <td className="tr-table__td tr-table__td--check" onClick={(e) => e.stopPropagation()}>
                   <input
-                    className="table-checkbox"
+                    className="tr-table__checkbox"
                     type="checkbox"
                     checked={selected[rowIndex] ?? false}
                     onChange={() => toggleRow(rowIndex)}
@@ -491,10 +491,10 @@ export class TableData extends React.Component {
                 </td>
               ) : null}
               {Object.entries(row).map(([key, value], colIndex) => (
-                <td className="table-td" key={colIndex}>
+                <td className="tr-table__td" key={colIndex}>
                   {colIndex === 0 ? (
                     <strong
-                      className="table-clickable-id"
+                      className="tr-table__id-link"
                       onClick={(e) => {
                         e.stopPropagation()
                         onView(row)
@@ -508,11 +508,11 @@ export class TableData extends React.Component {
                 </td>
               ))}
               {hasAction ? (
-                <td className="table-td table-td--action">
+                <td className="tr-table__td tr-table__td--action">
                   {!noEdit && (
                     <button
                       type="button"
-                      className="table-action-btn table-action-btn--edit"
+                      className="tr-table__action-btn tr-table__action-btn--edit"
                       onClick={(e) => {
                         e.stopPropagation()
                         CBE(row)
@@ -523,7 +523,7 @@ export class TableData extends React.Component {
                   )}
                   <button
                     type="button"
-                    className="table-action-btn table-action-btn--delete"
+                    className="tr-table__action-btn tr-table__action-btn--delete"
                     onClick={(e) => {
                       e.stopPropagation()
                       CBD(row)
@@ -546,10 +546,10 @@ export class TableNoData extends React.Component {
     const { message } = this.props
     return (
       <tr>
-        <td colSpan={this.props.colSpan} className="table-td--nodata">
-          <div className="no-data-wrapper">
-            <Archive size={28} strokeWidth={1.5} className="no-data-icon" />
-            <p className="no-data-title">{message ? message : `No data found :(`}</p>
+        <td colSpan={this.props.colSpan} className="tr-table__td--nodata">
+          <div className="tr-table__empty">
+            <Archive size={28} strokeWidth={1.5} className="tr-table__empty-icon" />
+            <p className="tr-table__empty-title">{message ? message : `No data found :(`}</p>
           </div>
         </td>
       </tr>

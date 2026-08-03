@@ -1,0 +1,168 @@
+@use '../../styles/abstracts' as *;
+
+.tr-login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: $space-10;
+  background-color: $surface-app !important;
+
+  &__shell {
+    width: 100%;
+    max-width: 400px;
+  }
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: $space-5;
+    justify-content: center;
+    margin-bottom: $space-11;
+  }
+
+  &__brand-mark {
+    width: 34px;
+    height: 34px;
+    border-radius: $radius-lg;
+    background: $accent;
+    color: $white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  &__brand-name {
+    font-size: 18px;
+    font-weight: $fw-bold;
+    color: $slate-800 !important; 
+    letter-spacing: $letter-spacing-tight;
+  }
+
+  &__card {
+    background-color: $white !important;
+    border: 1px solid $border-light !important;
+    border-radius: $radius-2xl;
+    box-shadow: $shadow-card;
+    overflow: hidden;
+
+    .tr-inputform-panel {
+      background-color: $white !important;
+      padding: 28px !important;
+      border-radius: $radius-2xl;
+      width: 100%;
+      box-sizing: border-box;
+      @include flex-column($space-9);
+    }
+
+    .tr-inputform-panel__headers {
+      border: none !important;
+      padding: 0 !important;
+      background: transparent !important;
+      @include flex-column($space-2);
+    }
+
+    .tr-inputform-panel__title {
+      font-size: 1.35rem;
+      font-weight: $fw-bold;
+      color: $slate-800 !important; 
+      margin: 0;
+      letter-spacing: $letter-spacing-tight;
+    }
+
+    .tr-inputform-panel__subtitle {
+      font-size: 0.875rem;
+      color: $slate-500 !important;
+      margin: 0;
+    }
+
+    .tr-inputform {
+      border: none !important;
+      padding: 0 !important;
+      background: transparent !important;
+      @include flex-column($space-8);
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    input {
+      background-color: $slate-50 !important;
+      border: 1px solid $slate-200 !important;
+      color: $slate-900 !important;
+
+      &::placeholder {
+        color: $slate-400 !important;
+      }
+    }
+
+    .tr-login__btn {
+      width: 100% !important;
+      background-color: $accent !important;
+      color: $white !important;
+      font-weight: $fw-semibold;
+      margin-top: 6px;
+      border-radius: $radius-lg;
+      padding: $space-6 $space-10;
+      cursor: pointer;
+      border: none !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background-color $transition-base ease;
+
+      &:hover {
+        background-color: $accent-dark !important;
+      }
+    }
+  }
+}
+
+.tr-login__form-error {
+  width: 100%;
+  margin: 0;
+  padding: $space-6 $space-7;
+  border-radius: $radius-lg;
+  background: $red-50 !important;
+  border: 1px solid $red-200 !important;
+  color: $red-600 !important;
+  font-size: $fs-sm;
+  box-sizing: border-box;
+}
+
+.tr-login__row {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  font-size: $fs-sm;
+  width: 100%;
+}
+
+.tr-login__forgot {
+  color: $accent !important;
+  text-decoration: none;
+  font-weight: $fw-medium;
+
+  &:hover {
+    color: $accent-dark !important;
+    text-decoration: underline;
+  }
+}
+
+.tr-login__signup-hint {
+  text-align: center;
+  font-size: $fs-sm;
+  color: $slate-500 !important;
+  margin-top: 18px;
+
+  a {
+    color: $accent !important;
+    text-decoration: none;
+    font-weight: $fw-medium;
+
+    &:hover {
+      color: $accent-dark !important;
+      text-decoration: underline;
+    }
+  }
+}

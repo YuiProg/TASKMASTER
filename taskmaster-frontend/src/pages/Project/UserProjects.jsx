@@ -4,7 +4,7 @@ import { Table } from "../../components/TRCOMPONENTS/TRTable/TrTable";
 import Button from "../../components/TRCOMPONENTS/TRButton/Button";
 import { InputField } from "../../components/TRCOMPONENTS/TRInputField/InputFIeld";
 import { useProjectStore } from "../../context/ProjectStore.js";
-import "./UserProjects.css";
+import "./UserProjects.scss";
 import navigateTo from "../../lib/navigate";
 import formatDate from "../../lib/formatDate";
 
@@ -63,7 +63,7 @@ class UserProjects extends React.Component {
         subTitle="Every project you created."
       >
         <PanelContainer>
-          <div className="projects-page-header">
+          <div className="user-projects-page__header">
             <InputField
               placeholder="Search projects"
               isSearch
@@ -73,7 +73,7 @@ class UserProjects extends React.Component {
             <Button
               text="+ NEW PROJECT"
               customWidth={160}
-              className="projects-new-btn"
+              className="user-projects-page__new-btn"
               onClick={this.goToNewProject}
             />
           </div>

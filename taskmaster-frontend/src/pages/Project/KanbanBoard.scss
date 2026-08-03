@@ -1,0 +1,130 @@
+@use '../../styles/abstracts' as *;
+
+.kb-board {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 14px;
+  width: 100%;
+  box-sizing: border-box;
+
+  &__column {
+    background-color: $surface-app;
+    border: 1px solid $border-light;
+    border-radius: $radius-xl;
+    padding: $space-6;
+    box-sizing: border-box;
+    @include flex-column($space-4);
+    min-height: 200px;
+    transition: background-color $transition-fast ease, border-color $transition-fast ease;
+
+    &--dragover {
+      background-color: $blue-50;
+      border-color: $blue-focus-border;
+    }
+
+    &--blue &-title {
+      color: $blue-600;
+    }
+
+    &--green &-title {
+      color: $green-600;
+    }
+  }
+
+  &__column-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__column-title {
+    font-size: 0.72rem;
+    font-weight: $fw-bold;
+    letter-spacing: 0.04em;
+    color: $slate-500;
+  }
+
+  &__column-count {
+    font-size: 0.7rem;
+    font-weight: $fw-semibold;
+    color: $slate-400;
+    background-color: $white;
+    border: 1px solid $slate-200;
+    padding: 1px 7px;
+    border-radius: $radius-pill;
+  }
+
+  &__column-body {
+    display: flex;
+    flex-direction: column;
+    gap: $space-4;
+    flex: 1;
+  }
+
+  &__empty {
+    margin: 0;
+    padding: $space-6 0;
+    text-align: center;
+    color: $slate-300;
+    font-size: 0.75rem;
+  }
+
+  &__card {
+    @include card-surface($radius: $radius-lg, $shadow: $shadow-xs);
+    padding: $space-5 $space-6;
+    cursor: grab;
+    transition: box-shadow $transition-fast ease, transform $transition-fast ease, opacity $transition-fast ease;
+
+    &:hover {
+      box-shadow: $shadow-hover-card;
+    }
+
+    &:active {
+      cursor: grabbing;
+    }
+
+    &--dragging {
+      opacity: 0.4;
+    }
+  }
+
+  &__card-title {
+    margin: 0 0 $space-3 0;
+    font-size: 0.82rem;
+    font-weight: $fw-semibold;
+    color: $slate-800;
+    line-height: $line-height-snug;
+  }
+
+  &__card-meta {
+    display: flex;
+    align-items: center;
+    font-size: 0.72rem;
+    color: $slate-400;
+  }
+}
+
+@include respond-to(1100px) {
+  .kb-board {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@include respond-to(640px) {
+  .kb-board {
+    grid-template-columns: 1fr;
+  }
+}
+
+@keyframes kb-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.kb-board__spinner {
+  animation: kb-spin 0.8s linear infinite;
+}

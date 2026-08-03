@@ -5,7 +5,7 @@ import Button from '../../components/TRCOMPONENTS/TRButton/Button';
 import { useProjectStore } from '../../context/ProjectStore.js';
 import { useTaskStore } from '../../context/TaskStore.js';
 import { useAuthStore } from '../../context/AuthStore.js';
-import './Dashboard.css';
+import './Dashboard.scss';
 import formatDate from '../../lib/formatDate';
 import navigateTo from '../../lib/navigate';
 
@@ -130,44 +130,44 @@ class Dashboard extends React.Component {
       <PanelPage titlePage="Dashboard" subTitle="Welcome to TaskMaster!">
         {/* Stats Row */}
         <PanelContainer>
-          <div className="dash-stats-row">
-            <div className="dash-stat-card">
-              <span className="dash-stat-label">Total Projects</span>
-              <h2 className="dash-stat-value">{projects.length}</h2>
+          <div className="dashboard__stats-row">
+            <div className="dashboard__stat-card">
+              <span className="dashboard__stat-label">Total Projects</span>
+              <h2 className="dashboard__stat-value">{projects.length}</h2>
             </div>
-            <div className="dash-stat-card">
-              <span className="dash-stat-label">Ongoing Projects</span>
-              <h2 className="dash-stat-value dash-stat-accent">{ongoingCount}</h2>
+            <div className="dashboard__stat-card">
+              <span className="dashboard__stat-label">Ongoing Projects</span>
+              <h2 className="dashboard__stat-value dashboard__stat-value--accent">{ongoingCount}</h2>
             </div>
 
             {/* Clickable Assigned To Me Box */}
             <div
-              className="dash-stat-card"
+              className="dashboard__stat-card"
               onClick={this.goToMyTasks}
               style={{ cursor: 'pointer' }}
               title="Click to view all assigned tasks"
             >
-              <span className="dash-stat-label">Assigned To Me</span>
-              <h2 className="dash-stat-value dash-stat-accent">{myTasks.length}</h2>
+              <span className="dashboard__stat-label">Assigned To Me</span>
+              <h2 className="dashboard__stat-value dashboard__stat-value--accent">{myTasks.length}</h2>
             </div>
 
-            <div className="dash-stat-card">
-              <span className="dash-stat-label">Total Open Tasks</span>
-              <h2 className="dash-stat-value">{openTaskCount}</h2>
+            <div className="dashboard__stat-card">
+              <span className="dashboard__stat-label">Total Open Tasks</span>
+              <h2 className="dashboard__stat-value">{openTaskCount}</h2>
             </div>
           </div>
         </PanelContainer>
 
         {/* My Assigned Tasks Container (Shows ALL tasks) */}
         <PanelContainer title="My Assigned Tasks">
-          <div className="dash-table-header">
-            <p className="dash-table-hint">
+          <div className="dashboard__table-header">
+            <p className="dashboard__table-hint">
               Tasks assigned directly to {user?.username || 'you'} ({myTasks.length} total assigned).
             </p>
             <Button
               text="+ NEW TASK"
               customWidth={160}
-              className="dash-new-task-btn"
+              className="dashboard__new-task-btn"
               onClick={this.goToNewTask}
             />
           </div>
@@ -188,8 +188,8 @@ class Dashboard extends React.Component {
 
         {/* All Recent Open Tasks */}
         <PanelContainer title="Recent Open Tasks">
-          <div className="dash-table-header">
-            <p className="dash-table-hint">Recently created tasks across all projects.</p>
+          <div className="dashboard__table-header">
+            <p className="dashboard__table-hint">Recently created tasks across all projects.</p>
           </div>
 
           <Table
@@ -208,12 +208,12 @@ class Dashboard extends React.Component {
 
         {/* Recent Projects */}
         <PanelContainer title="Recent Projects">
-          <div className="dash-table-header">
-            <p className="dash-table-hint">Your five most recently created projects.</p>
+          <div className="dashboard__table-header">
+            <p className="dashboard__table-hint">Your five most recently created projects.</p>
             <Button
               text="+ NEW PROJECT"
               customWidth={160}
-              className="dash-new-project-btn"
+              className="dashboard__new-project-btn"
               onClick={this.goToNewProject}
             />
           </div>
