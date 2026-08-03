@@ -44,6 +44,8 @@ public enum ApiEndpoint {
     GET_PROJECT_TASK("/api/v1/getProjectTask/{id}"),
     GET_OPEN_TASK("/api/v1/getOpenTasks"),
     UPDATE_TASK_DETAIL("/api/v1/updateTaskDetail/{id}"),
+    GET_ARCHIVED_TASKS("/api/v1/getArchiveTasks"),
+    SET_TO_ARCHIVE("/api/v1/updateToArchive/{id}"),
 
     //COMMENTS
     ADD_COMMENT("/api/v1/comments/newComment"),

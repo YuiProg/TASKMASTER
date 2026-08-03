@@ -35,4 +35,9 @@ public interface TaskClient {
     @PutMapping("/updateTask/{taskId}")
     ResponseEntity<ApiResponseModel<TaskDTO>> updateTaskStatus (@PathVariable String taskId, @RequestBody TaskRequest taskRequest);
 
+    @GetMapping("/getArchiveTasks")
+    ResponseEntity<ApiResponseModel<List<TaskDTO>>> getArchivedTasks ();
+
+    @PutMapping("/updateToArchive/{id}")
+    ResponseEntity<ApiResponseModel<TaskDTO>> updateToArchive (@PathVariable String id, @RequestBody TaskRequest toArchive);
 }

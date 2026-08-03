@@ -50,4 +50,7 @@ public class Task {
     @Column(nullable = false)
     @ColumnDefault("0")
     private Integer del = 0;
+
+    @Column(nullable = false)
+    private Integer archived = 0;
 }

@@ -72,4 +72,16 @@ public class TaskController implements TaskServiceInterface {
     public ResponseEntity<ApiResponseModel<List<Task>>> archiveTasks() {
         return taskServiceInterface.archiveTasks();
     }
+
+    @Override
+    @GetMapping("/api/v1/getArchiveTasks")
+    public ResponseEntity<ApiResponseModel<List<Task>>> getArchiveTasks() {
+        return taskServiceInterface.getArchiveTasks();
+    }
+
+    @Override
+    @PutMapping("/api/v1/updateToArchive/{id}")
+    public ResponseEntity<ApiResponseModel<Task>> setToArchive(@PathVariable String id, @RequestBody TaskRequest toArchive) {
+        return taskServiceInterface.setToArchive(id, toArchive);
+    }
 }

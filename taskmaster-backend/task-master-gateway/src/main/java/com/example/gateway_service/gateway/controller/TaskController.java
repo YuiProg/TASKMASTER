@@ -60,4 +60,16 @@ public class TaskController implements TaskClient {
     public ResponseEntity<ApiResponseModel<TaskDTO>> updateTaskStatus(@PathVariable String taskId, @RequestBody TaskRequest taskRequest) {
         return taskService.updateTaskStatus(taskId, taskRequest);
     }
+
+    @Override
+    @GetMapping("/getArchiveTasks")
+    public ResponseEntity<ApiResponseModel<List<TaskDTO>>> getArchivedTasks() {
+        return taskService.getArchivedTasks();
+    }
+
+    @Override
+    @PutMapping("/updateToArchive/{id}")
+    public ResponseEntity<ApiResponseModel<TaskDTO>> updateToArchive(@PathVariable String id, @RequestBody TaskRequest toArchive) {
+        return taskService.updateToArchive(id, toArchive);
+    }
 }

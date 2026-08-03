@@ -15,4 +15,5 @@ public class TaskDTO {
     private UserDTO createdBy;
     private String updatedBy;
     private Integer del;
+    private Integer archived;
 }

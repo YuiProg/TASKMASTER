@@ -178,4 +178,48 @@ public class TaskService implements TaskClient {
                             "ERROR"));
         }
     }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<List<TaskDTO>>> getArchivedTasks() {
+        try {
+            log.info("getArchivedTasks REQUEST");
+            ResponseEntity<ApiResponseModel<List<TaskDTO>>> response = taskClient.getArchivedTasks();
+            log.info("getArchivedTasks RESPONSE status: {} data: {}", response.getStatusCode(), response.getBody());
+
+            ResponseEntity.BodyBuilder builder = ResponseEntity.status(response.getStatusCode());
+
+            return builder.body(response.getBody());
+
+        } catch (FeignException e) {
+            log.error("RESPONSE getArchivedTasks (error) -> status: {}, cause: {}",
+                    e.status(), e.getCause() != null ? e.getCause().getMessage() : e.getMessage(), e);
+            HttpStatus status = e.status() > 0 ? HttpStatus.valueOf(e.status()) : HttpStatus.SERVICE_UNAVAILABLE;
+
+            return ResponseEntity.status(status)
+                    .body(ApiResponseModel.error(
+                            e.status() > 0 ? e.contentUTF8() : "Task service unavailable, please try again",
+                            "ERROR"));
+        }
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<TaskDTO>> updateToArchive(String id, TaskRequest toArchive) {
+        try {
+            log.info("updateToArchive REQUEST id: {}", id);
+            ResponseEntity<ApiResponseModel<TaskDTO>> response = taskClient.updateToArchive(id, toArchive);
+            log.info("updateToArchive RESPONSE status: {} data: {}", response.getStatusCode(), response.getBody());
+            ResponseEntity.BodyBuilder builder = ResponseEntity.status(response.getStatusCode());
+
+            return builder.body(response.getBody());
+        } catch (FeignException e) {
+            log.error("RESPONSE updateToArchive (error) -> status: {}, cause: {}",
+                    e.status(), e.getCause() != null ? e.getCause().getMessage() : e.getMessage(), e);
+            HttpStatus status = e.status() > 0 ? HttpStatus.valueOf(e.status()) : HttpStatus.SERVICE_UNAVAILABLE;
+
+            return ResponseEntity.status(status)
+                    .body(ApiResponseModel.error(
+                            e.status() > 0 ? e.contentUTF8() : "Task service unavailable, please try again",
+                            "ERROR"));
+        }
+    }
 }

@@ -77,5 +77,21 @@ public class TaskCacheService {
         return tasks;
     }
 
+    @Cacheable(value = "taskArchive")
+    public List<Task> getArchiveTasksCache () {
+        List<Task> tasks = taskRepository.getArchived();
+
+        for (Task task : tasks) {
+            if (task.getProject() != null && task.getProject().getMembers() != null) {
+                task.getProject().setMembers(new ArrayList<>(task.getProject().getMembers()));
+            }
+        }
+
+        return tasks;
+    }
+
+    @CacheEvict(value = "taskArchive", allEntries = true)
+    void evictArchiveTask () {}
+
 
 }

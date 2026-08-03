@@ -2,6 +2,7 @@ package com.example.backend.service.TaskService;
 
 import com.example.backend.client.ReportClient;
 import com.example.backend.config.AuthenticatedUser;
+import com.example.backend.constants.StringCodes;
 import com.example.backend.dto.ApiResponseModel;
 import com.example.backend.dto.ReportDTO;
 import com.example.backend.model.Project;
@@ -294,5 +295,34 @@ public class TaskService implements TaskServiceInterface {
         taskRepository.archiveTask();
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponseModel.success("TASKS ARCHIVED BY SCHEDULER", "SUCCESS", null));
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<List<Task>>> getArchiveTasks() {
+        List<Task> tasks = taskCacheService.getArchiveTasksCache();
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponseModel.success("ARCHIVE TASKS FOUND", "SUCCESS", tasks));
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<Task>> setToArchive(String id, TaskRequest toArchive) {
+
+        Task task = taskRepository.findById(id).orElse(null);
+        User user = authenticatedUser.getAuthenticatedUser();
+        if (task == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponseModel.error("TASK NOT FOUND", "ERROR"));
+        }
+
+        task.setArchived(toArchive.getToArchive().equals(StringCodes.TRUE.getFlag()) ? 1 : 0);
+
+        task.setUpdatedBy(user.getUsername());
+        taskCacheService.evictArchiveTask();
+        taskCacheService.evictTaskEntriesCache();
+        Task newTask = taskRepository.save(task);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponseModel.success("TASK ARCHIVED", "SUCCESS", newTask));
     }
 }

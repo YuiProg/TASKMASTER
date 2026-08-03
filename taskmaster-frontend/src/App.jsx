@@ -11,6 +11,7 @@ import ViewTask from "./pages/Tasks/ViewTask";
 import NewTask from "./pages/Tasks/NewTask";
 import OpenTasks from "./pages/Tasks/OpenTasks";
 import UserProjects from "./pages/Project/UserProjects";
+import Archive from "./pages/Project/Archive";
 
 function App() {
   return (
@@ -61,6 +62,11 @@ function App() {
         <Route path="/tasks/open-tasks" element={
           <Sidebar>
             <OpenTasks/>
+          </Sidebar>
+        }/>
+        <Route path="/projects/archived" element={
+          <Sidebar>
+            <Archive/>
           </Sidebar>
         }/>
       </Routes>

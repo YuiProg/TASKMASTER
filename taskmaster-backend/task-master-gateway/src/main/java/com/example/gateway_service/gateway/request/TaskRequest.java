@@ -21,4 +21,5 @@ public class TaskRequest {
     public String updatedBy;
     public String priority;
     public Integer del;
+    public Boolean toArchive;
 }

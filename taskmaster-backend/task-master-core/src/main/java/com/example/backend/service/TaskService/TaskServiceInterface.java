@@ -18,4 +18,6 @@ public interface TaskServiceInterface {
     ResponseEntity<ApiResponseModel<List<Task>>> getProjectTask (String id);
     ResponseEntity<ApiResponseModel<List<Task>>> getAllOpenTask ();
     ResponseEntity<ApiResponseModel<List<Task>>> archiveTasks ();
+    ResponseEntity<ApiResponseModel<List<Task>>> getArchiveTasks ();
+    ResponseEntity<ApiResponseModel<Task>> setToArchive (String id, TaskRequest toArchive);
 }
