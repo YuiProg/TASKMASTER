@@ -4,7 +4,7 @@ import { InputField } from "../../components/TRCOMPONENTS/TRInputField/InputFIel
 import Button from "../../components/TRCOMPONENTS/TRButton/Button";
 import { useProjectStore } from "../../context/ProjectStore.js";
 import navigateTo from "../../lib/navigate";
-import "./NewProject.css";
+import "./NewProject.scss";
 
 class NewProject extends React.Component {
   constructor(props) {
@@ -95,12 +95,12 @@ class NewProject extends React.Component {
         <PanelContainer>
           <form className="new-project-form" onSubmit={this.handleSubmit}>
             {(error || localError) && (
-              <p className="new-project-error">{error || localError}</p>
+              <p className="new-project-form__error">{error || localError}</p>
             )}
 
-            <div className="new-project-field">
-              <label className="new-project-label">
-                Project name<span className="new-project-required">*</span>
+            <div className="new-project-form__field">
+              <label className="new-project-form__label">
+                Project name<span className="new-project-form__required">*</span>
               </label>
               <InputField
                 placeholder="e.g. Website Redesign"
@@ -110,10 +110,10 @@ class NewProject extends React.Component {
               />
             </div>
 
-            <div className="new-project-field">
-              <label className="new-project-label">Description</label>
+            <div className="new-project-form__field">
+              <label className="new-project-form__label">Description</label>
               <textarea
-                className="new-project-textarea"
+                className="new-project-form__textarea"
                 placeholder="What's this project about?"
                 value={description}
                 onChange={(e) =>
@@ -123,13 +123,13 @@ class NewProject extends React.Component {
               />
             </div>
 
-            <div className="new-project-field">
-              <label className="new-project-label">Members</label>
-              <span className="new-project-note">
+            <div className="new-project-form__field">
+              <label className="new-project-form__label">Members</label>
+              <span className="new-project-form__note">
                 Added to the project when it's created.
               </span>
 
-              <div className="new-project-member-input-row">
+              <div className="new-project-form__member-row">
                 <InputField
                   placeholder="Add by email"
                   email
@@ -150,13 +150,13 @@ class NewProject extends React.Component {
               </div>
 
               {members.length > 0 && (
-                <div className="new-project-member-chips">
+                <div className="new-project-form__member-chips">
                   {members.map((email) => (
-                    <span key={email} className="new-project-chip">
+                    <span key={email} className="new-project-form__chip">
                       {email}
                       <button
                         type="button"
-                        className="new-project-chip-remove"
+                        className="new-project-form__chip-remove"
                         onClick={() => this.handleRemoveMember(email)}
                         aria-label={`Remove ${email}`}
                       >
@@ -168,7 +168,7 @@ class NewProject extends React.Component {
               )}
             </div>
 
-            <div className="new-project-actions">
+            <div className="new-project-form__actions">
               <Button
                 cancel
                 text="CANCEL"
@@ -178,7 +178,7 @@ class NewProject extends React.Component {
                 submit
                 text={isCreating ? "CREATING..." : "CREATE PROJECT"}
                 disabled={isCreating}
-                className="new-project-submit-btn"
+                className="new-project-form__submit-btn"
                 onClick={() => {}}
               />
             </div>

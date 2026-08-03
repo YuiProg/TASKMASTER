@@ -5,7 +5,7 @@ import Dropdown from "../../components/TRCOMPONENTS/TRDropDown/Dropdown";
 import Button from "../../components/TRCOMPONENTS/TRButton/Button";
 import { useTaskStore } from "../../context/TaskStore.js";
 import navigateTo from "../../lib/navigate";
-import "./NewTask.css";
+import "./NewTask.scss";
 
 // Dropdown options
 const STATUS_OPTIONS = ["OPEN", "IN PROGRESS", "QA CHECK", "DEPLOYED", "CLOSED"];
@@ -101,12 +101,12 @@ class NewTask extends React.Component {
         <PanelContainer>
           <form className="new-task-form" onSubmit={this.handleSubmit}>
             {(error || localError) && (
-              <p className="new-task-error">{error || localError}</p>
+              <p className="new-task-form__error">{error || localError}</p>
             )}
 
-            <div className="new-task-field">
-              <label className="new-task-label">
-                Task name<span className="new-task-required">*</span>
+            <div className="new-task-form__field">
+              <label className="new-task-form__label">
+                Task name<span className="new-task-form__required">*</span>
               </label>
               <InputField
                 placeholder="e.g. Fix login redirect bug"
@@ -116,8 +116,8 @@ class NewTask extends React.Component {
               />
             </div>
 
-            <div className="new-task-field">
-              <label className="new-task-label">Assignee</label>
+            <div className="new-task-form__field">
+              <label className="new-task-form__label">Assignee</label>
               <InputField
                 placeholder="Assignee's email"
                 email
@@ -126,8 +126,8 @@ class NewTask extends React.Component {
               />
             </div>
 
-            <div className="new-task-field">
-              <label className="new-task-label">Project</label>
+            <div className="new-task-form__field">
+              <label className="new-task-form__label">Project</label>
               <InputField
                 placeholder="Project name"
                 text
@@ -136,9 +136,9 @@ class NewTask extends React.Component {
               />
             </div>
 
-            <div className="new-task-field">
-              <label className="new-task-label">Status</label>
-              <div className="new-task-status-dropdown">
+            <div className="new-task-form__field">
+              <label className="new-task-form__label">Status</label>
+              <div className="new-task-form__status-dropdown">
                 <Dropdown
                   options={STATUS_OPTIONS}
                   value={status}
@@ -148,9 +148,9 @@ class NewTask extends React.Component {
             </div>
 
             {/* Priority Field */}
-            <div className="new-task-field">
-              <label className="new-task-label">Priority</label>
-              <div className="new-task-status-dropdown">
+            <div className="new-task-form__field">
+              <label className="new-task-form__label">Priority</label>
+              <div className="new-task-form__status-dropdown">
                 <Dropdown
                   options={PRIORITY_OPTIONS}
                   value={priority}
@@ -159,10 +159,10 @@ class NewTask extends React.Component {
               </div>
             </div>
 
-            <div className="new-task-field">
-              <label className="new-task-label">Description</label>
+            <div className="new-task-form__field">
+              <label className="new-task-form__label">Description</label>
               <textarea
-                className="new-task-textarea"
+                className="new-task-form__textarea"
                 placeholder="What needs to be done?"
                 value={description}
                 onChange={(e) =>
@@ -172,13 +172,13 @@ class NewTask extends React.Component {
               />
             </div>
 
-            <div className="new-task-actions">
+            <div className="new-task-form__actions">
               <Button cancel text="CANCEL" onClick={this.goBack} />
               <Button
                 submit
                 text={isCreating ? "CREATING..." : "CREATE TASK"}
                 disabled={isCreating}
-                className="new-task-submit-btn"
+                className="new-task-form__submit-btn"
                 onClick={() => {}}
               />
             </div>

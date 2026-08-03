@@ -4,7 +4,7 @@ import { Table } from "../../components/TRCOMPONENTS/TRTable/TrTable";
 import Button from "../../components/TRCOMPONENTS/TRButton/Button";
 import{ InputField }from "../../components/TRCOMPONENTS/TRInputField/InputFIeld";
 import { useProjectStore } from "../../context/ProjectStore.js";
-import "./Projects.css";
+import "./Projects.scss";
 import navigateTo from "../../lib/navigate";
 import formatDate from "../../lib/formatDate";
 
@@ -57,7 +57,7 @@ class Archive extends React.Component {
         subTitle="Every project that has been archived."
       >
         <PanelContainer>
-          <div className="projects-page-header">
+          <div className="projects-page__header">
             <InputField
               placeholder="Search projects"
               isSearch
@@ -67,7 +67,7 @@ class Archive extends React.Component {
             <Button
               text="+ NEW PROJECT"
               customWidth={160}
-              className="projects-new-btn"
+              className="projects-page__new-btn"
               onClick={this.goToNewProject}
             />
           </div>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Heart } from "lucide-react";
 
-import './TaskComment.css'
+import './TaskComment.scss'
 import Button from "../../components/TRCOMPONENTS/TRButton/Button";
 import Spinner from "../../components/Spinner/Spinner";
 import { useCommentStore } from "../../context/CommentStore.js";
@@ -36,14 +36,14 @@ function TaskComments({
   };
 
   return (
-    <div className="tc-container">
-      <p className="tc-count-line">
+    <div className="task-comments">
+      <p className="task-comments__count">
         {comments.length} comment{comments.length === 1 ? "" : "s"}
       </p>
 
-      <div className="tc-composer">
+      <div className="task-comments__composer">
         <textarea
-          className="tc-textarea"
+          className="task-comments__textarea"
           placeholder="Write a comment..."
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
@@ -52,33 +52,33 @@ function TaskComments({
         <Button
           text="POST"
           customWidth={100}
-          className="tc-post-btn"
+          className="task-comments__post-btn"
           onClick={handlePost}
           disabled={isButtonLoading}
         />
       </div>
 
       {isLoading ? (
-        <div className="tc-loading">
+        <div className="task-comments__loading">
           <Spinner size={20} strokeWidth={3} />
         </div>
       ) : comments.length === 0 ? (
-        <p className="tc-empty">No comments yet. Be the first to say something.</p>
+        <p className="task-comments__empty">No comments yet. Be the first to say something.</p>
       ) : (
-        <div className="tc-list">
+        <div className="task-comments__list">
           {comments.map((c) => (
-            <div key={c.id} className="tc-item">
-              <div className="tc-avatar">{initialsOf(c.createdBy?.username)}</div>
-              <div className="tc-body">
-                <div className="tc-meta">
-                  <span className="tc-username">
+            <div key={c.id} className="task-comments__item">
+              <div className="task-comments__avatar">{initialsOf(c.createdBy?.username)}</div>
+              <div className="task-comments__body">
+                <div className="task-comments__meta">
+                  <span className="task-comments__username">
                     {c.createdBy?.username || "Unknown"}
                   </span>
                 </div>
-                <p className="tc-text">{c.comment}</p>
+                <p className="task-comments__text">{c.comment}</p>
                 <button
                   type="button"
-                  className="tc-like-btn"
+                  className="task-comments__like-btn"
                   onClick={() => onLikeComment(c.id)}
                 >
                   <Heart size={14} />

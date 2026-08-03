@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./Dropdown.css";
+import "./Dropdown.scss";
 import { Warehouse, ChevronDown } from "lucide-react";
 import PropTypes from "prop-types";
 
@@ -33,7 +33,7 @@ class DropdownPortal extends React.Component {
   }
 
   handleClickOutside = (event) => {
-    const isPortalClick = document.querySelector('.tr-dropdown-list-portal')?.contains(event.target);
+    const isPortalClick = document.querySelector('.tr-dropdown__list')?.contains(event.target);
     
     if (this.buttonRef.current && !this.buttonRef.current.contains(event.target) && !isPortalClick) {
       this.setState({ isOpen: false });
@@ -106,29 +106,29 @@ class DropdownPortal extends React.Component {
 
     return (
       <>
-        <div className="tr-dropdown-wrapper">
+        <div className="tr-dropdown">
           <button
             ref={this.buttonRef}
-            className={`tr-dropdown-button ${disabled ? "disabled" : ""} ${isOpen ? "active-trigger" : ""}`}
+            className={`tr-dropdown__button ${disabled ? "tr-dropdown__button--disabled" : ""} ${isOpen ? "tr-dropdown__button--active" : ""}`}
             onClick={this.toggleDropdown}
             type="button"
             required={isRequired}
             disabled={disabled}
           >
-            <Warehouse className="tr-dropdown-icon" />
-            <span className="tr-dropdown-text">{displayValue}</span>
-            <ChevronDown className={`tr-dropdown-chevron ${isOpen ? "open" : ""}`} />
+            <Warehouse className="tr-dropdown__icon" />
+            <span className="tr-dropdown__text">{displayValue}</span>
+            <ChevronDown className={`tr-dropdown__chevron ${isOpen ? "tr-dropdown__chevron--open" : ""}`} />
           </button>
         </div>
 
         {isOpen && ReactDOM.createPortal(
-          <ul 
-            className={`tr-dropdown-list tr-dropdown-list-portal tr-dropdown-${openDirection}`}
+          <ul
+            className={`tr-dropdown__list tr-dropdown__list--${openDirection}`}
             style={listPosition}
           >
             {isHeader && (
               <li
-                className="tr-dropdown-item tr-all-option"
+                className="tr-dropdown__item tr-dropdown__item--all"
                 onClick={() => this.selectOption("all")}
               >
                 Select All
@@ -137,7 +137,7 @@ class DropdownPortal extends React.Component {
             {options?.map((option, i) => (
               <li
                 key={i}
-                className={`tr-dropdown-item ${value === option ? "active" : ""}`}
+                className={`tr-dropdown__item ${value === option ? "tr-dropdown__item--active" : ""}`}
                 onClick={() => this.selectOption(option)}
               >
                 {option}

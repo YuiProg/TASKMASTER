@@ -1,0 +1,47 @@
+@use './styles/abstracts' as *;
+
+/* Import Modern Tech Typography (Inter) */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: $bg-app-dark;
+  /* Primary font stack with clean system fallbacks */
+  font-family: $font-family-base;
+
+  /* Font smoothing for crisp rendering on dark backgrounds */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+
+  color: $slate-100;
+}
+
+/* Optional: Subtle scrollbar styling globally */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: $scrollbar-track-dark;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $scrollbar-thumb-dark;
+  border-radius: $radius-sm;
+
+  &:hover {
+    background: $scrollbar-thumb-dark-hover;
+  }
+}

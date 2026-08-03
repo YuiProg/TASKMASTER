@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Activity } from "lucide-react";
 
-import "./TaskReport.css";
+import "./TaskReport.scss";
 import Spinner from "../../components/Spinner/Spinner";
 import { useReportStore } from "../../context/ReportStore.js";
 
@@ -28,27 +28,27 @@ function TaskReports({ taskId }) {
   }, [taskId]);
 
   return (
-    <div className="tr-container">
-      <p className="tr-count-line">
+    <div className="task-reports">
+      <p className="task-reports__count">
         {reports.length} {reports.length === 1 ? "entry" : "entries"}
       </p>
 
       {isLoading ? (
-        <div className="tr-loading">
+        <div className="task-reports__loading">
           <Spinner size={20} strokeWidth={3} />
         </div>
       ) : reports.length === 0 ? (
-        <p className="tr-empty">No activity recorded yet.</p>
+        <p className="task-reports__empty">No activity recorded yet.</p>
       ) : (
-        <div className="tr-list">
+        <div className="task-reports__list">
           {reports.map((r) => (
-            <div key={r.id} className="tr-item">
-              <div className="tr-icon">
+            <div key={r.id} className="task-reports__item">
+              <div className="task-reports__icon">
                 <Activity size={14} />
               </div>
-              <div className="tr-body">
-                <p className="tr-description">{r.description}</p>
-                <span className="tr-meta">
+              <div className="task-reports__body">
+                <p className="task-reports__description">{r.description}</p>
+                <span className="task-reports__meta">
                   {r.performedBy?.username || "Unknown"} &middot;{" "}
                   {formatReportDate(r.createdAt)}
                 </span>

@@ -1,0 +1,151 @@
+@use '../../styles/abstracts' as *;
+
+.new-project-form {
+  @include flex-column(22px);
+
+  &__error {
+    margin: 0;
+    padding: $space-6 $space-7;
+    border-radius: $radius-lg;
+    background: $red-50;
+    border: 1px solid $red-200;
+    color: $red-600;
+    font-size: $fs-sm;
+  }
+
+  &__field {
+    @include flex-column($space-4);
+  }
+
+  &__label {
+    font-size: 0.8rem;
+    font-weight: $fw-semibold;
+    color: $slate-600;
+  }
+
+  &__required {
+    color: $blue-600; 
+    margin-left: $space-1;
+  }
+
+  &__note {
+    font-size: 0.7rem;
+    color: $slate-400;
+    margin-top: -4px;
+  }
+
+  &__textarea {
+    width: 100%;
+    background-color: $white;
+    border: 1px solid $border-light;
+    border-radius: $radius-lg;
+    color: $slate-800;
+    font-size: $fs-base;
+    padding: $space-6 $space-8;
+    box-sizing: border-box;
+    outline: none;
+    font-family: inherit;
+    resize: vertical;
+    transition: border-color $transition-fast ease, box-shadow $transition-fast ease;
+
+    &::placeholder {
+      color: $slate-400;
+    }
+
+    &:focus {
+      background-color: $white;
+      border-color: $blue-500; 
+      box-shadow: $shadow-focus-ring; 
+    }
+  }
+
+  &__member-row {
+    display: flex;
+    align-items: flex-start;
+    gap: $space-5;
+
+    .tr-input {
+      flex: 1;
+    }
+
+    .tr-button {
+      background: $white;
+      border: 1px solid $border-light;
+      color: $slate-800;
+      font-weight: $fw-semibold;
+      transition: background-color $transition-fast ease, border-color $transition-fast ease;
+
+      &:hover {
+        background: $slate-50;
+        border-color: $slate-300;
+        color: $slate-900;
+      }
+    }
+  }
+
+  &__member-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-4;
+    margin-top: $space-2;
+  }
+
+  /* ── Member Tag Chips (Soft Blue Tint) ── */
+  &__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-3;
+    padding: 5px $space-3 5px $space-6;
+    border-radius: $radius-pill;
+    background-color: $blue-50; /* Very soft light blue background */
+    border: 1px solid $blue-100;
+    color: $blue-700; /* Darker blue text for readability */
+    font-size: 0.78rem;
+    font-weight: $fw-medium;
+  }
+
+  &__chip-remove {
+    background: transparent;
+    border: none;
+    color: $blue-600;
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: $space-1 $space-2;
+    border-radius: $radius-circle;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: color $transition-fast ease, background-color $transition-fast ease;
+
+    &:hover {
+      color: $blue-800;
+      background-color: $blue-100;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: $space-6;
+    margin-top: $space-4;
+
+    .tr-button {
+      width: auto;
+      padding: 0 $space-9;
+    }
+  }
+
+  /* ── Primary Submit Button ── */
+  &__submit-btn {
+    background: $blue-600 !important; /* Primary Blue */
+    font-weight: $fw-semibold;
+    color: $white !important;
+    border: none !important;
+    transition: background-color $transition-fast ease;
+
+    &:hover {
+      background: $blue-700 !important; /* Darker Blue Hover State */
+    }
+  }
+}

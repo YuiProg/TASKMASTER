@@ -1,5 +1,5 @@
 import React from "react";
-import './TRAddFile.css';
+import './TRAddFile.scss';
 import { Image } from 'lucide-react';
 /**
  * @class
@@ -40,22 +40,22 @@ class TRAddfile extends React.Component {
         } = this.props;
 
         return (
-            <label className="tr-addfile-container">
-                {this.state.image 
+            <label className="tr-addfile">
+                {this.state.image
                 ? (
                     <>
                     <input type="file" hidden accept="image/png" onChange={async (e) => onChange(await this.formatFile(e))}/>
-                    <div disabled={disabled} className="tr-addfile-details">
-                        <img src={this.state.image} alt="image" className="tr-image"/>
+                    <div disabled={disabled} className="tr-addfile__details">
+                        <img src={this.state.image} alt="image" className="tr-addfile__image"/>
                     </div>
                     </>
-                ) 
+                )
                 : (
                     <>
                     <input disabled={disabled} type="file" hidden accept="image/png" onChange={async (e) => onChange(await this.formatFile(e))}/>
-                    <div className="tr-addfile-details">
+                    <div className="tr-addfile__details">
                         <Image size={40}/>
-                        <p className="tr-addfile-header">Select Image</p>
+                        <p className="tr-addfile__header">Select Image</p>
                     </div>
                     </>
                 )}

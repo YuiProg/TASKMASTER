@@ -1,0 +1,179 @@
+@use '../../../styles/abstracts' as *;
+
+/* ── Panel container ── */
+.tr-inputform-panel {
+  background-color: transparent;
+  padding: $space-10;
+  border-radius: $radius-2xl;
+  width: 100%;
+  box-sizing: border-box;
+  @include flex-column($space-10);
+
+  /* ── Headers ── */
+  &__headers {
+    @include flex-column($space-2);
+    border: 1px solid $border-light;
+    border-radius: $radius-xl;
+    padding: $space-8;
+  }
+
+  &__title {
+    font-size: 1.5rem;
+    font-weight: $fw-bold;
+    color: $slate-800;
+    margin: 0;
+    letter-spacing: $letter-spacing-tight;
+  }
+
+  &__subtitle {
+    font-size: 0.875rem;
+    color: $slate-500;
+    margin: 0;
+  }
+}
+
+/* ── Form ── */
+.tr-inputform {
+  @include flex(column, flex-start, flex-start, $space-8);
+  width: 100%;
+  border: 1px solid $border-light;
+  border-radius: $radius-xl;
+  padding: $space-10;
+  box-sizing: border-box;
+  overflow: auto;
+
+  &__actions {
+    display: flex;
+    gap: $space-5;
+    align-self: flex-end;
+  }
+
+  &__cancel-btn {
+    background-color: transparent;
+    color: $slate-500;
+    border: 1px solid $border-light;
+    padding: $space-5 $space-10;
+    border-radius: $radius-lg;
+    font-size: 0.875rem;
+    font-weight: $fw-semibold;
+    cursor: pointer;
+    transition: background $transition-base ease, color $transition-base ease;
+    white-space: nowrap;
+
+    &:hover {
+      background-color: $border-lighter;
+      color: $slate-800;
+    }
+  }
+
+  /* ── Submit button ── */
+  &__submit-btn {
+    background-color: $blue-600;
+    color: $white;
+    border: none;
+    padding: $space-5 $space-10;
+    border-radius: $radius-lg;
+    font-size: 0.875rem;
+    font-weight: $fw-semibold;
+    cursor: pointer;
+    align-self: flex-end;
+    transition: background $transition-base ease;
+    white-space: nowrap;
+
+    &:hover {
+      background-color: $blue-700;
+    }
+  }
+}
+
+/* ── Input row ── */
+.tr-inputrow {
+  display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  box-sizing: border-box;
+  flex-wrap: wrap;
+
+  /* ── Each field slot (title + input stacked) ── */
+  &__field {
+    @include flex-column($space-3);
+    flex: 1 1 0; /* equal width for all fields in a row */
+    min-width: 120px; /* prevents fields from getting too narrow */
+  }
+
+  /* ── Field title ── */
+  &__title {
+    font-size: 0.8rem;
+    font-weight: $fw-medium;
+    color: $slate-500;
+    margin: 0;
+    line-height: $line-height-tight;
+  }
+
+  /* ── Title spacer — keeps field height consistent when no title is present ── */
+  &__title-spacer {
+    display: block;
+    height: calc(0.8rem * 1.2);
+  }
+}
+
+/* ── Responsive — tablet (max 768px) ── */
+@include respond-to(tablet) {
+  .tr-inputform-panel {
+    padding: $space-8;
+    gap: $space-8;
+
+    &__title {
+      font-size: 1.25rem;
+    }
+  }
+
+  .tr-inputform {
+    padding: $space-8;
+
+    &__submit-btn {
+      width: 100%;
+      align-self: stretch;
+      text-align: center;
+    }
+  }
+
+  .tr-inputrow {
+    flex-direction: column;
+    gap: $space-6;
+
+    &__field {
+      width: 100%;
+      flex: unset;
+    }
+
+    &__title-spacer {
+      display: none; /* no need for spacer when stacked vertically */
+    }
+  }
+}
+
+/* ── Responsive — mobile (max 480px) ── */
+@include respond-to(mobile) {
+  .tr-inputform-panel {
+    padding: $space-6;
+    gap: $space-6;
+
+    &__title {
+      font-size: 1.1rem;
+    }
+
+    &__subtitle {
+      font-size: 0.8rem;
+    }
+
+    &__headers {
+      padding: $space-6;
+    }
+  }
+
+  .tr-inputform {
+    padding: $space-6;
+    gap: $space-6;
+  }
+}

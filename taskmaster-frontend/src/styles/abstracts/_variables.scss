@@ -1,0 +1,27 @@
+@use 'colors' as c;
+@use 'sass:color';
+
+$transition-fast: 0.15s;
+$transition-base: 0.18s;
+$transition-med: 0.2s;
+$transition-slow: 0.25s;
+$ease-standard: cubic-bezier(0.4, 0, 0.2, 1);
+$ease-out-standard: cubic-bezier(0.2, 0, 0, 1);
+
+$shadow-xs: 0 1px 3px rgba(c.$shadow-color, 0.04);
+$shadow-sm: 0 2px 4px rgba(c.$overlay-color, 0.1);
+$shadow-card: 0px 4px 14px rgba(c.$shadow-color, 0.06);
+$shadow-card-subtle: 0px 4px 14px rgba(c.$shadow-color, 0.04);
+$shadow-tooltip: 0 4px 14px rgba(c.$shadow-color, 0.18);
+$shadow-popover: 0 10px 25px -5px rgba(c.$shadow-color, 0.12),
+  0 8px 10px -6px rgba(c.$shadow-color, 0.08);
+$shadow-hover-card: 0 4px 10px rgba(c.$shadow-color, 0.08);
+$shadow-modal: 7px 10px 31.3px 15px rgba(c.$overlay-color, 0.25);
+$shadow-login-card: 0 8px 30px rgba(c.$overlay-color, 0.35);
+$shadow-hover-tooltip: 0 8px 20px rgba(c.$shadow-color, 0.12);
+$shadow-focus-ring: 0 0 0 3px rgba(c.$blue-600, 0.15);
+
+$z-tooltip: 100;
+$z-modal: 100;
+$z-portal: 99999;
+$z-hover-card: 20;

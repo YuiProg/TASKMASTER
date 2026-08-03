@@ -1,5 +1,5 @@
 import React from 'react'
-import './Toggle.css'
+import './Toggle.scss'
 
 /**
  * @class
@@ -29,18 +29,18 @@ export class Toggle extends React.Component {
     const isActive = this.state.status === "ACTIVE";
     const { isChecked, hideLabel } = this.props;
     return (
-      <div className="toggle-container">
-        <div className="toggle-btn">
-          <label className="toggle-btn-control">
-            <input 
+      <div className="tr-toggle">
+        <div className="tr-toggle__row">
+          <label className="tr-toggle__control">
+            <input
               type="checkbox"
               checked={isActive || isChecked}
               onChange={this.handleToggle}
             />
-            <span className="toggle-switch"></span>
+            <span className="tr-toggle__switch"></span>
           </label>
           {!hideLabel && (
-            <p className={`toggle-subtitle ${isActive ? 'ACTIVE' : 'INACTIVE'}`}>
+            <p className={`tr-toggle__subtitle ${isActive ? 'tr-toggle__subtitle--active' : 'tr-toggle__subtitle--inactive'}`}>
               {isActive ? "Active" : "Inactive"}
             </p>
           )}
@@ -65,18 +65,18 @@ export class BooleanToggle extends React.Component {
   render() {
     const { value, hideLabel } = this.props
     return (
-      <div className="toggle-container">
-        <div className="toggle-btn">
-          <label className="toggle-btn-control">
+      <div className="tr-toggle">
+        <div className="tr-toggle__row">
+          <label className="tr-toggle__control">
             <input
               type="checkbox"
               checked={value ?? false}
               onChange={this.handleToggle}
             />
-            <span className="toggle-switch"></span>
+            <span className="tr-toggle__switch"></span>
           </label>
           {!hideLabel && (
-            <p className={`toggle-subtitle ${value ? 'true' : 'false'}`}>
+            <p className={`tr-toggle__subtitle ${value ? 'tr-toggle__subtitle--active' : 'tr-toggle__subtitle--inactive'}`}>
               {String(value ?? false)}
             </p>
           )}

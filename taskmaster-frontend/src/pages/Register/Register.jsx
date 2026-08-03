@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import './Register.css';
+import './Register.scss';
 import { InputForm, TRInputFormPanel } from '../../components/TRCOMPONENTS/TRInputForm/TRInputForm';
 import Button from '../../components/TRCOMPONENTS/TRButton/Button';
 import { InputField } from '../../components/TRCOMPONENTS/TRInputField/InputFIeld';
@@ -27,19 +27,19 @@ function Register() {
   };
 
   return (
-    <div className="tr-login-page">
-      <div className="tr-login-shell">
+    <div className="tr-login">
+      <div className="tr-login__shell">
 
-        <div className="tr-brand">
-          <div className="tr-brand-mark">
+        <div className="tr-login__brand">
+          <div className="tr-login__brand-mark">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="20 6 9 17 4 12"></polyline>
             </svg>
           </div>
-          <span className="tr-brand-name">TASK MASTER</span>
+          <span className="tr-login__brand-name">TASK MASTER</span>
         </div>
 
-        <div className="tr-login-card">
+        <div className="tr-login__card">
           <TRInputFormPanel
             header="Create an account"
             subHeader="Start organizing your tasks today."
@@ -96,14 +96,14 @@ function Register() {
                 text={isLoading ? "CREATING ACCOUNT..." : "CREATE ACCOUNT"}
                 disabled={isLoading}
                 customBorder="none"
-                className="tr-login-btn"
+                className="tr-login__btn"
                 onClick={handleSubmit}
               />
             </InputForm>
           </TRInputFormPanel>
         </div>
 
-        <p className="tr-signup-hint">
+        <p className="tr-login__signup-hint">
           Already have an account? <Link to="/" onClick={clearError}>Log in</Link>
         </p>
       </div>

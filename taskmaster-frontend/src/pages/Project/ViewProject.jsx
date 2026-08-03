@@ -9,7 +9,7 @@ import Button from '../../components/TRCOMPONENTS/TRButton/Button';
 import { Plus } from 'lucide-react';
 import navigateTo from '../../lib/navigate';
 
-import './ViewProject.css';
+import './ViewProject.scss';
 import KanbanBoard from './KanbanBoard.jsx';
 
 class ViewProject extends React.Component {
@@ -148,10 +148,10 @@ class ViewProject extends React.Component {
         return (
             <PanelPage titlePage={this.state.project.projectName.toUpperCase()} isLoading={false} subTitle={`Project ID: ${this.state.project.id}`}>
                 <PanelContainer>
-                    <div className="vp-action-row">
+                    <div className="view-project__action-row">
                         <Label label="Action"/>
-                        <div className="vp-action-spacer"/>
-                        <Button className="vp-action-btn" text={<span><Plus size={10}/> CREATE TASK</span>} onClick={this.goToCreateTask}/>
+                        <div className="view-project__action-spacer"/>
+                        <Button className="view-project__action-btn" text={<span><Plus size={10}/> CREATE TASK</span>} onClick={this.goToCreateTask}/>
                     </div>
                 </PanelContainer>
                 <PanelContainer title="Project Details">
@@ -171,7 +171,7 @@ class ViewProject extends React.Component {
                 <PanelContainer title="Project Members">
                         <Label label={`Members: ${memberCount}`} style={{marginTop: '10px', marginBottom: '20px'}}/>
 
-                        <div className="vp-add-member-row">
+                        <div className="view-project__add-member-row">
                             <InputField
                                 placeholder="Add member by email"
                                 email
@@ -180,7 +180,7 @@ class ViewProject extends React.Component {
                                 onEnterDown={this.handleAddMember}
                             />
                             <Button
-                                className="vp-action-btn"
+                                className="view-project__action-btn"
                                 text={isAddingMember ? "ADDING..." : "ADD"}
                                 disabled={isAddingMember}
                                 customWidth={90}
@@ -188,7 +188,7 @@ class ViewProject extends React.Component {
                             />
                         </div>
                         {addMemberError && (
-                            <p className="vp-add-member-error">{addMemberError}</p>
+                            <p className="view-project__add-member-error">{addMemberError}</p>
                         )}
 
                         {this.projectMembers()}

@@ -1,0 +1,23 @@
+@use '../../../styles/abstracts' as *;
+
+.tr-button {
+  height: 44px;
+  border-radius: $radius-lg;
+  border: none;
+  color: $white;
+  cursor: pointer;
+  width: 100%;
+
+  &:active {
+    opacity: 0.5;
+  }
+
+  &:hover:not(.tr-button--disabled) {
+    transform: scale(1.02);
+  }
+
+  &--disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}

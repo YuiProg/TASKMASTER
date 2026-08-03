@@ -1,5 +1,5 @@
 import React from "react";
-import "./Radio.css";
+import "./Radio.scss";
 /**
  * @class
  * @component
@@ -9,20 +9,20 @@ class Radio extends React.Component {
         const { filters, onFilterChange } = this.props;
 
         return (
-            <div className="settings-demo">
+            <div className="tr-radio">
                 {/* AVAILABILITY TOGGLE */}
-                <div className="setting-row">
-                    <label className="setting-control">
+                <div className="tr-radio__row">
+                    <label className="tr-radio__control">
                         <input
                             type="checkbox"
                             checked={filters.availability === "ACTIVE"}
                             onChange={() => onFilterChange("availability", "ACTIVE")}
                         />
-                        <span className="switch switch--availability"></span>
+                        <span className="tr-radio__switch tr-radio__switch--availability"></span>
                     </label>
 
                     <div
-                        className="setting-text"
+                        className="tr-radio__text"
                         onClick={() =>
                             onFilterChange(
                                 "availability",
@@ -31,8 +31,8 @@ class Radio extends React.Component {
                         }
                         style={{ cursor: "pointer" }}
                     >
-                        <div className="setting-title">Availability</div>
-                        <div className="setting-subtitle">
+                        <div className="tr-radio__title">Availability</div>
+                        <div className="tr-radio__subtitle">
                             {filters.availability === "ACTIVE" ? "Show all branches" : "Show active only"}
                         </div>
                     </div>

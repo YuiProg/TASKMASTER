@@ -1,0 +1,28 @@
+@use '../../../styles/abstracts' as *;
+
+.tr-addfile {
+  width: auto;
+  height: auto;
+  border: 1px dashed;
+  cursor: pointer;
+  background: $dark-surface-alt;
+
+  &__details {
+    width: 100%;
+    height: 100%;
+    min-height: 12rem;
+    @include flex(column, center, center, $space-5);
+    overflow: hidden;
+    padding: $space-5 0;
+  }
+
+  &__header {
+    font-weight: $fw-thin;
+    margin: 0;
+  }
+
+  &__image {
+    width: inherit;
+    object-fit: cover;
+  }
+}

@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
-import './Button.css';
+import './Button.scss';
 /**
  * @class
  * @component
@@ -49,7 +49,7 @@ class Button extends React.Component {
                         }`,
                         color: cancel ? "#334155" : "#ffffff"
                     }}
-                    className={`TR-button ${disabled && 'tr-btn-disabled'} ${className || ''}`}
+                    className={`tr-button ${disabled ? 'tr-button--disabled' : ''} ${className || ''}`}
                     onClick={() => onClick()}
                     disabled={disabled}
                 >

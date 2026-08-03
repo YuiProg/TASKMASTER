@@ -1,0 +1,124 @@
+@use '../../../styles/abstracts' as *;
+
+.tr-radio {
+  padding: 28px;
+  display: flex;
+  flex-direction: row;
+  gap: 26px;
+  width: fit-content;
+
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  &__control {
+    position: relative;
+    display: inline-flex;
+    cursor: pointer;
+
+    input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+
+      &:checked + .tr-radio__switch--shift {
+        background: $black;
+
+        &::before {
+          left: 35px;
+          background: $switch-blue;
+        }
+
+        &::after {
+          left: 31px;
+          background: $black;
+          opacity: 1;
+        }
+      }
+
+      &:checked + .tr-radio__switch--availability {
+        background: $switch-track-active-green;
+
+        &::before {
+          left: 35px;
+        }
+      }
+    }
+  }
+
+  &__switch {
+    position: relative;
+    display: block;
+    border-radius: $radius-pill;
+    transition: all $transition-slow ease;
+    overflow: hidden;
+
+    &--shift {
+      width: 60px;
+      height: 30px;
+      background: $switch-track-light;
+
+      &::before {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        border-radius: $radius-circle;
+        left: 4px;
+        top: 5px;
+        background: $switch-orange;
+        transition: all $transition-slow ease;
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        width: 18px;
+        height: 17px;
+        border-radius: $radius-circle;
+        left: 14px;
+        top: 5px;
+        background: $switch-track-light;
+        opacity: 0;
+        transition: all $transition-slow ease;
+      }
+    }
+
+    &--availability {
+      width: 60px;
+      height: 30px;
+      background: $switch-track-gray;
+
+      &::before {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        border-radius: $radius-circle;
+        left: 5px;
+        top: 5px;
+        background: $switch-track-light;
+        transition: all $transition-slow ease;
+      }
+    }
+  }
+
+  &__text {
+    color: $white;
+  }
+
+  &__title {
+    font-size: $fs-lg;
+    line-height: 1;
+    font-weight: $fw-normal;
+    margin-bottom: $space-4;
+  }
+
+  &__subtitle {
+    font-size: $fs-xs;
+    line-height: 1;
+    color: rgba($white, 0.75);
+  }
+}

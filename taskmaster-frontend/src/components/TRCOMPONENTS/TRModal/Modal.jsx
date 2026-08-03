@@ -1,5 +1,5 @@
 import React from "react";
-import './Modal.css';
+import './Modal.scss';
 import { BadgeCheck, Check, X } from "lucide-react";
 import Button from "../components/TRButton/Button";
 import ModalStore from "../context/ModalStore";
@@ -46,21 +46,21 @@ export class Modal extends React.Component {
 
         return (
             <div
-                className={`modal-container ${isClosing ? 'closing' : ''}`}
+                className={`tr-modal__overlay ${isClosing ? 'tr-modal__overlay--closing' : ''}`}
                 onClick={this.handleClose}
             >
                 <div
-                    className={`modal-child ${isClosing ? 'closing' : ''}`}
+                    className={`tr-modal__panel ${isClosing ? 'tr-modal__panel--closing' : ''}`}
                     onClick={(e) => e.stopPropagation()}
                 >
                     {header && (
-                        <div className="modal-p-header">
+                        <div className="tr-modal__header">
                             <div>
-                                <h1 className="modal-p-h">{header}</h1>
-                                <p className="modal-p-sh">{subHeader}</p>
+                                <h1 className="tr-modal__title">{header}</h1>
+                                <p className="tr-modal__subtitle">{subHeader}</p>
                             </div>
-                            <button 
-                                className="modal-close-btn"
+                            <button
+                                className="tr-modal__close-btn"
                                 onClick={this.handleClose}
                                 aria-label="Close modal"
                             >
@@ -86,18 +86,18 @@ export class ModalConfim extends React.Component {
             onClose
         } = this.props;
         return (
-            <div className="modal-container-confirm">
+            <div className="tr-modal__overlay">
                 <div className="" onClick={(e) => e.stopPropagation()}>
                     {/* CHECK MARK */}
-                    <div className="modal-check-confirm">
-                        <div className="modal-confirm-green-circle">
+                    <div className="tr-modal__panel--confirm">
+                        <div className="tr-modal__confirm-icon">
                             <Check size={80}/>
                         </div>
-                        <h1 className="modal-confirm-header">{message}</h1>
-                        <Button 
-                            success 
+                        <h1 className="tr-modal__confirm-title">{message}</h1>
+                        <Button
+                            success
                             customWidth={150}
-                            text="OKAY" 
+                            text="OKAY"
                             onClick={() => onClose()}
                         />
                     </div>
@@ -114,9 +114,9 @@ export class ModalEditItem extends React.Component {
 
     render () {
         return (
-            <div className="modal-container-confirm">
-                <div className="modal-edit-container">
-                    
+            <div className="tr-modal__overlay">
+                <div className="tr-modal__edit-panel">
+
                 </div>
             </div>
         );
@@ -138,25 +138,25 @@ export class ModalYesNo extends React.Component {
         } = this.props;
 
         return (
-            <div className="modal-container-confirm">
-                <div className="modal-container__delete-clerk" onClick={(e) => e.stopPropagation()}>
+            <div className="tr-modal__overlay">
+                <div className="tr-modal__panel--yesno" onClick={(e) => e.stopPropagation()}>
                     {/* CHECK MARK */}
-                    <div className="modal-confirm-texts">
-                        <h1 className="modal-confirm-header">{message}</h1>
-                        <p className="modal-confirm-subheader">{message2}</p>
+                    <div className="tr-modal__confirm-texts">
+                        <h1 className="tr-modal__confirm-title">{message}</h1>
+                        <p className="tr-modal__confirm-subtitle">{message2}</p>
                     </div>
-                    <div className="modal-yesno-btns">
-                        <Button 
-                            className="modal-btn-no"
-                            maxWidth 
-                            text="NO" 
+                    <div className="tr-modal__actions">
+                        <Button
+                            className="tr-modal__action-btn--no"
+                            maxWidth
+                            text="NO"
                             onClick={() => onClose()}
                         />
-                        <Button 
-                            className="modal-btn-yes"
-                            disabled={loading} 
-                            maxWidth 
-                            text="YES" 
+                        <Button
+                            className="tr-modal__action-btn--yes"
+                            disabled={loading}
+                            maxWidth
+                            text="YES"
                             onClick={() => onYes()}
                         />
                     </div>

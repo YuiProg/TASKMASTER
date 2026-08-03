@@ -1,5 +1,5 @@
 import React from "react";
-import "./InputField.css";
+import "./InputField.scss";
 import { Search, EyeClosed, Eye } from "lucide-react";
 
 /**
@@ -82,12 +82,12 @@ export class InputField extends React.Component {
     } = this.props;
 
     return (
-      <div className="input-container">
+      <div className="tr-input">
         {this.state.error && (
-          <p className="input-error-message">{this.state.error}</p>
+          <p className="tr-input__error-message">{this.state.error}</p>
         )}
         <div
-          className={`input-wrapper ${this.state.error ? "input-error" : ""}`}
+          className={`tr-input__wrapper ${this.state.error ? "tr-input__wrapper--error" : ""}`}
         >
           {!isSearch ? (
             <>
@@ -117,19 +117,19 @@ export class InputField extends React.Component {
                 onKeyDown={(e) => this.handleEnterDown(e, onEnterDown)}
                 maxLength={maxLength}
               />
-              <label className="floating-label">
+              <label className="tr-input__label">
                   {placeholder}
                   {(required || isRequired) && <span style={{ color: '#8a3634', marginLeft: 2 }}>*</span>}
               </label>
               {password &&
                 (this.state.showPassword ? (
                   <Eye
-                    className="eye-icon"
+                    className="tr-input__eye-icon"
                     onClick={() => this.setState({ showPassword: false })}
                   />
                 ) : (
                   <EyeClosed
-                    className="eye-icon"
+                    className="tr-input__eye-icon"
                     onClick={() => this.setState({ showPassword: true })}
                   />
                 ))}
@@ -149,10 +149,10 @@ export class InputField extends React.Component {
                 value={this.state.searchValue}
                 placeholder=" "
                 onKeyDown={(e) => this.handleEnterDown(e, onEnterDown)}
-                className="search-input"
+                className="tr-input__search-field"
               />
-              <label className="floating-label">{placeholder}</label>
-              <Search className="search-icon" size={15} />
+              <label className="tr-input__label">{placeholder}</label>
+              <Search className="tr-input__search-icon" size={15} />
             </>
           )}
         </div>
@@ -255,7 +255,7 @@ export class Label extends React.Component {
     return (
       <div>
         <p
-          className={`tr-input-label${className ? ` ${className}` : ""}`}
+          className={`tr-label${className ? ` ${className}` : ""}`}
           style={{ ...style, cursor: onClick ? "pointer" : style?.cursor }}
           onClick={this.handleLabelClick}
         >

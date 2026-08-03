@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import './Login.css';
+import './Login.scss';
 import { InputForm, TRInputFormPanel } from '../../components/TRCOMPONENTS/TRInputForm/TRInputForm';
 import Button from '../../components/TRCOMPONENTS/TRButton/Button';
 import { useAuthStore } from '../../context/AuthStore';
@@ -24,29 +24,29 @@ function Login() {
   };
 
   return (
-    <div className="tr-login-page">
-      <div className="tr-login-shell">
+    <div className="tr-login">
+      <div className="tr-login__shell">
 
         {/* Brand Logo Header */}
-        <div className="tr-brand">
-          <div className="tr-brand-mark">
+        <div className="tr-login__brand">
+          <div className="tr-login__brand-mark">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <polyline points="20 6 9 17 4 12" />
             </svg>
           </div>
-          <span className="tr-brand-name">TASK MASTER</span>
+          <span className="tr-login__brand-name">TASK MASTER</span>
         </div>
 
         {/* Login Card */}
-        <div className="tr-login-card">
+        <div className="tr-login__card">
           <TRInputFormPanel
             header="Welcome back"
             subHeader="Log in to keep your tasks on track."
             onSubmit={handleSubmit}
             noBtn
           >
-            <InputForm noBtn className="tr-login-inner-form">
-              {error && <p className="tr-form-error">{error}</p>}
+            <InputForm noBtn className="tr-login__inner-form">
+              {error && <p className="tr-login__form-error">{error}</p>}
 
               <InputField
                 placeholder="Email address"
@@ -61,8 +61,8 @@ function Login() {
                 onChange={setPassword}
               />
 
-              <div className="tr-login-row">
-                <a href="#forgot" className="tr-forgot">Forgot password?</a>
+              <div className="tr-login__row">
+                <a href="#forgot" className="tr-login__forgot">Forgot password?</a>
               </div>
 
               <Button
@@ -71,13 +71,13 @@ function Login() {
                 text={isLoading ? 'LOGGING IN...' : 'LOG IN'}
                 disabled={isLoading}
                 customBorder="none"
-                className="tr-login-btn"
+                className="tr-login__btn"
               />
             </InputForm>
           </TRInputFormPanel>
         </div>
 
-        <p className="tr-signup-hint">
+        <p className="tr-login__signup-hint">
           Don&apos;t have an account? <Link to="/register">Sign up</Link>
         </p>
       </div>
