@@ -6,6 +6,7 @@ import com.example.backend.constants.StringCodes;
 import com.example.backend.dto.ApiResponseModel;
 import com.example.backend.model.Branch;
 import com.example.backend.repository.BranchRepository;
+import com.example.backend.service.EmailService.EmailService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
@@ -25,6 +26,7 @@ import com.example.backend.repository.UserRepository;
 import com.example.backend.request.UserRequest;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -37,7 +39,7 @@ public class UserProcessServiceImpl implements UserProcessService{
     private final BranchRepository branchRepository;
     private final AuthenticatedUser authenticatedUser;
     private final UserCacheService userCacheService;
-
+    private final EmailService emailService;
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -67,14 +69,22 @@ public class UserProcessServiceImpl implements UserProcessService{
             branch.setId(userRequest.getBranchId());
             user.setBranchLocation(branch);
         }
-
         User savedUser = userRepository.save(user);
-
-        String token = jwtUtil.generateToken(savedUser.getId());
-        org.springframework.http.ResponseCookie cookie = jwtUtil.createCookie(token);
+        try {
+            emailService.sendTemplatedEmail(
+                    savedUser.getEmail(),
+                    "NEW_USER_ASSIGNMENT",
+                    Map.of(
+                            "username", savedUser.getUsername() != null ? savedUser.getUsername() : "USERNAME"
+                    )
+            );
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                    .body(ApiResponseModel.error("FAILED TO SEND EMAIL", "ERROR"));
+        }
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .header(org.springframework.http.HttpHeaders.SET_COOKIE, cookie.toString())
                 .body(ApiResponseModel.success("User created successfully", StringCodes.SUCCESS.getPath(), savedUser));
     }
 
