@@ -75,7 +75,8 @@ public class UserProcessServiceImpl implements UserProcessService{
                     savedUser.getEmail(),
                     "NEW_USER_ASSIGNMENT",
                     Map.of(
-                            "username", savedUser.getUsername() != null ? savedUser.getUsername() : "USERNAME"
+                            "username", savedUser.getUsername() != null ? savedUser.getUsername() : "USERNAME",
+                            "loginUrl", "https://taskmasteropnexus.xyz/"
                     )
             );
         } catch (Exception e) {
@@ -169,6 +170,14 @@ public class UserProcessServiceImpl implements UserProcessService{
 
             User queryResult = (User) query.getSingleResult();
 
+            emailService.sendTemplatedEmail(
+                    user.getEmail(),
+                    "LOG_IN_CONFIRMATION",
+                    Map.of(
+                            "username", user.getUsername(),
+                            "tasksUrl", "https://taskmasteropnexus.xyz/tasks/my-tasks"
+                    )
+            );
 
             return ResponseEntity.status(HttpStatus.OK)
                     .body(ApiResponseModel.success(StringCodes.USER_LOG_IN.getPath(), StringCodes.SUCCESS.getPath(), queryResult));
