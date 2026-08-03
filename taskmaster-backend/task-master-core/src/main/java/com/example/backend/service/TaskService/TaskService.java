@@ -12,6 +12,7 @@ import com.example.backend.repository.ProjectRepository;
 import com.example.backend.repository.TaskRepository;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.request.TaskRequest;
+import com.example.backend.service.EmailService.EmailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,6 +31,7 @@ public class TaskService implements TaskServiceInterface {
     private final UserRepository userRepository;
     private final ProjectRepository projectRepository;
     private final ReportClient reportClient;
+    private final EmailService emailService;
 
     // Inject internal cache service
     private final TaskCacheService taskCacheService;
@@ -75,6 +77,7 @@ public class TaskService implements TaskServiceInterface {
                 }
 
             }
+
             task.setAssignee(assignee);
         }
 
@@ -85,7 +88,15 @@ public class TaskService implements TaskServiceInterface {
         task.setProject(project);
         Task newTask = taskRepository.save(task);
 
+        emailService.sendSimpleEmail(
+                newTask.getAssignee().getEmail(),
+                "New task!",
+                "Link: " + "https://taskmaster-frontend-s2ao.onrender.com/tasks/view/" + newTask.getId()
+                        + "\n status: " + newTask.getStatus()
+        );
+
         taskCacheService.evictTaskEntriesCache();
+
 
         return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponseModel.success("NEW TASK CREATED", "SUCCESS", newTask));
     }
