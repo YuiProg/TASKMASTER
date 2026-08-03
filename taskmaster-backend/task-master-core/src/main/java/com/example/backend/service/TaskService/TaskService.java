@@ -98,7 +98,7 @@ public class TaskService implements TaskServiceInterface {
                         "taskDescription", newTask.getDescription() != null ? newTask.getDescription() : "No description provided.",
                         "taskStatus", newTask.getStatus() != null ? newTask.getStatus() : "N/A",
                         "taskPriority", newTask.getPriority() != null ? newTask.getPriority() : "N/A",
-                        "taskUrl", "https://taskmaster-frontend-s2ao.onrender.com/tasks/view/" + newTask.getId()
+                        "taskUrl", "https://taskmasteropnexus.xyz/projects/view/" + newTask.getId()
                 )
         );
 
@@ -278,6 +278,18 @@ public class TaskService implements TaskServiceInterface {
 
         // Evict from Redis cache
         taskCacheService.evictTaskEntriesCache();
+
+        emailService.sendTemplatedEmail(
+                task.getAssignee().getEmail(),
+                "TASK_UPDATED_EMAIL",
+                Map.of(
+                        "assigneeName", user.getUsername(),
+                        "taskName", task.getTaskName(),
+                        "before", oldTask.getStatus(),
+                        "after", task.getStatus(),
+                        "taskUrl", "https://taskmasteropnexus.xyz/projects/view" + newTask.getId()
+                )
+        );
 
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.update("TASK UPDATED", "SUCCESS", newTask, oldTask));
     }
