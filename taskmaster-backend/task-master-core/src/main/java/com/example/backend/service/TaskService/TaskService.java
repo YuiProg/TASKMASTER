@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @Service
@@ -88,11 +89,16 @@ public class TaskService implements TaskServiceInterface {
         task.setProject(project);
         Task newTask = taskRepository.save(task);
 
-        emailService.sendSimpleEmail(
+        emailService.sendTemplatedEmail(
                 newTask.getAssignee().getEmail(),
-                "New task!",
-                "Link: " + "https://taskmaster-frontend-s2ao.onrender.com/tasks/view/" + newTask.getId()
-                        + "\n status: " + newTask.getStatus()
+                "NEW_TASK_ASSIGNMENT",
+                Map.of(
+                        "assigneeName", newTask.getAssignee().getUsername(),
+                        "taskTitle", newTask.getTaskName() != null ? newTask.getTaskName() : "Untitled Task",
+                        "taskDescription", newTask.getDescription() != null ? newTask.getDescription() : "No description provided.",
+                        "taskStatus", newTask.getStatus() != null ? newTask.getStatus() : "N/A",
+                        "taskUrl", "https://taskmaster-frontend-s2ao.onrender.com/tasks/view/" + newTask.getId()
+                )
         );
 
         taskCacheService.evictTaskEntriesCache();
