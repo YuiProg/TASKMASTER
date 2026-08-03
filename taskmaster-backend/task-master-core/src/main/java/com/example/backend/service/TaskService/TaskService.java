@@ -97,6 +97,7 @@ public class TaskService implements TaskServiceInterface {
                         "taskTitle", newTask.getTaskName() != null ? newTask.getTaskName() : "Untitled Task",
                         "taskDescription", newTask.getDescription() != null ? newTask.getDescription() : "No description provided.",
                         "taskStatus", newTask.getStatus() != null ? newTask.getStatus() : "N/A",
+                        "taskPriority", newTask.getPriority() != null ? newTask.getPriority() : "N/A",
                         "taskUrl", "https://taskmaster-frontend-s2ao.onrender.com/tasks/view/" + newTask.getId()
                 )
         );
