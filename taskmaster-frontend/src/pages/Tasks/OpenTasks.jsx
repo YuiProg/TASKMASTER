@@ -89,7 +89,7 @@ class OpenTasks extends React.Component {
             hasSelect={true}
             hasAction={true}
             noEdit
-            noDataMessage="No tasks assigned to you yet."
+            noDataMessage="No open tasks assigned to you yet."
             onDelete={() => {}}
             onEdit={() => {}}
             onView={() => {}}

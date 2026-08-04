@@ -189,7 +189,7 @@ class Dashboard extends React.Component {
         {/* All Recent Open Tasks */}
         <PanelContainer title="Recent Open Tasks">
           <div className="dashboard__table-header">
-            <p className="dashboard__table-hint">Recently created tasks across all projects.</p>
+            <p className="dashboard__table-hint">Recently created tasks assigned to you.</p>
           </div>
 
           <Table
@@ -198,7 +198,7 @@ class Dashboard extends React.Component {
             hasSelect={false}
             hasAction={false}
             noEdit
-            noDataMessage="No open tasks. Create one to get started."
+            noDataMessage="No open tasks assigned to you yet."
             onDelete={() => {}}
             onEdit={() => {}}
             onView={() => {}}

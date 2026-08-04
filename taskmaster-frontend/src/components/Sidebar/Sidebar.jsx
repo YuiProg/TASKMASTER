@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import './Sidebar.scss';
 import {
     LayoutDashboard, Folder, CheckSquare, GitBranch, Users,
-    LogOut, Menu, ChevronDown
+    LogOut, Menu, ChevronDown, Settings
 } from 'lucide-react';
 
 // Safe localStorage helpers — guard against SSR (no `window`) and
@@ -248,6 +248,14 @@ class Sidebar extends React.Component {
                             <p className="sidebar__section-label">Team</p>
                             <ul className="sidebar__list">
                                 {this.renderSimpleItem({ path: '/team', icon: <Users size={20} />, label: 'Members', pathname })}
+                            </ul>
+                        </div>
+
+                        {/* ── SYSTEM ── */}
+                        <div className="sidebar__section">
+                            <p className="sidebar__section-label">System</p>
+                            <ul className="sidebar__list">
+                                {this.renderSimpleItem({ path: '/settings', icon: <Settings size={20} />, label: 'Settings', pathname })}
                             </ul>
                         </div>
                     </nav>
