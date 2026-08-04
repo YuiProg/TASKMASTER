@@ -151,7 +151,7 @@ class ViewProject extends React.Component {
                     <div className="view-project__action-row">
                         <Label label="Action"/>
                         <div className="view-project__action-spacer"/>
-                        <Button className="view-project__action-btn" text={<span><Plus size={10}/> CREATE TASK</span>} onClick={this.goToCreateTask}/>
+                        <Button disabled={this.state.project?.archived === 1} className="view-project__action-btn" text={<span><Plus size={10}/> CREATE TASK</span>} onClick={this.goToCreateTask}/>
                     </div>
                 </PanelContainer>
                 <PanelContainer title="Project Details">
@@ -182,7 +182,7 @@ class ViewProject extends React.Component {
                             <Button
                                 className="view-project__action-btn"
                                 text={isAddingMember ? "ADDING..." : "ADD"}
-                                disabled={isAddingMember}
+                                disabled={isAddingMember || this.state.project?.archived === 1}
                                 customWidth={90}
                                 onClick={this.handleAddMember}
                             />

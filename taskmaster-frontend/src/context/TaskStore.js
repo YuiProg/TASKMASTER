@@ -13,6 +13,7 @@ export const useTaskStore = create((set, get) => ({
   updatingTaskId: null, // Track currently updating task ID
   error: null,
   openTasks: [],
+  archiveTasks: [],
 
   fetchTasks: async () => {
     set({ isLoading: true });
@@ -166,6 +167,23 @@ export const useTaskStore = create((set, get) => ({
       set({ isLoadingMyTasks: true });
       const response = await gateWayApi.get("/getOpenTasks");
       set({ openTasks: response.data?.data || [], isLoadingMyTasks: false });
+    } catch (error) {
+      console.log(error.message);
+      set({
+        isCreating: false,
+        error:
+          error.response?.data?.message ||
+          "Something went wrong. Please try again.",
+      });
+      return null;
+    }
+  },
+
+  fetchArchiveTask: async () => {
+    try {
+      set({ isLoadingMyTasks: true });
+      const response = await gateWayApi.get("/getArchiveTasks");
+      set({ archiveTasks: response.data?.data || [], isLoadingMyTasks: false });
     } catch (error) {
       console.log(error.message);
       set({

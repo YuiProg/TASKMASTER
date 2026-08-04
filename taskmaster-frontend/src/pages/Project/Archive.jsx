@@ -12,7 +12,7 @@ class Archive extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      projects: useProjectStore.getState().projects,
+      projects: useProjectStore.getState().archiveProjects,
       isLoading: useProjectStore.getState().isLoading,
       search: "",
     };
@@ -20,10 +20,10 @@ class Archive extends React.Component {
 
   componentDidMount() {
     this.unsubscribeProjects = useProjectStore.subscribe((state) => {
-      this.setState({ projects: state.projects, isLoading: state.isLoading });
+      this.setState({ projects: state.archiveProjects, isLoading: state.isLoading });
     });
 
-    useProjectStore.getState().fetchProjects();
+    useProjectStore.getState().fetchArchivedProjects();
   }
 
   componentWillUnmount() {
