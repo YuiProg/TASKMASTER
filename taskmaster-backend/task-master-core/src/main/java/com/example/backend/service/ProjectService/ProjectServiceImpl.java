@@ -2,6 +2,7 @@ package com.example.backend.service.ProjectService;
 
 import com.example.backend.config.AuthenticatedUser;
 import com.example.backend.config.JwtUtil;
+import com.example.backend.constants.StringCodes;
 import com.example.backend.dto.AddProjectMembersDTO;
 import com.example.backend.dto.ApiResponseModel;
 import com.example.backend.model.Project;
@@ -197,5 +198,30 @@ public class ProjectServiceImpl implements ProjectServiceInterface{
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponseModel.error("PROJECT NOT FOUND", "ERROR"));
         }
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("PROJECT FOUND", "SUCCESS", projects));
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<List<Project>>> getArchiveProjects() {
+        List<Project> projects = projectCacheService.archivedProjects();
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponseModel.success("ARCHIVED PROJECTS FOUND", "SUCCESS", projects));
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<Project>> archiveProject(String id, ProjectRequest projectRequest) {
+        Project project = projectCacheService.getProjectInCacheById(id);
+
+        if (project == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ApiResponseModel.error("PROJECT NOT FOUND", "ERROR"));
+        }
+
+        project.setArchived(projectRequest.getIsArchive().equals(StringCodes.TRUE.getFlag()) ? 1 : 0);
+
+        Project newProject = projectRepository.save(project);
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponseModel.success("PROJECT ARCHIVED","SUCCESS", newProject));
     }
 }

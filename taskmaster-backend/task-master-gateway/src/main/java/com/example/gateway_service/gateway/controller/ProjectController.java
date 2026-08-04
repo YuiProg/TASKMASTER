@@ -48,4 +48,16 @@ public class ProjectController implements ProjectClient {
     public ResponseEntity<ApiResponseModel<ProjectDTO>> addMemberToProject(@PathVariable String projectId, @RequestBody AddMemberToProjectRequest addMemberToProjectRequest) {
         return projectService.addMemberToProject(projectId, addMemberToProjectRequest);
     }
+
+    @Override
+    @PutMapping("/archiveProject/{id}")
+    public ResponseEntity<ApiResponseModel<ProjectDTO>> archiveProject(@PathVariable String id, @RequestBody ProjectRequest projectRequest) {
+        return projectService.archiveProject(id, projectRequest);
+    }
+
+    @Override
+    @GetMapping("/getArchiveProjects")
+    public ResponseEntity<ApiResponseModel<List<ProjectDTO>>> getArchiveProjects() {
+        return projectService.getArchiveProjects();
+    }
 }

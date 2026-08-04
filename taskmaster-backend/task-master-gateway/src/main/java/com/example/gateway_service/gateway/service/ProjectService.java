@@ -129,4 +129,39 @@ public class ProjectService implements ProjectClient {
                     .body(ApiResponseModel.error(e.status() > 0 ? e.contentUTF8() : "PROJECT SERVICE UNAVAILABLE", "ERROR"));
         }
     }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<ProjectDTO>> archiveProject(String id, ProjectRequest projectRequest) {
+        try {
+            log.info("archiveProject REQUEST id: {}, isArchive: {}", id, projectRequest.getIsArchive());
+            ResponseEntity<ApiResponseModel<ProjectDTO>> response = projectClient.archiveProject(id, projectRequest);
+            log.info("archiveProject RESPONSE status: {} data: {}", response.getStatusCode(), response.getBody());
+            ResponseEntity.BodyBuilder builder = ResponseEntity.status(response.getStatusCode());
+
+            return builder.body(response.getBody());
+        } catch (FeignException e) {
+            log.info("archiveProject FAILED status: {} message: {}", e.status(), e.contentUTF8());
+            HttpStatus status = e.status() > 0 ? HttpStatus.valueOf(e.status()) : HttpStatus.SERVICE_UNAVAILABLE;
+
+            return ResponseEntity.status(status)
+                    .body(ApiResponseModel.error(e.status() > 0 ? e.contentUTF8() : "PROJECT SERVICE UNAVAILABLE", "ERROR"));
+        }
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<List<ProjectDTO>>> getArchiveProjects() {
+        try {
+            log.info("getArchiveProjects REQUEST");
+            ResponseEntity<ApiResponseModel<List<ProjectDTO>>> response = projectClient.getArchiveProjects();
+            log.info("getArchiveProjects RESPONSE status: {} data: {}", response.getStatusCode(), response.getBody());
+            ResponseEntity.BodyBuilder builder = ResponseEntity.status(response.getStatusCode());
+            return builder.body(response.getBody());
+        } catch (FeignException e) {
+            log.info("getArchiveProjects FAILED status: {} message: {}", e.status(), e.contentUTF8());
+            HttpStatus status = e.status() > 0 ? HttpStatus.valueOf(e.status()) : HttpStatus.SERVICE_UNAVAILABLE;
+
+            return ResponseEntity.status(status)
+                    .body(ApiResponseModel.error(e.status() > 0 ? e.contentUTF8() : "PROJECT SERVICE UNAVAILABLE", "ERROR"));
+        }
+    }
 }

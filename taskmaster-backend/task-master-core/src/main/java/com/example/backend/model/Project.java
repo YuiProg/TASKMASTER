@@ -45,4 +45,8 @@ public class Project {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<User> members;
+
+    private Integer archived = 0;
+
+    private Integer del = 0;
 }

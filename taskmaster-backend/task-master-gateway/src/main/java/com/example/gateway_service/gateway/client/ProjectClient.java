@@ -30,4 +30,10 @@ public interface ProjectClient {
 
     @PutMapping("addProjectMembers/{projectId}")
     ResponseEntity<ApiResponseModel<ProjectDTO>> addMemberToProject (@PathVariable String projectId, @RequestBody AddMemberToProjectRequest addMemberToProjectRequest);
+
+    @PutMapping("/archiveProject/{id}")
+    ResponseEntity<ApiResponseModel<ProjectDTO>> archiveProject (@PathVariable String id, @RequestBody ProjectRequest projectRequest);
+
+    @GetMapping("/getArchiveProjects")
+    ResponseEntity<ApiResponseModel<List<ProjectDTO>>> getArchiveProjects ();
 }

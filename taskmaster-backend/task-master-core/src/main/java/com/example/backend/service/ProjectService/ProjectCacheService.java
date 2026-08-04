@@ -26,6 +26,17 @@ public class ProjectCacheService {
         return project;
     }
 
+    @Cacheable(value = "projectById", key = "#id")
+    public Project getProjectInCacheById (String id) {
+        Project project = projectRepository.findById(id).orElse(null);
+
+        if (project != null && project.getMembers() != null) {
+            project.setMembers(new ArrayList<>(project.getMembers()));
+        }
+
+        return project;
+    }
+
     @Cacheable(value = "userAssignedProjects", key = "#id")
     public List<Project> getProjectsCache(String id) {
         List<Project> projects = projectRepository.checkIfUserIsInAProject(id);
@@ -52,6 +63,19 @@ public class ProjectCacheService {
         return projects;
     }
 
+    @Cacheable(value = "archivedProjects")
+    public List<Project> archivedProjects () {
+        List<Project> projects = projectRepository.getArchivedProjects();
+
+        for (Project project : projects) {
+            if (project != null && project.getMembers() != null) {
+                project.setMembers(new ArrayList<>(project.getMembers()));
+            }
+        }
+
+        return projects;
+    }
+
     @CacheEvict(value = "userCreatedProjects", key = "#userId")
     public void evictUserCreatedProjects (String userId) {}
 
@@ -60,4 +84,8 @@ public class ProjectCacheService {
 
     @CacheEvict(value = "userAssignedProjects", allEntries = true)
     public void evictUserProjectsCache () {}
+
+    //tawagin to pag nag update ng project to archive
+    @CacheEvict(value = "archivedProjects")
+    public void evictArchivedProjects () {}
 }

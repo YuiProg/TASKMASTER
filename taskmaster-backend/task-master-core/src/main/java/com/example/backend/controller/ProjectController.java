@@ -66,4 +66,16 @@ public class ProjectController implements ProjectServiceInterface {
     public ResponseEntity<ApiResponseModel<List<Project>>> getUserCreatedProject() {
         return projectServiceInterface.getUserCreatedProject();
     }
+
+    @Override
+    @GetMapping("/api/v1/getArchiveProjects")
+    public ResponseEntity<ApiResponseModel<List<Project>>> getArchiveProjects() {
+        return projectServiceInterface.getArchiveProjects();
+    }
+
+    @Override
+    @PutMapping("/api/v1/archiveProject/{id}")
+    public ResponseEntity<ApiResponseModel<Project>> archiveProject(@PathVariable String id, @RequestBody ProjectRequest projectRequest) {
+        return projectServiceInterface.archiveProject(id, projectRequest);
+    }
 }

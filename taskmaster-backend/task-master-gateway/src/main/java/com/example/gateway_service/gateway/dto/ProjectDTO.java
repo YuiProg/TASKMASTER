@@ -13,4 +13,5 @@ public class ProjectDTO {
     private String updatedBy;
     private String status;
     private List<UserDTO> members;
+    private Integer archived;
 }

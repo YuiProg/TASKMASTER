@@ -17,4 +17,6 @@ public interface ProjectServiceInterface {
     ResponseEntity<ApiResponseModel<List<Project>>> getAuthUserProjects ();
     ResponseEntity<ApiResponseModel<Project>> getProjectByName (String name);
     ResponseEntity<ApiResponseModel<List<Project>>> getUserCreatedProject ();
+    ResponseEntity<ApiResponseModel<List<Project>>> getArchiveProjects ();
+    ResponseEntity<ApiResponseModel<Project>> archiveProject(String id, ProjectRequest projectRequest);
 }
