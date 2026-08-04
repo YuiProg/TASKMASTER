@@ -1,5 +1,11 @@
 @use '../../styles/abstracts' as *;
 
+@keyframes tr-login-btn-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 /* Global reset to neutralize body and app wrapper spacing */
 :global(body),
 :global(#root),
@@ -288,8 +294,8 @@
 
     &:hover {
       background-color: $accent-dark !important;
-      transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+      animation: tr-login-btn-spin 0.6s linear infinite;
     }
 
     &:active {
