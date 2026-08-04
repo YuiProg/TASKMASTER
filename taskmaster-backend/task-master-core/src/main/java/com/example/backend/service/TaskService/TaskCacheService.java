@@ -64,9 +64,9 @@ public class TaskCacheService {
         return tasks;
     }
 
-    @Cacheable(value = "taskData")
-    public List<Task> getAllOpenTaskCache () {
-        List<Task> tasks = taskRepository.getAllOpenTask();
+    @Cacheable(value = "openTaskData", key = "#id")
+    public List<Task> getAllOpenTaskCache (String id) {
+        List<Task> tasks = taskRepository.getAllOpenTask(id);
 
         for (Task task : tasks) {
             if (task.getProject() != null && task.getProject().getMembers() != null) {
@@ -93,5 +93,7 @@ public class TaskCacheService {
     @CacheEvict(value = "taskArchive", allEntries = true)
     void evictArchiveTask () {}
 
+    @CacheEvict(value = "openTaskData", allEntries = true)
+    public void evictOpenTask () {}
 
 }

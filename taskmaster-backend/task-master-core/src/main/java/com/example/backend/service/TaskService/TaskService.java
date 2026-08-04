@@ -101,7 +101,7 @@ public class TaskService implements TaskServiceInterface {
                         "taskUrl", "https://taskmasteropnexus.xyz/tasks/view/" + newTask.getId()
                 )
         );
-
+        taskCacheService.evictOpenTask();
         taskCacheService.evictTaskEntriesCache();
 
 
@@ -208,6 +208,7 @@ public class TaskService implements TaskServiceInterface {
         Task newTask = taskRepository.save(task);
 
         taskCacheService.evictTaskEntriesCache();
+        taskCacheService.evictOpenTask();
 
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.update("TASK UPDATED", "SUCCESS", newTask, oldTask));
     }
@@ -277,6 +278,7 @@ public class TaskService implements TaskServiceInterface {
         Task newTask = taskRepository.save(task);
 
         // Evict from Redis cache
+        taskCacheService.evictOpenTask();
         taskCacheService.evictTaskEntriesCache();
 
         emailService.sendTemplatedEmail(
@@ -284,12 +286,27 @@ public class TaskService implements TaskServiceInterface {
                 "TASK_UPDATED_EMAIL",
                 Map.of(
                         "assigneeName", user.getUsername(),
+                        "description", "You updated task '" + task.getTaskName() + "'",
                         "taskName", task.getTaskName(),
                         "before", oldTask.getStatus(),
                         "after", task.getStatus(),
                         "taskUrl", "https://taskmasteropnexus.xyz/tasks/view/" + newTask.getId()
                 )
         );
+        //send sa creator
+        emailService.sendTemplatedEmail(
+                task.getCreatedBy().getEmail(),
+                "TASK_UPDATED_EMAIL",
+                Map.of(
+                        "assigneeName", task.getCreatedBy().getUsername(),
+                        "description", "Task " + task.getTaskName() + " was updated by " + task.getUpdatedBy(),
+                        "taskName", task.getTaskName(),
+                        "before", oldTask.getStatus(),
+                        "after", task.getStatus(),
+                        "taskUrl", "https://taskmasteropnexus.xyz/tasks/view/" + newTask.getId()
+                )
+        );
+
 
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.update("TASK UPDATED", "SUCCESS", newTask, oldTask));
     }
@@ -316,7 +333,8 @@ public class TaskService implements TaskServiceInterface {
 
     @Override
     public ResponseEntity<ApiResponseModel<List<Task>>> getAllOpenTask() {
-        List<Task> tasks = taskCacheService.getAllOpenTaskCache();
+        User user = authenticatedUser.getAuthenticatedUser();
+        List<Task> tasks = taskCacheService.getAllOpenTaskCache(user.getId());
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("TASKS FOUND", "SUCCESS", tasks));
     }
 
