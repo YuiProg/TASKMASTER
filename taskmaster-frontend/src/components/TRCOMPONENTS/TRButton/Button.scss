@@ -12,9 +12,9 @@
     opacity: 0.5;
   }
 
-  &:hover:not(.tr-button--disabled) {
-    transform: scale(1.02);
-  }
+  // &:hover:not(.tr-button--disabled) {
+  //   transform: scale(1.02);
+  // }
 
   &--disabled {
     opacity: 0.5;
