@@ -287,7 +287,7 @@ public class TaskService implements TaskServiceInterface {
                         "taskName", task.getTaskName(),
                         "before", oldTask.getStatus(),
                         "after", task.getStatus(),
-                        "taskUrl", "https://taskmasteropnexus.xyz/tasks/view" + newTask.getId()
+                        "taskUrl", "https://taskmasteropnexus.xyz/tasks/view/" + newTask.getId()
                 )
         );
 
