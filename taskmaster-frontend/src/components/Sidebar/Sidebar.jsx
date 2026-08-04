@@ -182,8 +182,8 @@ class Sidebar extends React.Component {
             ? user.username.slice(0, 2).toUpperCase()
             : '?';
 
-        const isAnyProjectsActive = ["/projects", "/projects/new", "/projects/archived"].includes(pathname);
-        const isAnyTasksActive = ["/tasks/my-tasks", "/tasks/backlog"].includes(pathname);
+        const isAnyProjectsActive = ["/projects", "/projects/new", "/projects/archived", '/projects/my-projects'].includes(pathname);
+        const isAnyTasksActive = ["/tasks/my-tasks", "/tasks/backlog", '/tasks/open-tasks'].includes(pathname);
 
         return (
             <div className="sidebar">
