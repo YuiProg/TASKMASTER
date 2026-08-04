@@ -98,7 +98,7 @@ public class TaskService implements TaskServiceInterface {
                         "taskDescription", newTask.getDescription() != null ? newTask.getDescription() : "No description provided.",
                         "taskStatus", newTask.getStatus() != null ? newTask.getStatus() : "N/A",
                         "taskPriority", newTask.getPriority() != null ? newTask.getPriority() : "N/A",
-                        "taskUrl", "https://taskmasteropnexus.xyz/projects/view/" + newTask.getId()
+                        "taskUrl", "https://taskmasteropnexus.xyz/tasks/view/" + newTask.getId()
                 )
         );
 
@@ -287,7 +287,7 @@ public class TaskService implements TaskServiceInterface {
                         "taskName", task.getTaskName(),
                         "before", oldTask.getStatus(),
                         "after", task.getStatus(),
-                        "taskUrl", "https://taskmasteropnexus.xyz/projects/view" + newTask.getId()
+                        "taskUrl", "https://taskmasteropnexus.xyz/tasks/view" + newTask.getId()
                 )
         );
 
