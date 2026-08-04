@@ -25,23 +25,58 @@ function Login() {
 
   return (
     <div className="tr-login">
-      <div className="tr-login__shell">
-
-        {/* Brand Logo Header */}
-        <div className="tr-login__brand">
-          <div className="tr-login__brand-mark">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
+      {/* Left Visual Hero Section */}
+      <div className="tr-login__hero">
+        <div className="tr-login__hero-overlay" />
+        <div className="tr-login__hero-pattern" />
+        
+        <div className="tr-login__hero-content">
+          <div className="tr-login__brand">
+            <div className="tr-login__brand-mark">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            </div>
+            <span className="tr-login__brand-name">TASK MASTER</span>
           </div>
-          <span className="tr-login__brand-name">TASK MASTER</span>
-        </div>
 
-        {/* Login Card */}
-        <div className="tr-login__card">
+          <div className="tr-login__hero-text">
+            <span className="tr-login__badge">⚡ Workspace v2.0</span>
+            <h2>Master your workflow with effortless precision.</h2>
+            <p>Organize, track, and complete your team&apos;s tasks in one central workspace built for modern productivity.</p>
+          </div>
+
+          {/* Social Proof Glass Badge */}
+          <div className="tr-login__glass-card">
+            <div className="tr-login__stat-group">
+              <div className="tr-login__stat-number">99.9%</div>
+              <div className="tr-login__stat-label">Uptime across 10k+ active sprint boards.</div>
+            </div>
+          </div>
+
+          <div className="tr-login__hero-footer">
+            <p>© {new Date().getFullYear()} Task Master Inc. All rights reserved.</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Right Form Section */}
+      <div className="tr-login__form-section">
+        <div className="tr-login__form-wrapper">
+          
+          {/* Mobile-only Header */}
+          <div className="tr-login__brand tr-login__brand--mobile">
+            <div className="tr-login__brand-mark">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="20 6 9 17 4 12" />
+              </svg>
+            </div>
+            <span className="tr-login__brand-name">TASK MASTER</span>
+          </div>
+
           <TRInputFormPanel
             header="Welcome back"
-            subHeader="Log in to keep your tasks on track."
+            subHeader="Log in to access your dashboard & active tasks."
             onSubmit={handleSubmit}
             noBtn
           >
@@ -75,11 +110,11 @@ function Login() {
               />
             </InputForm>
           </TRInputFormPanel>
-        </div>
 
-        <p className="tr-login__signup-hint">
-          Don&apos;t have an account? <Link to="/register">Sign up</Link>
-        </p>
+          <p className="tr-login__signup-hint">
+            Don&apos;t have an account? <Link to="/register">Sign up</Link>
+          </p>
+        </div>
       </div>
     </div>
   );
