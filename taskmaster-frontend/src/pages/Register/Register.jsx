@@ -54,7 +54,7 @@ function Register() {
           </div>
 
           <div className="tr-register__hero-footer">
-            <p>© {new Date().getFullYear()} Task Master Inc. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} OPNEXUS Inc. All rights reserved.</p>
           </div>
         </div>
       </div>
