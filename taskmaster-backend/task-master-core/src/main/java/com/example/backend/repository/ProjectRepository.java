@@ -20,9 +20,9 @@ public interface ProjectRepository extends JpaRepository<Project, String> {
             "(SELECT m.id FROM p.members m) AND p.archived = 0 ORDER BY p.createdAt DESC")
     List<Project> checkIfUserIsInAProject (@Param("userId")String userId);
 
-    @Query("SELECT p FROM Project p WHERE p.createdBy.id = :userId AND p.archived = 0")
+    @Query("SELECT p FROM Project p WHERE p.createdBy.id = :userId AND p.archived = 0 ORDER BY p.createdAt DESC")
     List<Project> getUserCreatedProjects (String userId);
 
-    @Query("SELECT p FROM Project p WHERE p.archived = 1 AND p.del = 0")
+    @Query("SELECT p FROM Project p WHERE p.archived = 1 AND p.del = 0 ORDER BY p.createdAt DESC")
     List<Project> getArchivedProjects ();
 }
