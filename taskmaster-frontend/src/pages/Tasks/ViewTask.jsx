@@ -13,34 +13,67 @@ import TaskReports from "./TaskReport";
 import { useCommentStore } from "../../context/CommentStore.js";
 import { Toaster } from "react-hot-toast";
 
-// Options arrays
-const STATUS_OPTIONS = ["OPEN", "IN PROGRESS", "QA CHECK", "DEPLOYED", "CLOSED"];
+// Standard Fallback Options
+const DEFAULT_STATUS_OPTIONS = ["OPEN", "IN PROGRESS", "QA CHECK", "DEPLOYED", "CLOSED"];
 const PRIORITY_OPTIONS = ["LOW", "MEDIUM", "HIGH", "CRITICAL"];
 
-function toDisplayStatus(status) {
-  if (!status) return "";
-  return status.toUpperCase().replace(/[\s_-]+/g, " ").trim();
+/**
+ * Extracts available status options from task's attached project object.
+ * Checks project.priorities, project.statuses, or project.status array.
+ */
+function getStatusOptions(task) {
+  const project = task?.project || {};
+  const projectStatuses =
+    project.priorities ||
+    project.statuses ||
+    project.statusList ||
+    (Array.isArray(project.status) ? project.status : null);
+
+  if (Array.isArray(projectStatuses) && projectStatuses.length > 0) {
+    return projectStatuses;
+  }
+
+  return DEFAULT_STATUS_OPTIONS;
+}
+
+/**
+ * Safely converts status strings or numeric indexes (e.g., 2) to display text
+ */
+function toDisplayStatus(status, availableOptions) {
+  if (status === null || status === undefined || status === "") {
+    return availableOptions[0] || "";
+  }
+
+  // If status is a numeric index (e.g., 2)
+  if (!isNaN(status) && typeof Number(status) === "number") {
+    const idx = Number(status);
+    return availableOptions[idx] || availableOptions[0] || String(status);
+  }
+
+  return String(status).toUpperCase().replace(/[\s_-]+/g, " ").trim();
 }
 
 function statusColorGroup(status) {
-  const normalized = (status || "").toUpperCase().replace(/[\s-]+/g, "_");
+  const normalized = (status || "").toString().toUpperCase().replace(/[\s-]+/g, "_");
 
   switch (normalized) {
     case "IN_PROGRESS":
     case "QA_CHECK":
+    case "1":
+    case "2":
       return "blue";
     case "DEPLOYED":
     case "CLOSED":
+    case "3":
+    case "4":
       return "green";
     default:
       return "default";
   }
 }
 
-
-// Color group generator for Priority states
 function priorityColorGroup(priority) {
-  const normalized = (priority || "").toUpperCase();
+  const normalized = (priority || "").toString().toUpperCase();
 
   switch (normalized) {
     case "CRITICAL":
@@ -57,7 +90,7 @@ function priorityColorGroup(priority) {
 
 function formatDate(rawDate) {
   if (!rawDate) return "N/A";
-  
+
   const timestamp = Number(rawDate);
   const dateInput = !Number.isNaN(timestamp) ? timestamp : rawDate;
 
@@ -133,23 +166,16 @@ class ViewTask extends React.Component {
 
     const result = await updateStatus(this.state.task.id, displayValue);
 
-    // Revert state + trigger toast on failure
     if (!result || result.success === false) {
       this.setState((prev) => ({
         task: { ...prev.task, status: previousStatus },
       }));
-
-      // toast.error(result?.message, {
-      //   position: "bottom-right",
-      //   duration: 4000,
-      // });
       return;
     }
 
     if (result.data) {
       this.setState({ task: result.data });
     }
-    console.log("[ViewTask] status changed to:", displayValue);
   };
 
   handlePriorityChange = async (priorityValue) => {
@@ -163,23 +189,16 @@ class ViewTask extends React.Component {
 
     const result = await updateTask({ priority: priorityValue }, this.state.task.id);
 
-    // Revert state + trigger toast on failure
     if (!result || result.success === false) {
       this.setState((prev) => ({
         task: { ...prev.task, priority: previousPriority },
       }));
-
-      // toast.error(result?.message, {
-      //   position: "bottom-right",
-      //   duration: 4000,
-      // });
       return;
     }
 
     if (result.data || result) {
       this.setState({ task: result.data || result });
     }
-    console.log("[ViewTask] priority changed to:", priorityValue);
   };
 
   addComment = async (comment) => {
@@ -203,11 +222,6 @@ class ViewTask extends React.Component {
       this.setState((prev) => ({
         task: { ...prev.task, assignee: previousAssignee },
       }));
-
-      // toast.error(result?.message, {
-      //   position: "bottom-right",
-      //   duration: 4000,
-      // });
       return;
     }
 
@@ -230,7 +244,6 @@ class ViewTask extends React.Component {
       this.setState((prev) => ({
         task: { ...prev.task, description: previousDescription },
       }));
-      
       return;
     }
 
@@ -251,12 +264,14 @@ class ViewTask extends React.Component {
     const project = task.project || {};
     const members = project.members || [];
 
+    // Extract dynamic status options from project object (e.g. project.priorities)
+    const statusOptions = getStatusOptions(task);
+
     return (
       <PanelPage
         titlePage={task.taskName.toUpperCase()}
         subTitle={`Task ID: ${task.id}`}
       >
-        {/* Toast Container to display errors */}
         <Toaster />
 
         <PanelContainer title="Overview">
@@ -272,20 +287,21 @@ class ViewTask extends React.Component {
             onClick={this.handleDescriptionEdit}
           />
 
-          {/* Dropdowns now directly below the description */}
           <div className="view-task__header-dropdowns">
+            {/* Status Dropdown using project status options */}
             <div className={`view-task__status-dropdown view-task__status-dropdown--${statusColorGroup(task.status)}`}>
               <Dropdown
-                options={STATUS_OPTIONS}
-                value={toDisplayStatus(task.status)}
+                options={statusOptions}
+                value={toDisplayStatus(task.status, statusOptions)}
                 onChange={this.handleStatusChange}
               />
             </div>
 
+            {/* Priority Dropdown */}
             <div className={`view-task__priority-dropdown view-task__priority-dropdown--${priorityColorGroup(task.priority)}`}>
               <Dropdown
                 options={PRIORITY_OPTIONS}
-                value={(task.priority || "LOW").toUpperCase()}
+                value={(task.priority || "LOW").toString().toUpperCase()}
                 onChange={this.handlePriorityChange}
               />
             </div>
@@ -317,7 +333,7 @@ class ViewTask extends React.Component {
                 <span className="view-task__assignee-key">
                   Project Name: {project.projectName?.toUpperCase() || "NO PROJECT ASSIGNED"}
                 </span>
-                <Label label={`Status: ${project.status || "N/A"}`} />
+                <Label label={`Status: ${typeof project.status === "string" ? project.status : "N/A"}`} />
                 <Label label={`Members: ${members.length}`} />
               </div>
 
