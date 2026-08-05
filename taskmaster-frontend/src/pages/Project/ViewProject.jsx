@@ -33,13 +33,16 @@ class ViewProject extends React.Component {
         const currentPath = window.location.pathname;
         const newPath = currentPath.replace("/projects/", "");
         
-        // Fetch the wrapper object containing { project, tasks } directly from the store
         const data = await getProjectByName(newPath);
         
         if (data) {
+            // Extract the project object correctly from response structure
+            const projectObj = data.project || data.data || data;
+            const tasksList = data.tasks || projectObj?.tasks || [];
+
             this.setState({ 
-                project: data.project, 
-                tasks: data.tasks 
+                project: projectObj, 
+                tasks: tasksList 
             });
         }
     }
@@ -95,7 +98,6 @@ class ViewProject extends React.Component {
         }
     };
 
-
     viewTasks = () => {
         const tasks = this.state.tasks;
         const data = tasks.map(t => {
@@ -115,7 +117,6 @@ class ViewProject extends React.Component {
 
             return row;
         });
-
 
         return (
             <Table data={data} limit={6} onRowSelect={e => this.navigateToTask(e.id)}/>
@@ -141,7 +142,6 @@ class ViewProject extends React.Component {
             );
         }
 
-        //const taskCount = this.state.tasks ? this.state.tasks.length : 0;
         const memberCount = this.state.project.members ? this.state.project.members.length : 0;
         const { newMemberEmail, isAddingMember, addMemberError } = this.state;
 
@@ -157,17 +157,14 @@ class ViewProject extends React.Component {
                 <PanelContainer title="Project Details">
                     {this.topContainer()}
                     <InputRow gap={16}>
-                    {/* <PanelContainer title="Tasks">
-                        <Label label={`TASKS: ${taskCount}`} style={{marginTop: '10px', marginBottom: '20px'}}/>
-                        {this.viewTasks()}
-                    </PanelContainer> */}
-                </InputRow>
+                    </InputRow>
                 </PanelContainer>
 
                 <PanelContainer title="Task Board">
                     <div style={{marginTop: '10px'}}/>
-                    <KanbanBoard tasks={this.state.tasks}/>
+                    <KanbanBoard tasks={this.state.tasks} project={this.state.project} />
                 </PanelContainer>
+                
                 <PanelContainer title="Project Members">
                         <Label label={`Members: ${memberCount}`} style={{marginTop: '10px', marginBottom: '20px'}}/>
 

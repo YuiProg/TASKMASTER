@@ -26,10 +26,10 @@ export const useProjectStore = create((set, get) => ({
     }
   },
 
-  createProject: async (projectName, description, emails = []) => {
+  createProject: async (projectName, description, emails = [], priorities) => {
     set({ isCreating: true, error: null });
     try {
-      const res = await gateWayApi.post('/addProject', { projectName, description, emails });
+      const res = await gateWayApi.post('/addProject', { projectName, description, emails, priorities });
 
       if (String(res.data.status).toUpperCase() === 'SUCCESS') {
         set({

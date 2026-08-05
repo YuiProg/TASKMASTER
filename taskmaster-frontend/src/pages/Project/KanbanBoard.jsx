@@ -5,9 +5,7 @@ import { Eye, AlertOctagon, AlertTriangle, ArrowUp, ArrowDown, Loader2 } from "l
 import navigateTo from "../../lib/navigate";
 import { Toaster } from "react-hot-toast";
 
-const COLUMNS = ["OPEN", "IN PROGRESS", "QA CHECK", "DEPLOYED", "CLOSED"];
-
-// Main container for meta info + view button (row layout)
+// Styling constants
 const metaContainerStyle = {
   display: "flex",
   alignItems: "center",
@@ -16,7 +14,6 @@ const metaContainerStyle = {
   width: "100%",
 };
 
-// Container that stacks Assignee and Priority vertically
 const infoStackStyle = {
   display: "flex",
   flexDirection: "column",
@@ -69,53 +66,53 @@ const cardLoadingOverlayStyle = {
   color: "#2563eb",
 };
 
-function normalizeStatus(status) {
-  if (!status) return "";
-  return status.toUpperCase().replace(/[\s_-]+/g, " ").trim();
-}
-
-function columnColorClass(column) {
-  switch (column) {
-    case "IN PROGRESS":
-    case "QA CHECK":
-      return "kb-board__column--blue";
-    case "DEPLOYED":
-    case "CLOSED":
-      return "kb-board__column--green";
-    default:
-      return "";
+/**
+ * Extracts columns from the project payload, falls back to defaults.
+ */
+function getColumns(project) {
+  const customCols = project?.data?.priorities || project?.priorities;
+  if (Array.isArray(customCols) && customCols.length > 0) {
+    return customCols;
   }
+  return ["OPEN", "IN PROGRESS", "QA CHECK", "DEPLOYED", "CLOSED"];
 }
 
-// Groups task ids by column, preserving the order they appear in `tasks`.
-// This becomes the single source of truth for both which column a task
-// is in AND where it sits within that column — plain array filtering
-// alone can't guarantee a dropped card lands at the bottom, since it
-// would just fall back to wherever it happened to sit in the original
-// unsorted `tasks` array.
-function buildColumnOrder(tasks) {
+/**
+ * Groups tasks based on the dynamic columns provided.
+ */
+function buildColumnOrder(tasks = [], columns = []) {
   const order = {};
-  COLUMNS.forEach((c) => {
+  
+  columns.forEach((c) => {
     order[c] = [];
   });
 
   tasks.forEach((t) => {
-    const status = normalizeStatus(t.status);
-    if (order[status]) {
-      order[status].push(t.id);
-    } else {
-      // Unrecognized/legacy status value — default it into OPEN rather
-      // than silently dropping the card from the board entirely.
-      order.OPEN.push(t.id);
+    if (!t || !t.id) return;
+    const taskStatus = (t.status || "").trim();
+    
+    // Case-insensitive match to find which column the task belongs in
+    const matchedCol = columns.find(c => c.toLowerCase() === taskStatus.toLowerCase());
+    
+    if (matchedCol) {
+      order[matchedCol].push(t.id);
+    } else if (columns.length > 0) {
+      // If task status doesn't match any column, push to the very first column
+      order[columns[0]].push(t.id);
     }
   });
 
   return order;
 }
 
-// Helper to render priority icon & color dynamically
-function renderPriorityIcon(priority = "LOW") {
-  const normPriority = (priority || "LOW").toUpperCase();
+function columnColorClass(index, totalColumns) {
+  if (index === 0) return ""; 
+  if (index === totalColumns - 1) return "kb-board__column--green";
+  return "kb-board__column--blue";
+}
+
+function renderPriorityIcon(priority) {
+  const normPriority = (priority || "LOW").toString().toUpperCase().trim();
 
   switch (normPriority) {
     case "CRITICAL":
@@ -149,17 +146,18 @@ function renderPriorityIcon(priority = "LOW") {
 class KanbanBoard extends React.Component {
   constructor(props) {
     super(props);
+    const columns = getColumns(props.project);
     this.state = {
       draggingTaskId: null,
       dragOverColumn: null,
-      columnOrder: buildColumnOrder(props.tasks || []),
+      columns: columns,
+      columnOrder: buildColumnOrder(props.tasks || [], columns),
       updatingTaskId: null,
     };
     this.wasDragging = false;
   }
 
   componentDidMount() {
-    // Subscribe to Zustand store changes for updatingTaskId
     this.unsubscribe = useTaskStore.subscribe((state) => {
       this.setState({ updatingTaskId: state.updatingTaskId });
     });
@@ -170,21 +168,25 @@ class KanbanBoard extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    if (prevProps.tasks !== this.props.tasks) {
-      // Fresh data from the parent (e.g. after a real refetch) — rebuild
-      // column order from scratch rather than trying to merge it with
-      // whatever local drag state existed before.
-      this.setState({ columnOrder: buildColumnOrder(this.props.tasks || []) });
+    const prevCols = getColumns(prevProps.project).join(",");
+    const currCols = getColumns(this.props.project).join(",");
+
+    // Rebuild the board if tasks update OR if project priorities array changes
+    if (prevProps.tasks !== this.props.tasks || prevCols !== currCols) {
+      const columns = getColumns(this.props.project);
+      this.setState({ 
+        columns,
+        columnOrder: buildColumnOrder(this.props.tasks || [], columns) 
+      });
     }
   }
 
   findTaskColumn(taskId) {
-    const { columnOrder } = this.state;
-    return COLUMNS.find((c) => columnOrder[c].includes(taskId)) || null;
+    const { columnOrder, columns } = this.state;
+    return columns.find((c) => columnOrder[c]?.includes(taskId)) || null;
   }
 
   handleDragStart = (task) => (e) => {
-    // Prevent dragging if the task is currently updating
     if (String(this.state.updatingTaskId) === String(task.id)) {
       e.preventDefault();
       return;
@@ -229,12 +231,12 @@ class KanbanBoard extends React.Component {
       return;
     }
 
-    // Snapshot so we can restore exact prior order if the API call fails.
     const previousColumnOrder = this.state.columnOrder;
+    const { columns } = this.state;
 
-    // Optimistically move the card to the END of the target column.
+    // Dynamically rebuild the object based on current columns
     const nextColumnOrder = Object.fromEntries(
-      COLUMNS.map((c) => [c, previousColumnOrder[c].filter((id) => id !== taskId)])
+      columns.map((c) => [c, previousColumnOrder[c].filter((id) => id !== taskId)])
     );
     nextColumnOrder[column] = [...nextColumnOrder[column], taskId];
 
@@ -244,19 +246,11 @@ class KanbanBoard extends React.Component {
       dragOverColumn: null,
     });
 
-    // Trigger update in Zustand Store
     const { updateStatus } = useTaskStore.getState();
     const result = await updateStatus(taskId, column);
 
-    // IF API Call Failed / Status ERROR: Revert card and show toast notification
     if (!result || !result.success) {
       this.setState({ columnOrder: previousColumnOrder });
-
-      // Show toast error message
-      // toast.error(result?.message, {
-      //   position: "bottom-right",
-      //   duration: 4000,
-      // });
       this.wasDragging = false;
       return;
     }
@@ -280,24 +274,22 @@ class KanbanBoard extends React.Component {
 
   render() {
     const { tasks = [] } = this.props;
-    const { draggingTaskId, dragOverColumn, updatingTaskId, columnOrder } = this.state;
-
+    const { draggingTaskId, dragOverColumn, updatingTaskId, columnOrder, columns } = this.state;
     const tasksById = Object.fromEntries(tasks.map((t) => [t.id, t]));
 
     return (
       <div className="kb-board">
-        {/* Toast Container to render toasts */}
         <Toaster />
 
-        {COLUMNS.map((column) => {
-          const columnTasks = columnOrder[column]
+        {columns.map((column, index) => {
+          const columnTasks = (columnOrder[column] || [])
             .map((id) => tasksById[id])
             .filter(Boolean);
 
           return (
             <div
               key={column}
-              className={`kb-board__column ${columnColorClass(column)} ${
+              className={`kb-board__column ${columnColorClass(index, columns.length)} ${
                 dragOverColumn === column ? "kb-board__column--dragover" : ""
               }`}
               onDragOver={this.handleDragOver(column)}
@@ -305,7 +297,7 @@ class KanbanBoard extends React.Component {
               onDrop={this.handleDrop(column)}
             >
               <div className="kb-board__column-header">
-                <span className="kb-board__column-title">{column}</span>
+                <span className="kb-board__column-title">{column.toUpperCase()}</span>
                 <span className="kb-board__column-count">{columnTasks.length}</span>
               </div>
 
@@ -328,7 +320,6 @@ class KanbanBoard extends React.Component {
                         onDragEnd={this.handleDragEnd}
                         onClick={(e) => this.handleCardClick(task, e)}
                       >
-                        {/* Task Loading Overlay */}
                         {isUpdating && (
                           <div style={cardLoadingOverlayStyle}>
                             <Loader2 size={16} className="kb-board__spinner" />
