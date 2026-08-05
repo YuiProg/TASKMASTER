@@ -281,18 +281,20 @@ public class TaskService implements TaskServiceInterface {
         taskCacheService.evictOpenTask();
         taskCacheService.evictTaskEntriesCache();
 
-        emailService.sendTemplatedEmail(
-                task.getAssignee().getEmail(),
-                "TASK_UPDATED_EMAIL",
-                Map.of(
-                        "assigneeName", user.getUsername(),
-                        "description", "You updated task '" + task.getTaskName() + "'",
-                        "taskName", task.getTaskName(),
-                        "before", oldTask.getStatus(),
-                        "after", task.getStatus(),
-                        "taskUrl", "https://taskmasteropnexus.xyz/tasks/view/" + newTask.getId()
-                )
-        );
+        if (task.getAssignee() != null) {
+            emailService.sendTemplatedEmail(
+                    task.getAssignee().getEmail(),
+                    "TASK_UPDATED_EMAIL",
+                    Map.of(
+                            "assigneeName", user.getUsername(),
+                            "description", "You updated task '" + task.getTaskName() + "'",
+                            "taskName", task.getTaskName(),
+                            "before", oldTask.getStatus(),
+                            "after", task.getStatus(),
+                            "taskUrl", "https://taskmasteropnexus.xyz/tasks/view/" + newTask.getId()
+                    )
+            );
+        }
         //send sa creator
         emailService.sendTemplatedEmail(
                 task.getCreatedBy().getEmail(),

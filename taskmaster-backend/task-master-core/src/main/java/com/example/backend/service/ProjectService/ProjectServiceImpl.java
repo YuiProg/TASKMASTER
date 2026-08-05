@@ -54,6 +54,16 @@ public class ProjectServiceImpl implements ProjectServiceInterface{
         if (projectRequest.getStatus() != null && !projectRequest.getStatus().trim().isEmpty()) {
             project.setStatus(projectRequest.getStatus());
         }
+
+        if (projectRequest.getPriorities() != null) {
+            List<String> priorities = new ArrayList<>(projectRequest.getPriorities());
+
+            if (!priorities.contains("CLOSED")) {
+                priorities.add("CLOSED");
+            }
+            project.setPriorities(priorities);
+        }
+
         List<User> members = new ArrayList<>();
         if (!projectRequest.getEmails().isEmpty()) {
             for (String email : projectRequest.getEmails()) {
