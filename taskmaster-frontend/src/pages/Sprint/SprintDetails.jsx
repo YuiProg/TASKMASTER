@@ -2,6 +2,7 @@ import React from "react";
 import { PanelPage, PanelContainer } from "../../components/TRCOMPONENTS/TRPanelPage/TRPanelPage";
 import Button from "../../components/TRCOMPONENTS/TRButton/Button";
 import { Table } from "../../components/TRCOMPONENTS/TRTable/TrTable";
+import Spinner from "../../components/Spinner/Spinner.jsx";
 import { useSprintStore } from "../../context/SprintStore.js";
 import navigateTo from "../../lib/navigate";
 import "./SprintDetails.scss";
@@ -141,7 +142,9 @@ class SprintDetails extends React.Component {
       >
         <PanelContainer>
           {isLoading && (
-            <div className="sprint-details__loading">Loading sprint details...</div>
+            <div className="sprint-details__loading">
+              <Spinner />
+            </div>
           )}
 
           {error && !isLoading && (
