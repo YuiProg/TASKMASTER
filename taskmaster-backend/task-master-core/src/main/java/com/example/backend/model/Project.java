@@ -55,4 +55,8 @@ public class Project {
     private Integer archived = 0;
 
     private Integer del = 0;
+
+    private Integer inSprint = 0;
+
+    private String sprintId;
 }

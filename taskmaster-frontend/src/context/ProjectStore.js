@@ -153,5 +153,27 @@ export const useProjectStore = create((set, get) => ({
     }
   },
 
+  getProjectById: async (projectId) => {
+    try {
+      const res = await gateWayApi.get(`/getProjectById/${projectId}`);
+      const projectData = res.data?.data;
+
+      if (projectData) {
+        set({ selectedProject: projectData });
+        
+        const tasks = await get().getProjectTasks(projectId);
+        
+        return { project: projectData, tasks };
+      }
+      
+      return { project: null, tasks: [] };
+    } catch (err) {
+      set({
+        error: err.response?.data?.message || 'Something went wrong fetching the project by ID.',
+      });
+      return { project: null, tasks: [] };
+    }
+  },
+
   clearError: () => set({ error: null }),
 }));

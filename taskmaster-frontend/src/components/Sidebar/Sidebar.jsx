@@ -3,8 +3,10 @@ import { useAuthStore } from "../../context/AuthStore";
 import { Link } from "react-router-dom";
 import './Sidebar.scss';
 import {
-    LayoutDashboard, Folder, CheckSquare, GitBranch, Users,
-    LogOut, Menu, ChevronDown, Settings
+    LayoutDashboard, Folder, CheckSquare, Users,
+    LogOut, Menu, ChevronDown, Settings,
+
+    Rotate3D
 } from 'lucide-react';
 
 // Safe localStorage helpers — guard against SSR (no `window`) and
@@ -239,7 +241,7 @@ class Sidebar extends React.Component {
                                         { path: '/tasks/backlog', title: 'Backlog'}
                                     ],
                                 })}
-                                {this.renderSimpleItem({ path: '/branches', icon: <GitBranch size={20} />, label: 'Branches', pathname })}
+                                {this.renderSimpleItem({ path: '/sprint', icon: <Rotate3D size={20} />, label: 'Sprint', pathname })}
                             </ul>
                         </div>
 

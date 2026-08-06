@@ -26,7 +26,7 @@ public class ProjectCacheService {
         return project;
     }
 
-    @Cacheable(value = "projectById", key = "#id")
+    @Cacheable(value = "projectById", key = "#a0")
     public Project getProjectInCacheById (String id) {
         Project project = projectRepository.findById(id).orElse(null);
 
@@ -81,6 +81,9 @@ public class ProjectCacheService {
 
     @CacheEvict(value = "projectByName", key = "#name")
     public void evictUserViewProjectCache(String name) {}
+
+    @CacheEvict(value = "projectById", key = "#a0")
+    public void evictProjectInCacheById (String id) {}
 
     @CacheEvict(value = "userAssignedProjects", allEntries = true)
     public void evictUserProjectsCache () {}

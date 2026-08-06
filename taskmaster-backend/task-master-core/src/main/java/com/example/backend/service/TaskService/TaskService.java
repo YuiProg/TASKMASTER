@@ -89,18 +89,20 @@ public class TaskService implements TaskServiceInterface {
         task.setProject(project);
         Task newTask = taskRepository.save(task);
 
-        emailService.sendTemplatedEmail(
-                newTask.getAssignee().getEmail(),
-                "NEW_TASK_ASSIGNMENT",
-                Map.of(
-                        "assigneeName", newTask.getAssignee().getUsername(),
-                        "taskTitle", newTask.getTaskName() != null ? newTask.getTaskName() : "Untitled Task",
-                        "taskDescription", newTask.getDescription() != null ? newTask.getDescription() : "No description provided.",
-                        "taskStatus", newTask.getStatus() != null ? newTask.getStatus() : "N/A",
-                        "taskPriority", newTask.getPriority() != null ? newTask.getPriority() : "N/A",
-                        "taskUrl", "https://taskmasteropnexus.xyz/tasks/view/" + newTask.getId()
-                )
-        );
+        if (!taskRequest.getAssignee().isEmpty()) {
+            emailService.sendTemplatedEmail(
+                    newTask.getAssignee().getEmail(),
+                    "NEW_TASK_ASSIGNMENT",
+                    Map.of(
+                            "assigneeName", newTask.getAssignee().getUsername(),
+                            "taskTitle", newTask.getTaskName() != null ? newTask.getTaskName() : "Untitled Task",
+                            "taskDescription", newTask.getDescription() != null ? newTask.getDescription() : "No description provided.",
+                            "taskStatus", newTask.getStatus() != null ? newTask.getStatus() : "N/A",
+                            "taskPriority", newTask.getPriority() != null ? newTask.getPriority() : "N/A",
+                            "taskUrl", "https://taskmasteropnexus.xyz/tasks/view/" + newTask.getId()
+                    )
+            );
+        }
         taskCacheService.evictOpenTask();
         taskCacheService.evictTaskEntriesCache();
 
@@ -231,8 +233,8 @@ public class TaskService implements TaskServiceInterface {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponseModel.error("TASK NOT FOUND", "ERROR"));
         }
 
-        boolean isMember = task.getProject().getMembers()
-                .stream().anyMatch(member -> Objects.equals(member.getEmail(), taskRequest.getAssignee()));
+        boolean isMember = user != null && task.getProject().getMembers()
+                .stream().anyMatch(member -> Objects.equals(member.getEmail(), user.getEmail()));
 
 
         String userId = user != null ? user.getId() : null;

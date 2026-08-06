@@ -15,4 +15,6 @@ public class ProjectDTO {
     private List<UserDTO> members;
     private List<String> priorities;
     private Integer archived;
+    private Integer inSprint;
+    private String sprintId;
 }

@@ -106,7 +106,7 @@ class NewProject extends React.Component {
       return;
     }
 
-    if (!this.state.priorities || this.state.priorities.length < 5) {
+    if (!this.state.priorities || this.state.priorities.length < 4) {
       this.setState({ localError: "Please add at least 5 priorities to proceed." });
       return;
     }
@@ -155,7 +155,7 @@ class NewProject extends React.Component {
     const isSubmitDisabled =
       isCreating ||
       !projectName.trim() ||
-      priorities.length < 5 ||
+      priorities.length < 4 ||
       priorities.length > 9;
 
     return (

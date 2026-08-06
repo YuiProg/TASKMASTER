@@ -65,6 +65,9 @@ public class ProjectServiceImpl implements ProjectServiceInterface{
         }
 
         List<User> members = new ArrayList<>();
+
+        members.add(authUser);
+        project.setMembers(members);
         if (!projectRequest.getEmails().isEmpty()) {
             for (String email : projectRequest.getEmails()) {
                 User userData = userRepository.findByEmail(email).orElse(null);
@@ -99,7 +102,7 @@ public class ProjectServiceImpl implements ProjectServiceInterface{
 
     @Override
     public ResponseEntity<ApiResponseModel<Project>> getProjectById(String id) {
-        Project project = projectRepository.findById(id).orElse(null);
+        Project project = projectCacheService.getProjectInCacheById(id);
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("PROJECTS FOUND", "SUCCESS", project));
     }
 

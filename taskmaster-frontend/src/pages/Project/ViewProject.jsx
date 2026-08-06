@@ -6,7 +6,7 @@ import { Label, InputField } from '../../components/TRCOMPONENTS/TRInputField/In
 import { Table } from '../../components/TRCOMPONENTS/TRTable/TrTable';
 import Spinner from '../../components/Spinner/Spinner';
 import Button from '../../components/TRCOMPONENTS/TRButton/Button';
-import { Plus } from 'lucide-react';
+import { Plus, Zap, Eye } from 'lucide-react';
 import navigateTo from '../../lib/navigate';
 
 import './ViewProject.scss';
@@ -132,6 +132,20 @@ class ViewProject extends React.Component {
         navigateTo(`/tasks/new?project=${encodeURIComponent(projectName)}`);
     }
 
+    goToCreateSprint = () => {
+        const projectId = this.state.project?.id;
+        if (projectId) {
+            navigateTo(`/sprint/create/${projectId}`);
+        }
+    }
+
+    goToViewSprint = () => {
+        const sprintId = this.state.project?.sprintId;
+        if (sprintId) {
+            navigateTo(`/sprint/view/${sprintId}`);
+        }
+    }
+
     render () {
 
         if (!this.state.project) {
@@ -143,7 +157,8 @@ class ViewProject extends React.Component {
         }
 
         const memberCount = this.state.project.members ? this.state.project.members.length : 0;
-        const { newMemberEmail, isAddingMember, addMemberError } = this.state;
+        const { newMemberEmail, isAddingMember, addMemberError, project } = this.state;
+        const hasActiveSprint = project?.inSprint === 1 && Boolean(project?.sprintId);
 
         return (
             <PanelPage titlePage={this.state.project.projectName.toUpperCase()} isLoading={false} subTitle={`Project ID: ${this.state.project.id}`}>
@@ -151,7 +166,29 @@ class ViewProject extends React.Component {
                     <div className="view-project__action-row">
                         <Label label="Action"/>
                         <div className="view-project__action-spacer"/>
-                        <Button disabled={this.state.project?.archived === 1} className="view-project__action-btn" text={<span><Plus size={10}/> CREATE TASK</span>} onClick={this.goToCreateTask}/>
+                        
+                        {/* Show VIEW SPRINT if active sprint exists, otherwise show CREATE SPRINT */}
+                        {hasActiveSprint ? (
+                            <Button 
+                                className="view-project__action-btn" 
+                                text={<span><Eye size={12}/> VIEW SPRINT</span>} 
+                                onClick={this.goToViewSprint}
+                            />
+                        ) : (
+                            <Button 
+                                disabled={this.state.project?.archived === 1} 
+                                className="view-project__action-btn" 
+                                text={<span><Zap size={12}/> CREATE SPRINT</span>} 
+                                onClick={this.goToCreateSprint}
+                            />
+                        )}
+
+                        <Button 
+                            disabled={this.state.project?.archived === 1} 
+                            className="view-project__action-btn" 
+                            text={<span><Plus size={10}/> CREATE TASK</span>} 
+                            onClick={this.goToCreateTask}
+                        />
                     </div>
                 </PanelContainer>
                 <PanelContainer title="Project Details">
