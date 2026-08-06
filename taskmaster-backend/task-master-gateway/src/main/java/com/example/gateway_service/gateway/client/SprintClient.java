@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.List;
 
 //@FeignClient(name = "backend-sprint-client", url = "http://localhost:8080/api/v1", configuration = FeignCookieConfig.class)
-@FeignClient(name = "backend-project-client", url = "${services.backend.url}", configuration = FeignCookieConfig.class)
+@FeignClient(name = "backend-sprint-client", url = "${services.backend.url}", configuration = FeignCookieConfig.class)
 public interface SprintClient {
 
     @PostMapping("/createSprint")
