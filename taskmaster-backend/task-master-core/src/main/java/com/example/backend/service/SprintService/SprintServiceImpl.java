@@ -13,10 +13,8 @@ import com.example.backend.request.SprintRequest;
 import com.example.backend.service.EmailService.EmailService;
 import com.example.backend.service.ProjectService.ProjectCacheService;
 import com.example.backend.service.TaskService.TaskCacheService;
-import io.lettuce.core.RedisException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -40,7 +38,7 @@ public class SprintServiceImpl implements SprintServiceInterface {
 
     @Override
     public ResponseEntity<ApiResponseModel<Sprint>> createSprint(SprintRequest sprintRequest) {
-        Project project = projectRepository.findById(sprintRequest.getProjectId()).orElse(null);
+        Project project = projectCacheService.getProjectInCacheById(sprintRequest.getProjectId());
         User user = authenticatedUser.getAuthenticatedUser();
         List<Task> tasksInProject = taskCacheService.getProjectTaskCached(project.getId());
         Sprint sprint;
@@ -70,8 +68,8 @@ public class SprintServiceImpl implements SprintServiceInterface {
         sprint.setUpdatedBy(user.getUsername());
 
         List<String> taskIds = sprintRequest.getTaskIds();
-
         List<Task> tasks = new ArrayList<>();
+
         for (String ids : taskIds) {
             try {
                 Task task = taskCacheService.getTaskByIdCached(ids);
@@ -98,20 +96,18 @@ public class SprintServiceImpl implements SprintServiceInterface {
         if (sprintRequest.getDeadline() != null) {
             sprint.setDeadline(sprintRequest.getDeadline());
         }
-        projectCacheService.evictUserProjectsCache();
-        projectCacheService.evictUserCreatedProjects(user.getId());
-        Sprint newSprint = sprintRepository.save(sprint);
-        //send email to project members
 
-        for (User users : project.getMembers()) {
+        Sprint newSprint = sprintRepository.save(sprint);
+
+        for (User member : project.getMembers()) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
                     .withZone(ZoneId.of("UTC"));
             emailService.sendTemplatedEmail(
-                    users.getEmail(),
+                    member.getEmail(),
                     "SPRINT_CREATED_EMAIL",
                     Map.of(
                             "sprintName", newSprint.getSprintName(),
-                            "memberName", users.getUsername(),
+                            "memberName", member.getUsername(),
                             "projectName", project.getProjectName(),
                             "initiatedBy", newSprint.getInitiatedBy().getUsername(),
                             "deadline", formatter.format(Instant.ofEpochMilli(newSprint.getDeadline())),
@@ -119,7 +115,14 @@ public class SprintServiceImpl implements SprintServiceInterface {
                     )
             );
         }
+
         projectRepository.projectIsInSprint(id, newSprint.getId());
+
+        projectCacheService.evictUserViewProjectCache(project.getProjectName());
+        projectCacheService.evictProjectInCacheById(id);
+        projectCacheService.evictUserProjectsCache();
+        projectCacheService.evictUserCreatedProjects(user.getId());
+
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponseModel.success("SPRINT CREATED", "SUCCESS", newSprint));
     }
