@@ -97,6 +97,8 @@ public class SprintServiceImpl implements SprintServiceInterface {
         if (sprintRequest.getDeadline() != null) {
             sprint.setDeadline(sprintRequest.getDeadline());
         }
+        projectCacheService.evictUserProjectsCache();
+        projectCacheService.evictUserCreatedProjects(user.getId());
         Sprint newSprint = sprintRepository.save(sprint);
         //send email to project members
 
