@@ -120,6 +120,7 @@ public class SprintServiceImpl implements SprintServiceInterface {
         }
 
         projectCacheService.evictUserViewProjectCache(project.getId());
+        projectCacheService.evictProjectInCacheById(project.getId());
         projectRepository.projectIsInSprint(project.getId(), newSprint.getId());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponseModel.success("SPRINT CREATED", "SUCCESS", newSprint));
