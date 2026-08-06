@@ -44,7 +44,11 @@ public class SprintServiceImpl implements SprintServiceInterface {
         User user = authenticatedUser.getAuthenticatedUser();
         List<Task> tasksInProject = taskCacheService.getProjectTaskCached(project.getId());
         Sprint sprint;
-
+        String id = project.getId();
+        projectCacheService.evictUserViewProjectCache(id);
+        projectCacheService.evictProjectInCacheById(id);
+        projectCacheService.evictUserProjectsCache();
+        projectCacheService.evictUserCreatedProjects(user.getId());
         if (!Objects.equals(project.getCreatedBy().getId(), user.getId())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(ApiResponseModel.error("YOU ARE NOT THE OWNER OF THIS PROJECT", "ERROR"));
@@ -118,10 +122,7 @@ public class SprintServiceImpl implements SprintServiceInterface {
                     )
             );
         }
-
-        projectCacheService.evictUserViewProjectCache(project.getId());
-        projectCacheService.evictProjectInCacheById(project.getId());
-        projectRepository.projectIsInSprint(project.getId(), newSprint.getId());
+        projectRepository.projectIsInSprint(id, newSprint.getId());
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponseModel.success("SPRINT CREATED", "SUCCESS", newSprint));
     }
