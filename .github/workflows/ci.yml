@@ -8,7 +8,7 @@ on:
 
 jobs:
   check-frontend:
-    name: Check Frontend Version & Build
+    name: Frontend (Version Check & Docker Build)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -19,7 +19,7 @@ jobs:
       - name: Check if Frontend Version Is Incremented
         shell: bash
         run: |
-          FRONTEND_PATH="taskmaster-frontend" # Update path if your frontend directory name differs
+          FRONTEND_PATH="taskmaster-frontend" # Change if your frontend folder name differs
 
           if [ "${{ github.event_name }}" == "pull_request" ]; then
             TARGET_BRANCH="${{ github.base_ref }}"
@@ -29,10 +29,11 @@ jobs:
             COMPARE_REF="HEAD~1"
           fi
           
+          # Check if any files changed in the frontend directory
           CHANGED_FILES=$(git diff --name-only "$COMPARE_REF" HEAD -- "$FRONTEND_PATH")
           
           if [ -z "$CHANGED_FILES" ]; then
-            echo "No changes detected in $FRONTEND_PATH. Skipping version check."
+            echo "No changes detected in $FRONTEND_PATH. Skipping version check and build."
             exit 0
           fi
           
@@ -48,6 +49,18 @@ jobs:
             echo "::error::Code changes were made in $FRONTEND_PATH, but its package.json version was not incremented!"
             exit 1
           fi
+
+          echo "VERSION_CHANGED=true" >> $GITHUB_ENV
+
+      - name: Set up Docker Buildx
+        if: env.VERSION_CHANGED == 'true'
+        uses: docker/setup-buildx-action@v3
+
+      - name: Test Frontend Production Docker Build
+        if: env.VERSION_CHANGED == 'true'
+        working-directory: taskmaster-frontend # Matches your compose context location
+        run: |
+          docker compose build taskmaster-frontend
 
   build-and-test:
     name: Build & Test (${{ matrix.name }})
@@ -196,3 +209,10 @@ jobs:
             exit 1
           fi
           curl -sS -X POST "$URL"
+
+      # Optional: Add step here if you have a Render Deploy Hook for Frontend
+      # - name: Deploy Frontend Service
+      #   env:
+      #     URL: ${{ secrets.RENDER_DEPLOY_HOOK_FRONTEND }}
+      #   run: |
+      #     curl -sS -X POST "$URL"
