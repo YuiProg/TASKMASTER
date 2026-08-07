@@ -1,5 +1,5 @@
-// ViewSprint.jsx
 import { useEffect, useState } from "react";
+import { Helmet } from "react-helmet-async";
 import { useSprintStore } from "../../context/SprintStore.js";
 import { PanelPage, PanelContainer } from "../../components/TRCOMPONENTS/TRPanelPage/TRPanelPage";
 import Spinner from "../../components/Spinner/Spinner.jsx";
@@ -46,6 +46,10 @@ const ViewSprint = () => {
       titlePage="Sprints Overview"
       subTitle={`${sprints?.length || 0} Active Sprints`}
     >
+      <Helmet>
+        <title>Sprints | TaskMaster</title>
+      </Helmet>
+
       <PanelContainer>
         {isLoading ? (
           <div className="sprints-loading-container">
