@@ -1,0 +1,15 @@
+# Allow search engines to crawl public entry points
+User-agent: *
+Allow: /$
+Allow: /register
+
+# Prevent crawlers from indexing app dashboard and internal management routes
+Disallow: /dashboard
+Disallow: /projects
+Disallow: /projects/
+Disallow: /tasks/
+Disallow: /sprint
+Disallow: /sprint/
+
+# Link your sitemap
+Sitemap: https://taskmasteropnexus.xyz/sitemap.xml
