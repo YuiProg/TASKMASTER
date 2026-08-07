@@ -241,7 +241,7 @@ class Sidebar extends React.Component {
                                         { path: '/tasks/backlog', title: 'Backlog'}
                                     ],
                                 })}
-                                {this.renderSimpleItem({ path: '/sprint', icon: <Rotate3D size={20} />, label: 'Sprint (Beta)', pathname })}
+                                {this.renderSimpleItem({ path: '/sprint', icon: <Rotate3D size={20} />, label: 'Sprint', pathname })}
                             </ul>
                         </div>
 
