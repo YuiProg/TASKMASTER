@@ -154,7 +154,7 @@ public class UserProcessServiceImpl implements UserProcessService{
 
             if (user == null) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(ApiResponseModel.error("User not found with the provided email", StringCodes.ERROR.getPath()));
+                        .body(ApiResponseModel.error("Login failed.", StringCodes.ERROR.getPath()));
             }
 
             if (!passwordEncoder.matches(userRequest.getPassword(), user.getPassword())) {
