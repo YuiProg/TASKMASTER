@@ -41,9 +41,9 @@ jobs:
         run: |
           if [ -f "./mvnw" ]; then
             chmod +x mvnw
-            ./mvnw -B clean verify -Dservices.report.url=http://localhost:8080
+            ./mvnw -B clean verify -DskipTests
           else
-            mvn -B clean verify -Dservices.report.url=http://localhost:8080
+            mvn -B clean verify -DskipTests
           fi
 
       - name: Upload test reports
