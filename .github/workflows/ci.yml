@@ -71,46 +71,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy Core Service
-        run: |
-          if [ -n "${{ secrets.RENDER_DEPLOY_HOOK_CORE }}" ]; then
-            curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_CORE }}"
-          else
-            echo "RENDER_DEPLOY_HOOK_CORE secret is missing!"
-            exit 1
-          fi
+        env:
+          URL: ${{ secrets.RENDER_DEPLOY_HOOK_CORE }}
+        run: curl -sS -X POST "$URL"
 
       - name: Deploy Comment Service
-        run: |
-          if [ -n "${{ secrets.RENDER_DEPLOY_HOOK_COMMENT }}" ]; then
-            curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_COMMENT }}"
-          else
-            echo "RENDER_DEPLOY_HOOK_COMMENT secret is missing!"
-            exit 1
-          fi
+        env:
+          URL: ${{ secrets.RENDER_DEPLOY_HOOK_COMMENT }}
+        run: curl -sS -X POST "$URL"
 
       - name: Deploy Reports Service
-        run: |
-          if [ -n "${{ secrets.RENDER_DEPLOY_HOOK_REPORTS }}" ]; then
-            curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_REPORTS }}"
-          else
-            echo "RENDER_DEPLOY_HOOK_REPORTS secret is missing!"
-            exit 1
-          fi
+        env:
+          URL: ${{ secrets.RENDER_DEPLOY_HOOK_REPORTS }}
+        run: curl -sS -X POST "$URL"
 
       - name: Deploy Gateway Service
-        run: |
-          if [ -n "${{ secrets.RENDER_DEPLOY_HOOK_GATEWAY }}" ]; then
-            curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_GATEWAY }}"
-          else
-            echo "RENDER_DEPLOY_HOOK_GATEWAY secret is missing!"
-            exit 1
-          fi
+        env:
+          URL: ${{ secrets.RENDER_DEPLOY_HOOK_GATEWAY }}
+        run: curl -sS -X POST "$URL"
 
       - name: Deploy Scheduler Service
-        run: |
-          if [ -n "${{ secrets.RENDER_DEPLOY_HOOK_SCHEDULER }}" ]; then
-            curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_SCHEDULER }}"
-          else
-            echo "RENDER_DEPLOY_HOOK_SCHEDULER secret is missing!"
-            exit 1
-          fi
+        env:
+          URL: ${{ secrets.RENDER_DEPLOY_HOOK_SCHEDULER }}
+        run: curl -sS -X POST "$URL"
