@@ -53,3 +53,24 @@ jobs:
           name: surefire-reports-${{ matrix.name }}
           path: ${{ matrix.path }}/target/surefire-reports/*.xml
           if-no-files-found: ignore
+
+  deploy:
+    name: Trigger Render Deployments
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy Core Service
+        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_CORE }}"
+
+      - name: Deploy Comment Service
+        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_COMMENT }}"
+
+      - name: Deploy Reports Service
+        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_REPORTS }}"
+
+      - name: Deploy Gateway Service
+        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_GATEWAY }}"
+
+      - name: Deploy Scheduler Service
+        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_SCHEDULER }}"
