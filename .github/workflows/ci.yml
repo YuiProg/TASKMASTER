@@ -52,9 +52,9 @@ jobs:
           scan-type: 'fs'
           scan-ref: '${{ matrix.path }}'
           format: 'table'
-          exit-code: '0'
+          exit-code: '1' # Fails the step if matching vulnerabilities are found
           ignore-unfixed: true
-          severity: 'CRITICAL,HIGH'
+          severity: 'CRITICAL' # Only fail on critical severity issues
 
       - name: Upload test reports
         if: always()
@@ -73,24 +73,49 @@ jobs:
       - name: Deploy Core Service
         env:
           URL: ${{ secrets.RENDER_DEPLOY_HOOK_CORE }}
-        run: curl -sS -X POST "$URL"
+        run: |
+          if [ -z "$URL" ]; then
+            echo "::error::RENDER_DEPLOY_HOOK_CORE is empty!"
+            exit 1
+          fi
+          curl -sS -X POST "$URL"
 
       - name: Deploy Comment Service
         env:
           URL: ${{ secrets.RENDER_DEPLOY_HOOK_COMMENT }}
-        run: curl -sS -X POST "$URL"
+        run: |
+          if [ -z "$URL" ]; then
+            echo "::error::RENDER_DEPLOY_HOOK_COMMENT is empty!"
+            exit 1
+          fi
+          curl -sS -X POST "$URL"
 
       - name: Deploy Reports Service
         env:
           URL: ${{ secrets.RENDER_DEPLOY_HOOK_REPORTS }}
-        run: curl -sS -X POST "$URL"
+        run: |
+          if [ -z "$URL" ]; then
+            echo "::error::RENDER_DEPLOY_HOOK_REPORTS is empty!"
+            exit 1
+          fi
+          curl -sS -X POST "$URL"
 
       - name: Deploy Gateway Service
         env:
           URL: ${{ secrets.RENDER_DEPLOY_HOOK_GATEWAY }}
-        run: curl -sS -X POST "$URL"
+        run: |
+          if [ -z "$URL" ]; then
+            echo "::error::RENDER_DEPLOY_HOOK_GATEWAY is empty!"
+            exit 1
+          fi
+          curl -sS -X POST "$URL"
 
       - name: Deploy Scheduler Service
         env:
           URL: ${{ secrets.RENDER_DEPLOY_HOOK_SCHEDULER }}
-        run: curl -sS -X POST "$URL"
+        run: |
+          if [ -z "$URL" ]; then
+            echo "::error::RENDER_DEPLOY_HOOK_SCHEDULER is empty!"
+            exit 1
+          fi
+          curl -sS -X POST "$URL"
