@@ -5,6 +5,7 @@ import { InputForm, TRInputFormPanel } from '../../components/TRCOMPONENTS/TRInp
 import Button from '../../components/TRCOMPONENTS/TRButton/Button';
 import { useAuthStore } from '../../context/AuthStore';
 import { InputField } from '../../components/TRCOMPONENTS/TRInputField/InputFIeld';
+import packageJson from '../../../package.json'; // Adjust relative path if package.json is in a different parent folder
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -14,6 +15,8 @@ function Login() {
   const login = useAuthStore((state) => state.login);
   const isLoading = useAuthStore((state) => state.isLoading);
   const error = useAuthStore((state) => state.error);
+
+  const appVersion = packageJson.version || '0.0.0';
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -41,7 +44,6 @@ function Login() {
           </div>
 
           <div className="tr-login__hero-text">
-            <span className="tr-login__badge">⚡ Workspace v2.0</span>
             <h2>Master your workflow with effortless precision.</h2>
             <p>Organize, track, and complete your team&apos;s tasks in one central workspace built for modern productivity.</p>
           </div>
@@ -113,6 +115,20 @@ function Login() {
 
           <p className="tr-login__signup-hint">
             Don&apos;t have an account? <Link to="/register">Sign up</Link>
+          </p>
+
+          {/* Version tag placed below sign-up hint with dark text styling */}
+          <p 
+            className="tr-login__version-tag" 
+            style={{ 
+              color: '#64748b', 
+              fontSize: '12px', 
+              textAlign: 'center', 
+              marginTop: '12px',
+              fontWeight: 500
+            }}
+          >
+            v{appVersion}
           </p>
         </div>
       </div>

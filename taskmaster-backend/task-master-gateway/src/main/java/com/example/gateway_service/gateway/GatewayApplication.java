@@ -11,7 +11,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 		CommentClient.class,
 		TaskClient.class,
 		ProjectClient.class,
-		ReportClient.class
+		ReportClient.class,
+		SprintClient.class
 })
 public class GatewayApplication {
 

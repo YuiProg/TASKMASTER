@@ -4,11 +4,12 @@ import { InputField } from "../../components/TRCOMPONENTS/TRInputField/InputFIel
 import Dropdown from "../../components/TRCOMPONENTS/TRDropDown/Dropdown";
 import Button from "../../components/TRCOMPONENTS/TRButton/Button";
 import { useTaskStore } from "../../context/TaskStore.js";
+import { useProjectStore } from "../../context/ProjectStore.js";
 import navigateTo from "../../lib/navigate";
 import "./NewTask.scss";
 
-// Dropdown options
-const STATUS_OPTIONS = ["OPEN", "IN PROGRESS", "QA CHECK", "DEPLOYED", "CLOSED"];
+// Hardcoded fallbacks
+const DEFAULT_STATUS_OPTIONS = ["OPEN", "IN PROGRESS", "QA CHECK", "DEPLOYED", "CLOSED"];
 const PRIORITY_OPTIONS = ["LOW", "MEDIUM", "HIGH", "CRITICAL"];
 
 class NewTask extends React.Component {
@@ -20,7 +21,8 @@ class NewTask extends React.Component {
       description: "",
       project: "",
       status: "OPEN",
-      priority: "LOW", // Default priority
+      statusOptions: DEFAULT_STATUS_OPTIONS,
+      priority: "LOW",
       cameFromProject: false,
       isCreating: useTaskStore.getState().isCreating,
       error: useTaskStore.getState().error,
@@ -28,15 +30,17 @@ class NewTask extends React.Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     this.unsubscribeTasks = useTaskStore.subscribe((state) => {
       this.setState({ isCreating: state.isCreating, error: state.error });
     });
 
     const params = new URLSearchParams(window.location.search);
     const projectFromQuery = params.get("project");
+
     if (projectFromQuery) {
       this.setState({ project: projectFromQuery, cameFromProject: true });
+      await this.fetchProjectStatuses(projectFromQuery);
     }
   }
 
@@ -44,9 +48,52 @@ class NewTask extends React.Component {
     if (this.unsubscribeTasks) this.unsubscribeTasks();
   }
 
+  fetchProjectStatuses = async (projectName) => {
+    try {
+      const getProjectByName = useProjectStore.getState().getProjectByName;
+      if (!getProjectByName) return;
+
+      const res = await getProjectByName(projectName);
+      const projectObj = res?.data || res?.project || res;
+      
+      // Status options sourced from project object (priorities or statuses property)
+      const projectStatuses = projectObj?.priorities || projectObj?.statuses;
+
+      if (Array.isArray(projectStatuses) && projectStatuses.length > 0) {
+        this.setState({
+          statusOptions: projectStatuses,
+          status: projectStatuses[0], // Default selection to the first custom status/priority
+        });
+      } else {
+        this.setState({
+          statusOptions: DEFAULT_STATUS_OPTIONS,
+          status: "OPEN",
+        });
+      }
+    } catch (err) {
+      console.log(err);
+      this.setState({
+        statusOptions: DEFAULT_STATUS_OPTIONS,
+        status: "OPEN",
+      });
+    }
+  };
+
+  handleProjectChange = async (value) => {
+    this.setState({ project: value });
+    if (value.trim()) {
+      await this.fetchProjectStatuses(value.trim());
+    } else {
+      this.setState({
+        statusOptions: DEFAULT_STATUS_OPTIONS,
+        status: "OPEN",
+      });
+    }
+  };
+
   goBack = () => {
     if (this.state.cameFromProject) {
-        navigateTo(`/projects/${encodeURIComponent(this.state.project.trim())}`);
+      navigateTo(`/projects/${encodeURIComponent(this.state.project.trim())}`);
     } else {
       navigateTo("/tasks/my-tasks");
     }
@@ -67,7 +114,7 @@ class NewTask extends React.Component {
       description: this.state.description.trim(),
       project: this.state.project.trim(),
       status: this.state.status,
-      priority: this.state.priority, // Added priority to payload
+      priority: this.state.priority,
     };
 
     const newTask = await useTaskStore.getState().createTask(payload);
@@ -87,6 +134,7 @@ class NewTask extends React.Component {
       description,
       project,
       status,
+      statusOptions,
       priority,
       isCreating,
       error,
@@ -132,22 +180,23 @@ class NewTask extends React.Component {
                 placeholder="Project name"
                 text
                 value={project}
-                onChange={(value) => this.setState({ project: value })}
+                onChange={this.handleProjectChange}
               />
             </div>
 
+            {/* Dynamic Status Dropdown based on Project Object */}
             <div className="new-task-form__field">
               <label className="new-task-form__label">Status</label>
               <div className="new-task-form__status-dropdown">
                 <Dropdown
-                  options={STATUS_OPTIONS}
+                  options={statusOptions}
                   value={status}
                   onChange={(value) => this.setState({ status: value })}
                 />
               </div>
             </div>
 
-            {/* Priority Field */}
+            {/* Standard Priority Dropdown */}
             <div className="new-task-form__field">
               <label className="new-task-form__label">Priority</label>
               <div className="new-task-form__status-dropdown">

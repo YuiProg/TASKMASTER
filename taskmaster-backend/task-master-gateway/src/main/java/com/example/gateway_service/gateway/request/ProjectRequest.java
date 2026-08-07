@@ -18,5 +18,6 @@ public class ProjectRequest {
     public String status;
     public String description;
     public List<String> emails;
+    public List<String> priorities;
     public Boolean isArchive;
 }

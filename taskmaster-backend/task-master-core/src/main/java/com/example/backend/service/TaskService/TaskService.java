@@ -13,6 +13,7 @@ import com.example.backend.repository.TaskRepository;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.request.TaskRequest;
 import com.example.backend.service.EmailService.EmailService;
+import com.example.backend.service.SprintService.SprintCacheService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,7 @@ public class TaskService implements TaskServiceInterface {
     private final ProjectRepository projectRepository;
     private final ReportClient reportClient;
     private final EmailService emailService;
+    private final SprintCacheService sprintCacheService;
 
     // Inject internal cache service
     private final TaskCacheService taskCacheService;
@@ -89,18 +91,20 @@ public class TaskService implements TaskServiceInterface {
         task.setProject(project);
         Task newTask = taskRepository.save(task);
 
-        emailService.sendTemplatedEmail(
-                newTask.getAssignee().getEmail(),
-                "NEW_TASK_ASSIGNMENT",
-                Map.of(
-                        "assigneeName", newTask.getAssignee().getUsername(),
-                        "taskTitle", newTask.getTaskName() != null ? newTask.getTaskName() : "Untitled Task",
-                        "taskDescription", newTask.getDescription() != null ? newTask.getDescription() : "No description provided.",
-                        "taskStatus", newTask.getStatus() != null ? newTask.getStatus() : "N/A",
-                        "taskPriority", newTask.getPriority() != null ? newTask.getPriority() : "N/A",
-                        "taskUrl", "https://taskmasteropnexus.xyz/tasks/view/" + newTask.getId()
-                )
-        );
+        if (!taskRequest.getAssignee().isEmpty()) {
+            emailService.sendTemplatedEmail(
+                    newTask.getAssignee().getEmail(),
+                    "NEW_TASK_ASSIGNMENT",
+                    Map.of(
+                            "assigneeName", newTask.getAssignee().getUsername(),
+                            "taskTitle", newTask.getTaskName() != null ? newTask.getTaskName() : "Untitled Task",
+                            "taskDescription", newTask.getDescription() != null ? newTask.getDescription() : "No description provided.",
+                            "taskStatus", newTask.getStatus() != null ? newTask.getStatus() : "N/A",
+                            "taskPriority", newTask.getPriority() != null ? newTask.getPriority() : "N/A",
+                            "taskUrl", "https://taskmasteropnexus.xyz/tasks/view/" + newTask.getId()
+                    )
+            );
+        }
         taskCacheService.evictOpenTask();
         taskCacheService.evictTaskEntriesCache();
 
@@ -209,6 +213,7 @@ public class TaskService implements TaskServiceInterface {
 
         taskCacheService.evictTaskEntriesCache();
         taskCacheService.evictOpenTask();
+        sprintCacheService.evictSprintCache();
 
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.update("TASK UPDATED", "SUCCESS", newTask, oldTask));
     }
@@ -231,8 +236,8 @@ public class TaskService implements TaskServiceInterface {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponseModel.error("TASK NOT FOUND", "ERROR"));
         }
 
-        boolean isMember = task.getProject().getMembers()
-                .stream().anyMatch(member -> Objects.equals(member.getEmail(), taskRequest.getAssignee()));
+        boolean isMember = user != null && task.getProject().getMembers()
+                .stream().anyMatch(member -> Objects.equals(member.getEmail(), user.getEmail()));
 
 
         String userId = user != null ? user.getId() : null;
@@ -280,19 +285,21 @@ public class TaskService implements TaskServiceInterface {
         // Evict from Redis cache
         taskCacheService.evictOpenTask();
         taskCacheService.evictTaskEntriesCache();
-
-        emailService.sendTemplatedEmail(
-                task.getAssignee().getEmail(),
-                "TASK_UPDATED_EMAIL",
-                Map.of(
-                        "assigneeName", user.getUsername(),
-                        "description", "You updated task '" + task.getTaskName() + "'",
-                        "taskName", task.getTaskName(),
-                        "before", oldTask.getStatus(),
-                        "after", task.getStatus(),
-                        "taskUrl", "https://taskmasteropnexus.xyz/tasks/view/" + newTask.getId()
-                )
-        );
+        sprintCacheService.evictSprintCache();
+        if (task.getAssignee() != null) {
+            emailService.sendTemplatedEmail(
+                    task.getAssignee().getEmail(),
+                    "TASK_UPDATED_EMAIL",
+                    Map.of(
+                            "assigneeName", user.getUsername(),
+                            "description", "You updated task '" + task.getTaskName() + "'",
+                            "taskName", task.getTaskName(),
+                            "before", oldTask.getStatus(),
+                            "after", task.getStatus(),
+                            "taskUrl", "https://taskmasteropnexus.xyz/tasks/view/" + newTask.getId()
+                    )
+            );
+        }
         //send sa creator
         emailService.sendTemplatedEmail(
                 task.getCreatedBy().getEmail(),

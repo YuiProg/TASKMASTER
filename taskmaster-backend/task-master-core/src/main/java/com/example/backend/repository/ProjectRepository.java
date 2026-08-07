@@ -1,8 +1,10 @@
 package com.example.backend.repository;
 
 import com.example.backend.model.Project;
-import com.example.backend.model.User;
+import com.example.backend.model.Sprint;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -20,9 +22,14 @@ public interface ProjectRepository extends JpaRepository<Project, String> {
             "(SELECT m.id FROM p.members m) AND p.archived = 0 ORDER BY p.createdAt DESC")
     List<Project> checkIfUserIsInAProject (@Param("userId")String userId);
 
-    @Query("SELECT p FROM Project p WHERE p.createdBy.id = :userId AND p.archived = 0")
+    @Query("SELECT p FROM Project p WHERE p.createdBy.id = :userId AND p.archived = 0 ORDER BY p.createdAt DESC")
     List<Project> getUserCreatedProjects (String userId);
 
-    @Query("SELECT p FROM Project p WHERE p.archived = 1 AND p.del = 0")
+    @Query("SELECT p FROM Project p WHERE p.archived = 1 AND p.del = 0 ORDER BY p.createdAt DESC")
     List<Project> getArchivedProjects ();
+
+    @Query("UPDATE Project p SET p.inSprint = 1, p.sprintId = :sprintId WHERE p.id = :id")
+    @Modifying
+    @Transactional
+    void projectIsInSprint (String id, String sprintId);
 }

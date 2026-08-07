@@ -26,10 +26,10 @@ export const useProjectStore = create((set, get) => ({
     }
   },
 
-  createProject: async (projectName, description, emails = []) => {
+  createProject: async (projectName, description, emails = [], priorities) => {
     set({ isCreating: true, error: null });
     try {
-      const res = await gateWayApi.post('/addProject', { projectName, description, emails });
+      const res = await gateWayApi.post('/addProject', { projectName, description, emails, priorities });
 
       if (String(res.data.status).toUpperCase() === 'SUCCESS') {
         set({
@@ -150,6 +150,28 @@ export const useProjectStore = create((set, get) => ({
       });
       set({ userProjects: [], isLoading: false });
       return false;
+    }
+  },
+
+  getProjectById: async (projectId) => {
+    try {
+      const res = await gateWayApi.get(`/getProjectById/${projectId}`);
+      const projectData = res.data?.data;
+
+      if (projectData) {
+        set({ selectedProject: projectData });
+        
+        const tasks = await get().getProjectTasks(projectId);
+        
+        return { project: projectData, tasks };
+      }
+      
+      return { project: null, tasks: [] };
+    } catch (err) {
+      set({
+        error: err.response?.data?.message || 'Something went wrong fetching the project by ID.',
+      });
+      return { project: null, tasks: [] };
     }
   },
 

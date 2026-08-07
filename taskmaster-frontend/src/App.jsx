@@ -12,6 +12,9 @@ import NewTask from "./pages/Tasks/NewTask";
 import OpenTasks from "./pages/Tasks/OpenTasks";
 import UserProjects from "./pages/Project/UserProjects";
 import Archive from "./pages/Project/Archive";
+import CreateSprint from "./pages/Sprint/CreateSprint";
+import ViewSprint from "./pages/Sprint/ViewSprint";
+import SprintDetails from "./pages/Sprint/SprintDetails";
 
 function App() {
   return (
@@ -67,6 +70,21 @@ function App() {
         <Route path="/projects/archived" element={
           <Sidebar>
             <Archive/>
+          </Sidebar>
+        }/>
+        <Route path="/sprint/create/:projectId" element={
+          <Sidebar>
+            <CreateSprint/>
+          </Sidebar>
+        }/>
+        <Route path="/sprint" element={
+          <Sidebar>
+            <ViewSprint/>
+          </Sidebar>
+        }/>
+        <Route path="/sprint/view/:id" element={
+          <Sidebar>
+            <SprintDetails/>
           </Sidebar>
         }/>
       </Routes>

@@ -6,6 +6,7 @@ import { InputForm, TRInputFormPanel } from '../../components/TRCOMPONENTS/TRInp
 import Button from '../../components/TRCOMPONENTS/TRButton/Button';
 import { InputField } from '../../components/TRCOMPONENTS/TRInputField/InputFIeld';
 import { useAuthStore } from '../../context/AuthStore';
+import packageJson from '../../../package.json'; // Adjust relative path if package.json is in a different parent folder
 
 function Register() {
   const [username, setUsername] = useState('');
@@ -14,6 +15,7 @@ function Register() {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   const { register, isLoading, error, clearError } = useAuthStore();
+  const appVersion = packageJson.version || '0.0.0';
 
   useEffect(() => {
     clearError();
@@ -125,6 +127,20 @@ function Register() {
 
           <p className="tr-register__signup-hint">
             Already have an account? <Link to="/" onClick={clearError}>Log in</Link>
+          </p>
+
+          {/* Dynamic Version Tag */}
+          <p 
+            className="tr-register__version-tag" 
+            style={{ 
+              color: '#64748b', 
+              fontSize: '12px', 
+              textAlign: 'center', 
+              marginTop: '12px',
+              fontWeight: 500
+            }}
+          >
+            v{appVersion}
           </p>
         </div>
       </div>

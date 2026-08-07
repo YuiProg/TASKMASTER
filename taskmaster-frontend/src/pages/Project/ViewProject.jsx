@@ -6,7 +6,7 @@ import { Label, InputField } from '../../components/TRCOMPONENTS/TRInputField/In
 import { Table } from '../../components/TRCOMPONENTS/TRTable/TrTable';
 import Spinner from '../../components/Spinner/Spinner';
 import Button from '../../components/TRCOMPONENTS/TRButton/Button';
-import { Plus } from 'lucide-react';
+import { Plus, Zap, Eye } from 'lucide-react';
 import navigateTo from '../../lib/navigate';
 
 import './ViewProject.scss';
@@ -33,13 +33,16 @@ class ViewProject extends React.Component {
         const currentPath = window.location.pathname;
         const newPath = currentPath.replace("/projects/", "");
         
-        // Fetch the wrapper object containing { project, tasks } directly from the store
         const data = await getProjectByName(newPath);
         
         if (data) {
+            // Extract the project object correctly from response structure
+            const projectObj = data.project || data.data || data;
+            const tasksList = data.tasks || projectObj?.tasks || [];
+
             this.setState({ 
-                project: data.project, 
-                tasks: data.tasks 
+                project: projectObj, 
+                tasks: tasksList 
             });
         }
     }
@@ -95,7 +98,6 @@ class ViewProject extends React.Component {
         }
     };
 
-
     viewTasks = () => {
         const tasks = this.state.tasks;
         const data = tasks.map(t => {
@@ -116,7 +118,6 @@ class ViewProject extends React.Component {
             return row;
         });
 
-
         return (
             <Table data={data} limit={6} onRowSelect={e => this.navigateToTask(e.id)}/>
         );
@@ -131,6 +132,20 @@ class ViewProject extends React.Component {
         navigateTo(`/tasks/new?project=${encodeURIComponent(projectName)}`);
     }
 
+    goToCreateSprint = () => {
+        const projectId = this.state.project?.id;
+        if (projectId) {
+            navigateTo(`/sprint/create/${projectId}`);
+        }
+    }
+
+    goToViewSprint = () => {
+        const sprintId = this.state.project?.sprintId;
+        if (sprintId) {
+            navigateTo(`/sprint/view/${sprintId}`);
+        }
+    }
+
     render () {
 
         if (!this.state.project) {
@@ -141,9 +156,9 @@ class ViewProject extends React.Component {
             );
         }
 
-        //const taskCount = this.state.tasks ? this.state.tasks.length : 0;
         const memberCount = this.state.project.members ? this.state.project.members.length : 0;
-        const { newMemberEmail, isAddingMember, addMemberError } = this.state;
+        const { newMemberEmail, isAddingMember, addMemberError, project } = this.state;
+        const hasActiveSprint = project?.inSprint === 1 && Boolean(project?.sprintId);
 
         return (
             <PanelPage titlePage={this.state.project.projectName.toUpperCase()} isLoading={false} subTitle={`Project ID: ${this.state.project.id}`}>
@@ -151,23 +166,42 @@ class ViewProject extends React.Component {
                     <div className="view-project__action-row">
                         <Label label="Action"/>
                         <div className="view-project__action-spacer"/>
-                        <Button disabled={this.state.project?.archived === 1} className="view-project__action-btn" text={<span><Plus size={10}/> CREATE TASK</span>} onClick={this.goToCreateTask}/>
+                        
+                        {/* Show VIEW SPRINT if active sprint exists, otherwise show CREATE SPRINT */}
+                        {hasActiveSprint ? (
+                            <Button 
+                                className="view-project__action-btn" 
+                                text={<span><Eye size={12}/> VIEW SPRINT</span>} 
+                                onClick={this.goToViewSprint}
+                            />
+                        ) : (
+                            <Button 
+                                disabled={this.state.project?.archived === 1} 
+                                className="view-project__action-btn" 
+                                text={<span><Zap size={12}/> CREATE SPRINT</span>} 
+                                onClick={this.goToCreateSprint}
+                            />
+                        )}
+
+                        <Button 
+                            disabled={this.state.project?.archived === 1} 
+                            className="view-project__action-btn" 
+                            text={<span><Plus size={10}/> CREATE TASK</span>} 
+                            onClick={this.goToCreateTask}
+                        />
                     </div>
                 </PanelContainer>
                 <PanelContainer title="Project Details">
                     {this.topContainer()}
                     <InputRow gap={16}>
-                    {/* <PanelContainer title="Tasks">
-                        <Label label={`TASKS: ${taskCount}`} style={{marginTop: '10px', marginBottom: '20px'}}/>
-                        {this.viewTasks()}
-                    </PanelContainer> */}
-                </InputRow>
+                    </InputRow>
                 </PanelContainer>
 
                 <PanelContainer title="Task Board">
                     <div style={{marginTop: '10px'}}/>
-                    <KanbanBoard tasks={this.state.tasks}/>
+                    <KanbanBoard tasks={this.state.tasks} project={this.state.project} />
                 </PanelContainer>
+                
                 <PanelContainer title="Project Members">
                         <Label label={`Members: ${memberCount}`} style={{marginTop: '10px', marginBottom: '20px'}}/>
 

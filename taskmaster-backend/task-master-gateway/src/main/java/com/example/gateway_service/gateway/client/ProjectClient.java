@@ -25,6 +25,9 @@ public interface ProjectClient {
     @GetMapping("/getProjectByName/{name}")
     ResponseEntity<ApiResponseModel<ProjectDTO>> getProjectByName (@PathVariable String name);
 
+    @GetMapping("/getProjectById/{id}")
+    ResponseEntity<ApiResponseModel<ProjectDTO>> getProjectById (@PathVariable String id);
+
     @GetMapping("/getUserCreatedProjects")
     ResponseEntity<ApiResponseModel<List<ProjectDTO>>> getUserCreatedProjects ();
 

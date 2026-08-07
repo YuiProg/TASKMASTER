@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.List;
 
@@ -46,7 +48,15 @@ public class Project {
     )
     private List<User> members;
 
+    @JdbcTypeCode(SqlTypes.JSON)
+    @Column(name = "priorities", columnDefinition = "jsonb", nullable = true)
+    private List<String> priorities;
+
     private Integer archived = 0;
 
     private Integer del = 0;
+
+    private Integer inSprint = 0;
+
+    private String sprintId;
 }

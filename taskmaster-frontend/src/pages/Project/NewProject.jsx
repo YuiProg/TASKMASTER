@@ -14,6 +14,8 @@ class NewProject extends React.Component {
       description: "",
       members: [],
       memberInput: "",
+      priorities: [],
+      priorityInput: "",
       isCreating: useProjectStore.getState().isCreating,
       error: useProjectStore.getState().error,
       localError: null,
@@ -34,8 +36,18 @@ class NewProject extends React.Component {
     navigateTo("/projects");
   };
 
+  handleKeyDownBlockSubmit = (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  };
+
   handleAddMember = (e) => {
-    e.preventDefault();
+    if (e) {
+      if (e.preventDefault) e.preventDefault();
+      if (e.stopPropagation) e.stopPropagation();
+    }
     const email = this.state.memberInput.trim();
     if (!email) return;
     if (this.state.members.includes(email)) {
@@ -54,13 +66,56 @@ class NewProject extends React.Component {
     }));
   };
 
+  handleAddPriority = (e) => {
+    if (e) {
+      if (e.preventDefault) e.preventDefault();
+      if (e.stopPropagation) e.stopPropagation();
+    }
+    const priority = this.state.priorityInput.trim();
+    if (!priority) return;
+
+    if (this.state.priorities.length >= 8) {
+      this.setState({ localError: "Maximum of 8 priorities allowed." });
+      return;
+    }
+
+    if (this.state.priorities.includes(priority)) {
+      this.setState({ priorityInput: "", localError: null });
+      return;
+    }
+
+    this.setState((prev) => ({
+      priorities: [...prev.priorities, priority],
+      priorityInput: "",
+      localError: null,
+    }));
+  };
+
+  handleRemovePriority = (priority) => {
+    this.setState((prev) => ({
+      priorities: prev.priorities.filter((p) => p !== priority),
+      localError: null,
+    }));
+  };
+
   handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!this.state.projectName.trim()) {
-      this.setState({ localError: 'Project name is required.' });
+      this.setState({ localError: "Project name is required." });
       return;
     }
+
+    if (!this.state.priorities || this.state.priorities.length < 4) {
+      this.setState({ localError: "Please add at least 5 priorities to proceed." });
+      return;
+    }
+
+    if (this.state.priorities.length > 8) {
+      this.setState({ localError: "Maximum of 8 priorities allowed." });
+      return;
+    }
+
     this.setState({ localError: null });
 
     try {
@@ -69,23 +124,39 @@ class NewProject extends React.Component {
         .createProject(
           this.state.projectName.trim(),
           this.state.description.trim(),
-          this.state.members
+          this.state.members,
+          this.state.priorities
         );
 
       if (success) {
         navigateTo("/projects");
       }
     } catch (err) {
-      // createProject already catches its own errors internally, so this
-      // only fires if something unexpected blew up before/after that call.
-      console.error('Unexpected error creating project:', err);
-      this.setState({ localError: 'Something unexpected went wrong. Check the console.' });
+      console.error("Unexpected error creating project:", err);
+      this.setState({
+        localError: "Something unexpected went wrong. Check the console.",
+      });
     }
   };
 
   render() {
-    const { projectName, description, members, memberInput, isCreating, error, localError } =
-      this.state;
+    const {
+      projectName,
+      description,
+      members,
+      memberInput,
+      priorities,
+      priorityInput,
+      isCreating,
+      error,
+      localError,
+    } = this.state;
+
+    const isSubmitDisabled =
+      isCreating ||
+      !projectName.trim() ||
+      priorities.length < 4 ||
+      priorities.length > 9;
 
     return (
       <PanelPage
@@ -124,27 +195,75 @@ class NewProject extends React.Component {
             </div>
 
             <div className="new-project-form__field">
+              <label className="new-project-form__label">
+                Priorities<span className="new-project-form__required">*</span>
+              </label>
+              <span className="new-project-form__note">
+                Add priorities (Min: 5, Max: 8 required to proceed).
+              </span>
+
+              <div 
+                className="new-project-form__member-row" 
+                onKeyDown={this.handleKeyDownBlockSubmit}
+              >
+                <InputField
+                  placeholder="e.g. Low, High, Urgent"
+                  text
+                  value={priorityInput}
+                  onChange={(value) => this.setState({ priorityInput: value })}
+                  onEnterDown={this.handleAddPriority}
+                />
+                <Button
+                  text="ADD"
+                  customWidth={80}
+                  type="button"
+                  onClick={this.handleAddPriority}
+                  cancel
+                  disabled={priorities.length >= 8}
+                />
+              </div>
+
+              {priorities.length > 0 && (
+                <div className="new-project-form__member-chips">
+                  {priorities.map((priority) => (
+                    <span key={priority} className="new-project-form__chip">
+                      {priority}
+                      <button
+                        type="button"
+                        className="new-project-form__chip-remove"
+                        onClick={() => this.handleRemovePriority(priority)}
+                        aria-label={`Remove ${priority}`}
+                      >
+                        &times;
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div className="new-project-form__field">
               <label className="new-project-form__label">Members</label>
               <span className="new-project-form__note">
                 Added to the project when it's created.
               </span>
 
-              <div className="new-project-form__member-row">
+              <div 
+                className="new-project-form__member-row" 
+                onKeyDown={this.handleKeyDownBlockSubmit}
+              >
                 <InputField
                   placeholder="Add by email"
                   email
                   value={memberInput}
                   onChange={(value) => this.setState({ memberInput: value })}
-                  onEnterDown={() =>
-                    this.handleAddMember({ preventDefault: () => {} })
-                  }
+                  onEnterDown={this.handleAddMember}
                 />
                 <Button
                   text="ADD"
                   customWidth={80}
-                  onClick={() =>
-                    this.handleAddMember({ preventDefault: () => {} })
-                  }
+                  type="button"
+                  onClick={this.handleAddMember}
                   cancel
                 />
               </div>
@@ -171,15 +290,15 @@ class NewProject extends React.Component {
             <div className="new-project-form__actions">
               <Button
                 cancel
+                type="button"
                 text="CANCEL"
                 onClick={this.goBack}
               />
               <Button
                 submit
                 text={isCreating ? "CREATING..." : "CREATE PROJECT"}
-                disabled={isCreating}
+                disabled={isSubmitDisabled}
                 className="new-project-form__submit-btn"
-                onClick={() => {}}
               />
             </div>
           </form>

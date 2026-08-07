@@ -6,7 +6,8 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'https://task-master-gateway.onrender.com',
+        //target: 'https://task-master-gateway.onrender.com',
+        target: 'http://localhost:8083',
         changeOrigin: true,
         secure: true,
       },
