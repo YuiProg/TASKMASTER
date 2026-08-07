@@ -139,8 +139,11 @@ public class SprintServiceImpl implements SprintServiceInterface {
         List<Sprint> sprints = sprintCacheService.getSprints(user.getId());
 
         for (Sprint sprint : sprints) {
-            if (sprint.getDeadline() != null && sprint.getDeadline() == new Date().getTime()) {
+            if (sprint.getDeadline() != null && sprint.getDeadline() <= new Date().getTime()
+             && !sprint.getFinished().equals(StringCodes.TRUE.getCode())) {
+                sprint.setFinished(StringCodes.TRUE.getCode());
                 sprintRepository.finishSprint(sprint.getId());
+                sprintCacheService.evictSprintCache();
             }
         }
 
