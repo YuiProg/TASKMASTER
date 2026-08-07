@@ -31,27 +31,32 @@ jobs:
           fetch-depth: 0
 
       - name: Check if Version Is Incremented
-        if: github.event_name == 'pull_request'
         shell: bash
         run: |
-          TARGET_BRANCH="${{ github.base_ref }}"
-          git fetch origin "$TARGET_BRANCH"
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            TARGET_BRANCH="${{ github.base_ref }}"
+            git fetch origin "$TARGET_BRANCH"
+            COMPARE_REF="origin/$TARGET_BRANCH"
+          else
+            COMPARE_REF="HEAD~1"
+          fi
           
           # Check if any files changed in this specific module directory
-          CHANGED_FILES=$(git diff --name-only "origin/$TARGET_BRANCH" HEAD -- ${{ matrix.path }})
+          CHANGED_FILES=$(git diff --name-only "$COMPARE_REF" HEAD -- ${{ matrix.path }})
           
           if [ -z "$CHANGED_FILES" ]; then
             echo "No changes detected in ${{ matrix.path }}. Skipping version check."
             exit 0
           fi
           
-          echo "Changes detected in ${{ matrix.path }}. Verifying version bump..."
+          echo "Changes detected in ${{ matrix.path }}. Verifying version bump against $COMPARE_REF..."
           
-          CURRENT_VERSION=$(sed -n 's/.*<version>\(.*\)<\/version>.*/\1/p' ${{ matrix.path }}/pom.xml | head -n 1)
-          BASE_VERSION=$(git show "origin/$TARGET_BRANCH:${{ matrix.path }}/pom.xml" | sed -n 's/.*<version>\(.*\)<\/version>.*/\1/p' | head -n 1)
+          # Strip out <parent>...</parent> block to get the actual project version
+          CURRENT_VERSION=$(sed '/<parent>/,/<\/parent>/d' ${{ matrix.path }}/pom.xml | sed -n 's/.*<version>\(.*\)<\/version>.*/\1/p' | head -n 1 | xargs)
+          BASE_VERSION=$(git show "$COMPARE_REF:${{ matrix.path }}/pom.xml" | sed '/<parent>/,/<\/parent>/d' | sed -n 's/.*<version>\(.*\)<\/version>.*/\1/p' | head -n 1 | xargs)
           
-          echo "Base version ($TARGET_BRANCH): $BASE_VERSION"
-          echo "Current version: $CURRENT_VERSION"
+          echo "Base project version ($COMPARE_REF): $BASE_VERSION"
+          echo "Current project version: $CURRENT_VERSION"
           
           if [ "$CURRENT_VERSION" == "$BASE_VERSION" ]; then
             echo "::error::Code changes were made in ${{ matrix.path }}, but its pom.xml version was not incremented!"
