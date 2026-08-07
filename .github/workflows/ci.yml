@@ -41,9 +41,9 @@ jobs:
         run: |
           if [ -f "./mvnw" ]; then
             chmod +x mvnw
-            ./mvnw -B clean verify
+            ./mvnw -B clean verify -Dservices.report.url=http://localhost:8080
           else
-            mvn -B clean verify
+            mvn -B clean verify -Dservices.report.url=http://localhost:8080
           fi
 
       - name: Upload test reports
@@ -53,17 +53,3 @@ jobs:
           name: surefire-reports-${{ matrix.name }}
           path: ${{ matrix.path }}/target/surefire-reports/*.xml
           if-no-files-found: ignore
-
-  # No image-build/push job: Render builds each service directly from this repo's
-  # own Dockerfiles per render.yaml (runtime: docker + dockerContext/dockerfilePath).
-  # It never pulls from GHCR, so publishing images here would be dead work.
-  #
-  # Deploy gating: Render Blueprints auto-deploy on push to whatever branch each
-  # service is connected to. To make sure only code that passed build-and-test
-  # reaches Render, protect that branch in GitHub:
-  #   Settings -> Branches -> Branch protection rule -> main (and staging if desired)
-  #   -> Require status checks to pass before merging -> select "Build & Test (*)"
-  # Once real JUnit tests exist and you want stricter control (e.g. block deploy
-  # on push, not just on PR merge), disable Render's auto-deploy per service and
-  # add a job here that calls each service's Render Deploy Hook URL after this
-  # job succeeds.
