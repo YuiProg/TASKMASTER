@@ -1,4 +1,5 @@
 import React from "react";
+import { Helmet } from "react-helmet-async";
 import { PanelPage, PanelContainer } from "../../components/TRCOMPONENTS/TRPanelPage/TRPanelPage";
 import { Table } from "../../components/TRCOMPONENTS/TRTable/TrTable";
 import Button from "../../components/TRCOMPONENTS/TRButton/Button";
@@ -42,15 +43,15 @@ class MyTasks extends React.Component {
     const { myTasks, isLoading, search } = this.state;
 
     const tableRows = myTasks.map((t) => {
-    const row = {
-      "Task Name": t.taskName,
-      Project: t.project?.projectName || "No project",
-      Assignee: t.assignee?.username || "Unassigned",
-      Status: t.status,
-      Priority: t.priority || 'LOW',
-      "REPORTER": t.createdBy?.username || "unknown",
-      "Created On": formatDate(t.createdAt),
-    };
+      const row = {
+        "Task Name": t.taskName,
+        Project: t.project?.projectName || "No project",
+        Assignee: t.assignee?.username || "Unassigned",
+        Status: t.status,
+        Priority: t.priority || 'LOW',
+        "REPORTER": t.createdBy?.username || "unknown",
+        "Created On": formatDate(t.createdAt),
+      };
 
       Object.defineProperty(row, "id", {
         value: t.id,
@@ -66,6 +67,10 @@ class MyTasks extends React.Component {
         titlePage="My Tasks"
         subTitle="Tasks assigned to you."
       >
+        <Helmet>
+          <title>My Tasks | TaskMaster</title>
+        </Helmet>
+
         <PanelContainer>
           <div className="tasks-page__header">
             <InputField

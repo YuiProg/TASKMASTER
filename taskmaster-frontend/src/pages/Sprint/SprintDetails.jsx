@@ -1,4 +1,5 @@
 import React from "react";
+import { Helmet } from "react-helmet-async";
 import { PanelPage, PanelContainer } from "../../components/TRCOMPONENTS/TRPanelPage/TRPanelPage";
 import Button from "../../components/TRCOMPONENTS/TRButton/Button";
 import { Table } from "../../components/TRCOMPONENTS/TRTable/TrTable";
@@ -140,6 +141,12 @@ class SprintDetails extends React.Component {
         titlePage={sprint ? `SPRINT: ${sprint.sprintName?.toUpperCase()}` : "Sprint Details"}
         subTitle={sprint ? `Sprint ID: ${sprint.id}` : ""}
       >
+        <Helmet>
+          <title>
+            {sprint?.sprintName ? `${sprint.sprintName} | TaskMaster` : "Sprint Details | TaskMaster"}
+          </title>
+        </Helmet>
+
         <PanelContainer>
           {isLoading && (
             <div className="sprint-details__loading">

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { PanelContainer, PanelPage } from '../../components/TRCOMPONENTS/TRPanelPage/TRPanelPage';
 import { useProjectStore } from '../../context/ProjectStore.js';
 import { InputRow } from '../../components/TRCOMPONENTS/TRInputForm/TRInputForm';
@@ -151,6 +152,9 @@ class ViewProject extends React.Component {
         if (!this.state.project) {
             return (
                 <PanelPage>
+                    <Helmet>
+                        <title>Loading Project... | TaskMaster</title>
+                    </Helmet>
                     <Spinner size={30} strokeWidth={3} />
                 </PanelPage>
             );
@@ -159,9 +163,14 @@ class ViewProject extends React.Component {
         const memberCount = this.state.project.members ? this.state.project.members.length : 0;
         const { newMemberEmail, isAddingMember, addMemberError, project } = this.state;
         const hasActiveSprint = project?.inSprint === 1 && Boolean(project?.sprintId);
+        const pageTitle = project?.projectName ? `${project.projectName} | TaskMaster` : 'Project Details | TaskMaster';
 
         return (
             <PanelPage titlePage={this.state.project.projectName.toUpperCase()} isLoading={false} subTitle={`Project ID: ${this.state.project.id}`}>
+                <Helmet>
+                    <title>{pageTitle}</title>
+                </Helmet>
+
                 <PanelContainer>
                     <div className="view-project__action-row">
                         <Label label="Action"/>
@@ -226,7 +235,7 @@ class ViewProject extends React.Component {
                         )}
 
                         {this.projectMembers()}
-                    </PanelContainer>
+                </PanelContainer>
             </PanelPage>
         );
     }

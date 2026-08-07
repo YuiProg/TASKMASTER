@@ -1,4 +1,5 @@
 import React from "react";
+import { Helmet } from "react-helmet-async";
 import { PanelPage, PanelContainer } from "../../components/TRCOMPONENTS/TRPanelPage/TRPanelPage";
 import { Table } from "../../components/TRCOMPONENTS/TRTable/TrTable";
 import Button from "../../components/TRCOMPONENTS/TRButton/Button";
@@ -62,6 +63,10 @@ class UserProjects extends React.Component {
         titlePage="Your Projects"
         subTitle="Every project you created."
       >
+        <Helmet>
+          <title>Your Projects | TaskMaster</title>
+        </Helmet>
+
         <PanelContainer>
           <div className="user-projects-page__header">
             <InputField

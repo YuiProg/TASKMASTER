@@ -1,4 +1,5 @@
 import React from "react";
+import { Helmet } from "react-helmet-async";
 import { PanelPage, PanelContainer } from "../../components/TRCOMPONENTS/TRPanelPage/TRPanelPage";
 import { InputRow } from "../../components/TRCOMPONENTS/TRInputForm/TRInputForm";
 import { Label } from "../../components/TRCOMPONENTS/TRInputField/InputFIeld";
@@ -256,6 +257,9 @@ class ViewTask extends React.Component {
     if (!this.state.task)
       return (
         <PanelPage>
+          <Helmet>
+            <title>TaskMaster</title>
+          </Helmet>
           <Spinner size={30} strokeWidth={3} />
         </PanelPage>
       );
@@ -272,6 +276,10 @@ class ViewTask extends React.Component {
         titlePage={task.taskName.toUpperCase()}
         subTitle={`Task ID: ${task.id}`}
       >
+        <Helmet>
+          <title>{`${task.taskName} | TaskMaster`}</title>
+        </Helmet>
+
         <Toaster />
 
         <PanelContainer title="Overview">
