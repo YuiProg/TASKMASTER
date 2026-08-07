@@ -13,6 +13,7 @@ import com.example.backend.repository.TaskRepository;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.request.TaskRequest;
 import com.example.backend.service.EmailService.EmailService;
+import com.example.backend.service.SprintService.SprintCacheService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,7 @@ public class TaskService implements TaskServiceInterface {
     private final ProjectRepository projectRepository;
     private final ReportClient reportClient;
     private final EmailService emailService;
+    private final SprintCacheService sprintCacheService;
 
     // Inject internal cache service
     private final TaskCacheService taskCacheService;
@@ -211,6 +213,7 @@ public class TaskService implements TaskServiceInterface {
 
         taskCacheService.evictTaskEntriesCache();
         taskCacheService.evictOpenTask();
+        sprintCacheService.evictSprintCache();
 
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.update("TASK UPDATED", "SUCCESS", newTask, oldTask));
     }
@@ -282,7 +285,7 @@ public class TaskService implements TaskServiceInterface {
         // Evict from Redis cache
         taskCacheService.evictOpenTask();
         taskCacheService.evictTaskEntriesCache();
-
+        sprintCacheService.evictSprintCache();
         if (task.getAssignee() != null) {
             emailService.sendTemplatedEmail(
                     task.getAssignee().getEmail(),
