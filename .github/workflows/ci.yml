@@ -46,6 +46,16 @@ jobs:
             mvn -B clean verify -DskipTests
           fi
 
+      - name: Run Trivy Vulnerability Scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '${{ matrix.path }}'
+          format: 'table'
+          exit-code: '0'
+          ignore-unfixed: true
+          severity: 'CRITICAL,HIGH'
+
       - name: Upload test reports
         if: always()
         uses: actions/upload-artifact@v4
@@ -61,16 +71,46 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy Core Service
-        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_CORE }}"
+        run: |
+          if [ -n "${{ secrets.RENDER_DEPLOY_HOOK_CORE }}" ]; then
+            curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_CORE }}"
+          else
+            echo "RENDER_DEPLOY_HOOK_CORE secret is missing!"
+            exit 1
+          fi
 
       - name: Deploy Comment Service
-        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_COMMENT }}"
+        run: |
+          if [ -n "${{ secrets.RENDER_DEPLOY_HOOK_COMMENT }}" ]; then
+            curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_COMMENT }}"
+          else
+            echo "RENDER_DEPLOY_HOOK_COMMENT secret is missing!"
+            exit 1
+          fi
 
       - name: Deploy Reports Service
-        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_REPORTS }}"
+        run: |
+          if [ -n "${{ secrets.RENDER_DEPLOY_HOOK_REPORTS }}" ]; then
+            curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_REPORTS }}"
+          else
+            echo "RENDER_DEPLOY_HOOK_REPORTS secret is missing!"
+            exit 1
+          fi
 
       - name: Deploy Gateway Service
-        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_GATEWAY }}"
+        run: |
+          if [ -n "${{ secrets.RENDER_DEPLOY_HOOK_GATEWAY }}" ]; then
+            curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_GATEWAY }}"
+          else
+            echo "RENDER_DEPLOY_HOOK_GATEWAY secret is missing!"
+            exit 1
+          fi
 
       - name: Deploy Scheduler Service
-        run: curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_SCHEDULER }}"
+        run: |
+          if [ -n "${{ secrets.RENDER_DEPLOY_HOOK_SCHEDULER }}" ]; then
+            curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK_SCHEDULER }}"
+          else
+            echo "RENDER_DEPLOY_HOOK_SCHEDULER secret is missing!"
+            exit 1
+          fi
