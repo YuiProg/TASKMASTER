@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { PanelContainer, PanelPage } from '../../components/TRCOMPONENTS/TRPanelPage/TRPanelPage';
 import { Table } from '../../components/TRCOMPONENTS/TRTable/TrTable';
 import Button from '../../components/TRCOMPONENTS/TRButton/Button';
@@ -128,6 +129,10 @@ class Dashboard extends React.Component {
 
     return (
       <PanelPage titlePage="Dashboard" subTitle="Welcome to TaskMaster!">
+        <Helmet>
+          <title>Dashboard | TaskMaster</title>
+        </Helmet>
+
         {/* Stats Row */}
         <PanelContainer>
           <div className="dashboard__stats-row">

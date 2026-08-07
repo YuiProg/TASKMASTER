@@ -1,8 +1,9 @@
 import React from "react";
+import { Helmet } from "react-helmet-async";
 import { PanelPage, PanelContainer } from "../../components/TRCOMPONENTS/TRPanelPage/TRPanelPage";
 import { Table } from "../../components/TRCOMPONENTS/TRTable/TrTable";
 import Button from "../../components/TRCOMPONENTS/TRButton/Button";
-import{ InputField }from "../../components/TRCOMPONENTS/TRInputField/InputFIeld";
+import { InputField } from "../../components/TRCOMPONENTS/TRInputField/InputFIeld";
 import { useProjectStore } from "../../context/ProjectStore.js";
 import "./Projects.scss";
 import navigateTo from "../../lib/navigate";
@@ -56,6 +57,10 @@ class Projects extends React.Component {
         titlePage="Projects"
         subTitle="Every project your branch is currently tracking."
       >
+        <Helmet>
+          <title>Projects | TaskMaster</title>
+        </Helmet>
+
         <PanelContainer>
           <div className="projects-page__header">
             <InputField
