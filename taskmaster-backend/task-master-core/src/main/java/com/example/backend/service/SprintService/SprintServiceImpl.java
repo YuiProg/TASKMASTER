@@ -35,6 +35,7 @@ public class SprintServiceImpl implements SprintServiceInterface {
     private final TaskCacheService taskCacheService;
     private final ProjectRepository projectRepository;
     private final EmailService emailService;
+    private final SprintCacheService sprintCacheService;
 
     @Override
     public ResponseEntity<ApiResponseModel<Sprint>> createSprint(SprintRequest sprintRequest) {
@@ -57,6 +58,11 @@ public class SprintServiceImpl implements SprintServiceInterface {
         if (StringCodes.TRUE.getCode().equals(project.getInSprint())) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body(ApiResponseModel.error("PROJECT IS ALREADY IN SPRINT", "ERROR"));
+        }
+
+        if (sprintRequest.getDeadline() == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponseModel.error("PLEASE PROVIDE A DEADLINE.", "ERROR"));
         }
 
         sprint = new Sprint();
@@ -96,7 +102,7 @@ public class SprintServiceImpl implements SprintServiceInterface {
         if (sprintRequest.getDeadline() != null) {
             sprint.setDeadline(sprintRequest.getDeadline());
         }
-
+        sprintCacheService.evictSprintCache();
         Sprint newSprint = sprintRepository.save(sprint);
 
         for (User member : project.getMembers()) {
@@ -130,10 +136,10 @@ public class SprintServiceImpl implements SprintServiceInterface {
     @Override
     public ResponseEntity<ApiResponseModel<List<Sprint>>> getSprints() {
         User user = authenticatedUser.getAuthenticatedUser();
-        List<Sprint> sprints = sprintRepository.getSprints(user.getId());
+        List<Sprint> sprints = sprintCacheService.getSprints(user.getId());
 
         for (Sprint sprint : sprints) {
-            if (sprint.getDeadline() == new Date().getTime()) {
+            if (sprint.getDeadline() != null && sprint.getDeadline() == new Date().getTime()) {
                 sprintRepository.finishSprint(sprint.getId());
             }
         }
@@ -144,7 +150,7 @@ public class SprintServiceImpl implements SprintServiceInterface {
 
     @Override
     public ResponseEntity<ApiResponseModel<Sprint>> getSprintById(String id) {
-        Sprint sprint = sprintRepository.findById(id).orElse(null);
+        Sprint sprint = sprintCacheService.viewSprintCache(id);
         return ResponseEntity.ok(ApiResponseModel.success("SPRINT FOUND", "SUCCESS", sprint));
     }
 }
