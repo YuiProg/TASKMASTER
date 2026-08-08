@@ -75,7 +75,7 @@ class NewProject extends React.Component {
     if (!priority) return;
 
     if (this.state.priorities.length >= 8) {
-      this.setState({ localError: "Maximum of 8 priorities allowed." });
+      this.setState({ localError: "Maximum of 8 status allowed." });
       return;
     }
 
@@ -107,12 +107,12 @@ class NewProject extends React.Component {
     }
 
     if (!this.state.priorities || this.state.priorities.length < 4) {
-      this.setState({ localError: "Please add at least 5 priorities to proceed." });
+      this.setState({ localError: "Please add at least 5 status to proceed." });
       return;
     }
 
     if (this.state.priorities.length > 8) {
-      this.setState({ localError: "Maximum of 8 priorities allowed." });
+      this.setState({ localError: "Maximum of 8 status allowed." });
       return;
     }
 
@@ -196,10 +196,10 @@ class NewProject extends React.Component {
 
             <div className="new-project-form__field">
               <label className="new-project-form__label">
-                Priorities<span className="new-project-form__required">*</span>
+                Status<span className="new-project-form__required">*</span>
               </label>
               <span className="new-project-form__note">
-                Add priorities (Min: 5, Max: 8 required to proceed).
+                Add status (Min: 5, Max: 8 required to proceed).
               </span>
 
               <div 
@@ -207,7 +207,7 @@ class NewProject extends React.Component {
                 onKeyDown={this.handleKeyDownBlockSubmit}
               >
                 <InputField
-                  placeholder="e.g. Low, High, Urgent"
+                  placeholder="e.g. OPEN, IN PROGRESS, DONE"
                   text
                   value={priorityInput}
                   onChange={(value) => this.setState({ priorityInput: value })}
