@@ -20,6 +20,6 @@ public interface CommentRepository extends JpaRepository<Comment, String> {
 
     @Modifying
     @Transactional
-    @Query("DELETE FROM comments c WHERE c.id = :taskId")
+    @Query("DELETE FROM Comment c WHERE c.id = :taskId")
     void deleteCommentByTaskId(String taskId);
 }
