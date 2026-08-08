@@ -178,13 +178,20 @@
     width: 38px;
     height: 38px;
     border-radius: $radius-lg;
-    background: $accent;
+    background: #121929; // Matched to icon inner dark navy background
     color: $white;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.25);
+    box-shadow: 0 4px 12px rgba(18, 25, 41, 0.25);
+
+    img {
+      display: block;
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+    }
   }
 
   &__brand-name {

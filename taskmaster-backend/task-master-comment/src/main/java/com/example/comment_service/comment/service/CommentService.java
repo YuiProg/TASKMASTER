@@ -1,5 +1,7 @@
 package com.example.comment_service.comment.service;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.example.comment_service.comment.Request.CommentRequest;
 import com.example.comment_service.comment.client.ProjectClient;
 import com.example.comment_service.comment.client.TaskClient;
@@ -15,7 +17,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +32,7 @@ public class CommentService implements CommentServiceInterface{
     private final ProjectClient projectClient;
     private final AuthenticatedUser authenticatedUser;
     private final TaskClient taskClient;
+    private final Cloudinary cloudinary;
 
     @Override
     @Transactional
@@ -43,13 +48,35 @@ public class CommentService implements CommentServiceInterface{
 
         Comment comment = new Comment();
 
+        if (commentRequest.getComment() == null && commentRequest.getImage().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponseModel.error("COMMENT EMPTY", "ERROR"));
+        }
+
         comment.setTask(task.getData().getId());
-        comment.setComment(commentRequest.getComment());
+        if (commentRequest.getComment() != null && !commentRequest.getComment().trim().isEmpty()) {
+            comment.setComment(commentRequest.getComment());
+        }
         comment.setCreatedBy(user.getId());
         comment.setUpdatedBy(user.getUsername());
 
-        Comment newComment = commentRepository.save(comment);
+        if (commentRequest.getImage() != null && !commentRequest.getImage().trim().isEmpty()) {
+            try {
+                String imageData = commentRequest.getImage();
 
+                Map<String, Object> res = cloudinary.uploader().upload(imageData, ObjectUtils.emptyMap());
+                comment.setImageUrl((String) res.get("secure_url"));
+                comment.setImageId((String) res.get("public_id"));
+                log.info("image uploaded successfully url: {}, id: {}", res.get("secure_url"), res.get("public_id"));
+
+            } catch (IOException e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .body(ApiResponseModel.error(e.getMessage(), "ERROR"));
+            }
+        }
+
+        Comment newComment = commentRepository.save(comment);
+        commentResponseDTO.setImageId(newComment.getImageId());
+        commentResponseDTO.setImageUrl(newComment.getImageUrl());
         commentResponseDTO.setId(newComment.getId());
         commentResponseDTO.setLike(comment.getLike());
         commentResponseDTO.setTask(task.getData());
@@ -116,6 +143,8 @@ public class CommentService implements CommentServiceInterface{
                     ApiResponseModel<UserDTO> user = userClient.getUserById(comment.getCreatedBy());
                     log.info("FETCHING CREATED BY FOR COMMENT ID: {} USER: {}", comment.getId(), user.getData().getId());
                     dto.setId(comment.getId());
+                    dto.setImageId(comment.getImageId());
+                    dto.setImageUrl(comment.getImageUrl());
                     dto.setComment(comment.getComment());
                     dto.setCreatedBy(user.getData());
                     dto.setUpdatedBy(comment.getUpdatedBy());
