@@ -11,7 +11,6 @@ $space-10: 24px;
 $space-11: 28px;
 $space-12: 32px;
 
-// Common component sizing
 $radius-sm: 4px;
 $radius-md: 6px;
 $radius-lg: 8px;
@@ -24,9 +23,6 @@ $topbar-height: 64px;
 $sidebar-width: 240px;
 $sidebar-width-collapsed: 60px;
 
-// Breakpoints
 $bp-tablet: 768px;
 $bp-mobile: 480px;
-// The app-wide cutoff where the sidebar becomes an off-canvas drawer
-// and multi-column layouts collapse to a single column.
 $bp-mobile-nav: 749px;

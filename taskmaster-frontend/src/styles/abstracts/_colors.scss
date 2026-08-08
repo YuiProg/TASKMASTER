@@ -1,12 +1,6 @@
 $white: #ffffff;
 $black: #000000;
 
-/* ── Slate ramp ──────────────────────────────────────────────
-   Repurposed for the dark-glass theme: the codebase always uses
-   higher numbers for stronger emphasis (800/900 = primary text,
-   400 = muted). That relative ordering is preserved here — only
-   the absolute lightness direction flips, since surfaces are now
-   dark instead of light. */
 $slate-50: rgba(255, 255, 255, 0.04);
 $slate-100: rgba(255, 255, 255, 0.07);
 $slate-200: rgba(255, 255, 255, 0.12);
@@ -31,10 +25,6 @@ $dark-surface-alt: rgba(20, 20, 23, 0.55);
 $dark-border: rgba(255, 255, 255, 0.12);
 $dark-muted-text: #9a9ea6;
 
-$scrollbar-track-dark: #141414;
-$scrollbar-thumb-dark: #282828;
-$scrollbar-thumb-dark-hover: #383838;
-
 $blue-50: rgba(59, 130, 246, 0.14);
 $blue-100: rgba(59, 130, 246, 0.22);
 $blue-200: rgba(59, 130, 246, 0.4);
@@ -49,10 +39,10 @@ $blue-gradient-start: #4f7cf6;
 $slate-icon-muted: #a3b0c2;
 $slate-chevron: #b0bcd0;
 
-$accent: #c0392b;
-$accent-dark: #a02e22;
-$accent-alt: #e0574a;
-$accent-light: #d85a30;
+$accent: #2563eb;
+$accent-dark: #1d4ed8;
+$accent-alt: #4f7cf6;
+$accent-light: #60a5fa;
 
 $green-50: rgba(34, 197, 94, 0.14);
 $green-100: rgba(34, 197, 94, 0.22);
@@ -60,14 +50,14 @@ $green-200: rgba(34, 197, 94, 0.4);
 $green-500: #22c55e;
 $green-600: #4ade80;
 
-$red-50: rgba(239, 68, 68, 0.14);
-$red-100: rgba(239, 68, 68, 0.22);
-$red-200: rgba(239, 68, 68, 0.4);
-$red-600: #f87171;
-$red-hover: #f38b8b;
-$red-hover-bg: rgba(239, 68, 68, 0.16);
-$red-tint-bg: rgba(239, 68, 68, 0.12);
-$error-red: #ef4444;
+$red-50: rgba(59, 130, 246, 0.14);
+$red-100: rgba(59, 130, 246, 0.22);
+$red-200: rgba(59, 130, 246, 0.4);
+$red-600: #60a5fa;
+$red-hover: #93b4f5;
+$red-hover-bg: rgba(59, 130, 246, 0.16);
+$red-tint-bg: rgba(59, 130, 246, 0.12);
+$error-red: #3b82f6;
 
 $amber-50: rgba(217, 119, 6, 0.16);
 $amber-100: rgba(217, 119, 6, 0.26);
@@ -87,15 +77,11 @@ $blue-ring-track: rgba(59, 130, 246, 0.2);
 $shadow-color: $black;
 $overlay-color: $black;
 
-/* ── Glassmorphism tokens ────────────────────────────────────
-   Base app canvas + the frosted-panel fills/borders/blur used by
-   card-surface and every hand-rolled glass panel (sidebar, topbar,
-   modal, dropdown list, etc). */
 $glass-bg-app: #0a0b0f;
-$glass-bg-1: rgba(20, 22, 28, 0.55); /* sidebar / topbar / header chrome */
-$glass-bg-2: rgba(32, 34, 42, 0.45); /* cards / tables / panels */
-$glass-bg-3: rgba(255, 255, 255, 0.06); /* raised hover surface */
-$glass-bg-strong: rgba(18, 19, 24, 0.78); /* modal panels — needs to read on its own */
+$glass-bg-1: rgba(20, 22, 28, 0.55);
+$glass-bg-2: rgba(32, 34, 42, 0.45);
+$glass-bg-3: rgba(255, 255, 255, 0.06);
+$glass-bg-strong: rgba(18, 19, 24, 0.78);
 $glass-border: rgba(255, 255, 255, 0.09);
 $glass-border-strong: rgba(255, 255, 255, 0.16);
 

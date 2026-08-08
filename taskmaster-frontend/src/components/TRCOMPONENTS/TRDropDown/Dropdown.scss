@@ -6,11 +6,11 @@
   width: 100%;
 
   &__button {
-    background-color: $input-bg-light; /* Matches your dashboard input background color */
+    background-color: $input-bg-light;
     backdrop-filter: blur($glass-blur-sm);
     -webkit-backdrop-filter: blur($glass-blur-sm);
     color: $slate-800;
-    height: 50px; /* Aligns smoothly with InputField height sizing lines */
+    height: 50px;
     border-radius: $radius-md;
     border: 1px solid $slate-200;
     width: 100%;
@@ -37,9 +37,6 @@
       cursor: not-allowed;
     }
 
-    /* Loading looks distinct from a plain disabled state — keeps the
-       button's normal background instead of dimming it, so it reads as
-       "in progress" rather than "unavailable". */
     &--loading {
       background-color: $input-bg-light;
       color: $slate-800;
@@ -81,10 +78,9 @@
     animation: tr-dropdown-spin 0.7s linear infinite;
   }
 
-  /* ── Portal Container Architecture ── */
   &__list {
-    position: absolute !important; /* Managed cleanly via component matrix coordinates */
-    background-color: $glass-bg-strong; /* Frosted glass surface, floats via portal above any content */
+    position: absolute !important;
+    background-color: $glass-bg-strong;
     backdrop-filter: blur($glass-blur-md);
     -webkit-backdrop-filter: blur($glass-blur-md);
     border: 1px solid $slate-200;
@@ -99,12 +95,11 @@
     box-sizing: border-box;
     font-family: $font-family-fallback;
 
-    /* ── Webkit Scrollbar Controls ── */
     @include custom-scrollbar($width: 6px, $thumb: $slate-300, $thumb-hover: $slate-400, $radius: 20px);
   }
 
   &__item {
-    background-color: transparent; /* Allows inheritance of container body background safely */
+    background-color: transparent;
     color: $slate-700;
     padding: $space-6 $space-8;
     cursor: pointer;

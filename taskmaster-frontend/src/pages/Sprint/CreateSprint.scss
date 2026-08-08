@@ -189,7 +189,6 @@
       cursor: pointer;
       transition: all 0.2s ease;
 
-      /* Primary / Submit Button */
       &[type="submit"],
       &.submit,
       &:not([cancel]) {
@@ -202,7 +201,6 @@
         }
       }
 
-      /* Cancel Button */
       &[type="button"],
       &.cancel {
         background-color: $glass-bg-3;
@@ -214,7 +212,6 @@
         }
       }
 
-      /* Disabled state styling */
       &:disabled,
       &[disabled] {
         opacity: 0.5;

@@ -6,7 +6,6 @@
   box-sizing: border-box;
   padding: $space-9;
 
-  /* ── Header Row ── */
   &__header {
     @include flex-between($gap: $space-6);
     margin-bottom: $space-9;
@@ -43,7 +42,6 @@
     gap: $space-6;
   }
 
-  /* ── Table Container ── */
   &__scroll {
     width: 100%;
     border: 1px solid $border-light;
@@ -52,17 +50,15 @@
     background-color: transparent;
   }
 
-  /* ── Table Base ── */
   &__table {
     width: 100%;
     border-collapse: collapse;
     border-spacing: 0;
     font-size: $fs-sm;
     color: $slate-800;
-    text-align: left; /* Changes text alignments to match natural table layouts */
+    text-align: left;
   }
 
-  /* ── Headers ── */
   &__head-row {
     border-bottom: 1px solid $slate-200;
   }
@@ -114,7 +110,6 @@
     }
   }
 
-  /* ── Rows & Columns ── */
   &__row {
     border-bottom: 1px solid $border-lighter;
     transition: background-color $transition-fast ease;
@@ -160,11 +155,10 @@
     transition: color 0.1s ease;
 
     &:hover {
-      color: $blue-600; /* Brand Accent highlight color */
+      color: $blue-600;
     }
   }
 
-  /* ── Checkboxes ── */
   &__checkbox {
     appearance: none;
     -webkit-appearance: none;
@@ -203,7 +197,6 @@
     }
   }
 
-  /* ── Action Buttons ── */
   &__action-btn {
     background: transparent;
     border: none;
@@ -234,7 +227,6 @@
     }
   }
 
-  /* ── Pagination Area ── */
   &__pagination {
     display: flex;
     flex-direction: row;
@@ -310,7 +302,6 @@
     line-height: 1;
   }
 
-  /* ── No Data / Loading states ── */
   &__empty {
     @include flex(column, center, center, $space-6);
     padding: 48px $space-10;
@@ -343,7 +334,6 @@
   }
 }
 
-/* ── Mobile (≤749px) ─────────────────────────────────────── */
 @include respond-to(mobile-nav) {
   .tr-table {
     padding: $space-6;

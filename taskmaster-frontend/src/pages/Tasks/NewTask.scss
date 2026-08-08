@@ -24,7 +24,7 @@
   }
 
   &__required {
-    color: $blue-600; /* Primary Blue */
+    color: $blue-600;
     margin-left: $space-1;
   }
 
@@ -55,8 +55,8 @@
 
     &:focus {
       background-color: $input-bg-hover;
-      border-color: $blue-500; /* Blue active border */
-      box-shadow: $shadow-focus-ring; /* Blue glow ring */
+      border-color: $blue-500;
+      box-shadow: $shadow-focus-ring;
     }
   }
 
@@ -72,16 +72,15 @@
     }
   }
 
-  /* ── Primary Submit Button ── */
   &__submit-btn {
-    background: $blue-600 !important; /* Primary Blue */
+    background: $blue-600 !important;
     font-weight: $fw-semibold;
     color: $white !important;
     border: none !important;
     transition: background-color $transition-fast ease;
 
     &:hover {
-      background: $blue-700 !important; /* Darker Blue Hover */
+      background: $blue-700 !important;
     }
   }
 }

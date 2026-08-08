@@ -109,6 +109,8 @@ class Sidebar extends React.Component {
         });
     }
 
+    isCollapsed = () => this.state.collapsed && !this.state.mobileNavOpen;
+
     toggleMobileNav = () => {
         this.setState(prev => ({ mobileNavOpen: !prev.mobileNavOpen }));
     }
@@ -141,7 +143,7 @@ class Sidebar extends React.Component {
     }
 
     renderAccordion({ key, expanded, active, icon, label, tooltip, items }) {
-        const { collapsed } = this.state;
+        const collapsed = this.isCollapsed();
         return (
             <li className={`sidebar__row${expanded ? ' sidebar__row--expanded' : ''}${active ? ' sidebar__row--parent-active' : ''}`}>
                 <a href={`#${key}`} onClick={this.toggleMenu(`${key}Expanded`)} className="sidebar__dropdown-trigger">
@@ -172,7 +174,7 @@ class Sidebar extends React.Component {
     }
 
     renderSimpleItem({ path, icon, label, pathname }) {
-        const { collapsed } = this.state;
+        const collapsed = this.isCollapsed();
         return (
             <li className={`sidebar__row${pathname === path ? ' sidebar__row--active' : ''}`}>
                 <Link to={path} onClick={this.closeMobileNav}>
@@ -185,7 +187,8 @@ class Sidebar extends React.Component {
     }
 
     render() {
-        const { collapsed, mobileNavOpen, projectsExpanded, tasksExpanded, user } = this.state;
+        const { mobileNavOpen, projectsExpanded, tasksExpanded, user } = this.state;
+        const isCollapsed = this.isCollapsed();
 
         const pathname = window.location.pathname;
 
@@ -208,12 +211,12 @@ class Sidebar extends React.Component {
                     aria-hidden="true"
                 />
 
-                <aside className={`sidebar__aside${collapsed ? ' sidebar__aside--collapsed' : ''}${mobileNavOpen ? ' sidebar__aside--mobile-open' : ''}`}>
+                <aside className={`sidebar__aside${isCollapsed ? ' sidebar__aside--collapsed' : ''}${mobileNavOpen ? ' sidebar__aside--mobile-open' : ''}`}>
 
                     {/* Top Section */}
                     <div className="sidebar__top">
                         <div className="sidebar__logo-area">
-                            {!collapsed && <span className="sidebar__logo-text">Task Master</span>}
+                            {!isCollapsed && <span className="sidebar__logo-text">Task Master</span>}
                         </div>
                         <button className="sidebar__burger sidebar__burger--collapse" onClick={this.toggleSidebar} aria-label="Toggle sidebar">
                             <Menu size={20} />
@@ -290,7 +293,7 @@ class Sidebar extends React.Component {
                             {user ? (
                                 <>
                                     <div className="sidebar__avatar">{initials}</div>
-                                    {!collapsed && (
+                                    {!isCollapsed && (
                                         <div className="sidebar__user-info">
                                             <p className="sidebar__user-name">{displayName}</p>
                                             <p className="sidebar__user-role">{displayEmail}</p>
@@ -306,7 +309,7 @@ class Sidebar extends React.Component {
                             ) : (
                                 <>
                                     <div className="sidebar__skeleton sidebar__skeleton-avatar" />
-                                    {!collapsed && (
+                                    {!isCollapsed && (
                                         <div className="sidebar__user-info">
                                             <div className="sidebar__skeleton sidebar__skeleton-line sidebar__skeleton-line--name" />
                                             <div className="sidebar__skeleton sidebar__skeleton-line sidebar__skeleton-line--email" />
@@ -314,7 +317,7 @@ class Sidebar extends React.Component {
                                     )}
                                 </>
                             )}
-                            {!collapsed && user && (
+                            {!isCollapsed && user && (
                                 <button className="sidebar__logout-btn" onClick={this.handleLogout} aria-label="Log out">
                                     <LogOut size={16} />
                                 </button>

@@ -24,7 +24,7 @@
   }
 
   &__required {
-    color: $blue-600; 
+    color: $blue-600;
     margin-left: $space-1;
   }
 
@@ -92,16 +92,15 @@
     margin-top: $space-2;
   }
 
-  /* ── Member Tag Chips (Soft Blue Tint) ── */
   &__chip {
     display: inline-flex;
     align-items: center;
     gap: $space-3;
     padding: 5px $space-3 5px $space-6;
     border-radius: $radius-pill;
-    background-color: $blue-50; /* Very soft light blue background */
+    background-color: $blue-50;
     border: 1px solid $blue-100;
-    color: $blue-700; /* Darker blue text for readability */
+    color: $blue-700;
     font-size: 0.78rem;
     font-weight: $fw-medium;
   }
@@ -138,16 +137,15 @@
     }
   }
 
-  /* ── Primary Submit Button ── */
   &__submit-btn {
-    background: $blue-600 !important; /* Primary Blue */
+    background: $blue-600 !important;
     font-weight: $fw-semibold;
     color: $white !important;
     border: none !important;
     transition: background-color $transition-fast ease;
 
     &:hover {
-      background: $blue-700 !important; /* Darker Blue Hover State */
+      background: $blue-700 !important;
     }
   }
 }

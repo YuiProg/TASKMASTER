@@ -1,6 +1,5 @@
 @use '../../../styles/abstracts' as *;
 
-/* ── Panel container ── */
 .tr-inputform-panel {
   background-color: transparent;
   padding: $space-10;
@@ -9,7 +8,6 @@
   box-sizing: border-box;
   @include flex-column($space-10);
 
-  /* ── Headers ── */
   &__headers {
     @include flex-column($space-2);
     @include glass-surface($bg: $glass-bg-3, $blur: $glass-blur-sm);
@@ -32,7 +30,6 @@
   }
 }
 
-/* ── Form ── */
 .tr-inputform {
   @include flex(column, flex-start, flex-start, $space-8);
   width: 100%;
@@ -66,7 +63,6 @@
     }
   }
 
-  /* ── Submit button ── */
   &__submit-btn {
     background-color: $blue-600;
     color: $white;
@@ -86,7 +82,6 @@
   }
 }
 
-/* ── Input row ── */
 .tr-inputrow {
   display: flex;
   justify-content: flex-start;
@@ -94,14 +89,12 @@
   box-sizing: border-box;
   flex-wrap: wrap;
 
-  /* ── Each field slot (title + input stacked) ── */
   &__field {
     @include flex-column($space-3);
-    flex: 1 1 0; /* equal width for all fields in a row */
-    min-width: 120px; /* prevents fields from getting too narrow */
+    flex: 1 1 0;
+    min-width: 120px;
   }
 
-  /* ── Field title ── */
   &__title {
     font-size: 0.8rem;
     font-weight: $fw-medium;
@@ -110,14 +103,12 @@
     line-height: $line-height-tight;
   }
 
-  /* ── Title spacer — keeps field height consistent when no title is present ── */
   &__title-spacer {
     display: block;
     height: calc(0.8rem * 1.2);
   }
 }
 
-/* ── Responsive — tablet (max 768px) ── */
 @include respond-to(tablet) {
   .tr-inputform-panel {
     padding: $space-8;
@@ -148,12 +139,11 @@
     }
 
     &__title-spacer {
-      display: none; /* no need for spacer when stacked vertically */
+      display: none;
     }
   }
 }
 
-/* ── Responsive — mobile (max 480px) ── */
 @include respond-to(mobile) {
   .tr-inputform-panel {
     padding: $space-6;
