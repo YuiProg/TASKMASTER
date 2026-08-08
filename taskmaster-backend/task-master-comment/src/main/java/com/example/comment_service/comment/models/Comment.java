@@ -36,4 +36,8 @@ public class Comment {
 
     @Column(name = "task_id", nullable = false)
     private String task;
+
+    private String imageUrl;
+
+    private String imageId;
 }

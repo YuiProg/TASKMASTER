@@ -33,3 +33,7 @@ app:
   jwt:
     secret: ${SECRET_KEY}
     expiration: ${EXPIRATION_TIME}
+  cloudinary:
+    name: ${CLOUDINARY_NAME}
+    key: ${CLOUDINARY_KEY}
+    secret: ${CLOUDINARY_SECRET}

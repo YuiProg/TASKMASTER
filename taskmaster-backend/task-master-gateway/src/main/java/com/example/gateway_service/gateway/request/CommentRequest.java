@@ -17,4 +17,5 @@ public class CommentRequest {
     public String taskId;
     public String updatedBy;
     public Integer like;
+    public String image;
 }
