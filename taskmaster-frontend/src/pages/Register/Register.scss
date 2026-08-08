@@ -59,6 +59,7 @@
     flex-direction: column;
     padding: 48px 56px;
     box-sizing: border-box;
+    border-right: none !important;
 
     @media (max-width: 868px) {
       display: none;
@@ -172,6 +173,7 @@
     background-color: $glass-bg-2 !important;
     backdrop-filter: blur($glass-blur-lg);
     -webkit-backdrop-filter: blur($glass-blur-lg);
+    border-left: none !important;
     box-sizing: border-box;
 
     @media (max-width: 868px) {
@@ -183,6 +185,13 @@
   &__form-wrapper {
     width: 100%;
     max-width: 380px;
+    padding: $space-8 $space-7;
+    border-radius: $radius-2xl;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.12);
   }
 
   &__brand {
