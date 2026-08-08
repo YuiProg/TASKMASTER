@@ -35,7 +35,7 @@
   width: 100%;
   @include glass-surface($bg: $glass-bg-3, $blur: $glass-blur-sm);
   border-radius: $radius-xl;
-  padding: $space-10;
+  padding: $space-8;
   box-sizing: border-box;
   overflow: auto;
 

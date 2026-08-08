@@ -1,5 +1,27 @@
 @use '../../styles/abstracts' as *;
 
+@keyframes tr-register-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes tr-register-exit {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
 .tr-register {
   position: fixed !important;
   inset: 0 !important;
@@ -11,6 +33,12 @@
   overflow: hidden;
   @include gradient-mesh-bg;
   z-index: 999999;
+  animation: tr-register-enter 0.32s $ease-out-standard both;
+
+  &--leaving {
+    animation: tr-register-exit 0.2s $ease-standard both;
+    pointer-events: none;
+  }
 
   @media (max-width: 868px) {
     position: absolute !important;
@@ -211,6 +239,9 @@
   .tr-inputform-panel__headers {
     border: none !important;
     background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     @include flex-column($space-2);
   }
 
@@ -231,6 +262,9 @@
   .tr-inputform {
     border: none !important;
     background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
     @include flex-column($space-4);
     width: 100%;
     box-sizing: border-box;

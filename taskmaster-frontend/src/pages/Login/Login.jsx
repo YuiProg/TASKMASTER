@@ -7,9 +7,12 @@ import { useAuthStore } from '../../context/AuthStore';
 import { InputField } from '../../components/TRCOMPONENTS/TRInputField/InputFIeld';
 import packageJson from '../../../package.json';
 
+const PAGE_TRANSITION_MS = 220;
+
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLeaving, setIsLeaving] = useState(false);
 
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
@@ -26,8 +29,15 @@ function Login() {
     }
   };
 
+  const goToRegister = (e) => {
+    e.preventDefault();
+    if (isLeaving) return;
+    setIsLeaving(true);
+    setTimeout(() => navigate('/register'), PAGE_TRANSITION_MS);
+  };
+
   return (
-    <div className="tr-login">
+    <div className={`tr-login${isLeaving ? ' tr-login--leaving' : ''}`}>
       {/* Left Visual Hero Section */}
       <div className="tr-login__hero">
         <div className="tr-login__hero-overlay" />
@@ -110,7 +120,7 @@ function Login() {
           </TRInputFormPanel>
 
           <p className="tr-login__signup-hint">
-            Don&apos;t have an account? <Link to="/register">Sign up</Link>
+            Don&apos;t have an account? <Link to="/register" onClick={goToRegister}>Sign up</Link>
           </p>
 
           <p 

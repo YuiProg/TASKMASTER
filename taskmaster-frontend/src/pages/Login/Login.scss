@@ -10,6 +10,28 @@
   overflow-x: hidden;
 }
 
+@keyframes tr-login-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes tr-login-exit {
+  from {
+    opacity: 1;
+    transform: scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+}
+
 .tr-login {
   position: fixed !important;
   top: 0 !important;
@@ -19,12 +41,17 @@
   width: 100vw !important;
   height: 100vh !important;
   margin: 0 !important;
-  transform: none !important;
   display: flex;
   overflow: hidden;
   @include gradient-mesh-bg;
   z-index: 99999;
   padding: 0;
+  animation: tr-login-enter 0.32s $ease-out-standard both;
+
+  &--leaving {
+    animation: tr-login-exit 0.2s $ease-standard both;
+    pointer-events: none;
+  }
 
   @media (max-width: 868px) {
     position: absolute !important;
