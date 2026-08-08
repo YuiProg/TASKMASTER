@@ -34,18 +34,15 @@
 
 .tr-login {
   position: fixed !important;
-  top: 0 !important;
-  left: 0 !important;
-  right: 0 !important;
-  bottom: 0 !important;
+  inset: 0 !important;
   width: 100vw !important;
   height: 100vh !important;
   margin: 0 !important;
+  padding: 0 !important;
   display: flex;
   overflow: hidden;
   @include gradient-mesh-bg;
-  z-index: 99999;
-  padding: 0;
+  z-index: 999999;
   animation: tr-login-enter 0.32s $ease-out-standard both;
 
   &--leaving {
@@ -68,11 +65,11 @@
     background-image: url('https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=1600&auto=format&fit=crop');
     background-size: cover;
     background-position: center;
-    filter: saturate(0.85) contrast(1.04);
     display: flex;
     flex-direction: column;
     padding: 48px 56px;
     box-sizing: border-box;
+    border-right: none !important;
 
     @media (max-width: 868px) {
       display: none;
@@ -111,17 +108,15 @@
 
   &__badge {
     display: inline-block;
-    padding: 6px 14px;
-    border-radius: $radius-pill;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.06));
-    backdrop-filter: blur($glass-blur-sm);
-    -webkit-backdrop-filter: blur($glass-blur-sm);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 2px 8px rgba(0, 0, 0, 0.2);
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     font-size: 0.75rem;
     font-weight: $fw-semibold;
     color: $white;
-    letter-spacing: $letter-spacing-wide;
+    letter-spacing: 0.5px;
     margin-bottom: $space-5;
     text-transform: uppercase;
   }
@@ -148,12 +143,11 @@
   }
 
   &__glass-card {
-    background: linear-gradient(160deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
-    backdrop-filter: blur($glass-blur-md) saturate(140%);
-    -webkit-backdrop-filter: blur($glass-blur-md) saturate(140%);
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
     border-radius: $radius-xl;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), 0 8px 24px rgba(0, 0, 0, 0.25);
     padding: 18px 24px;
     max-width: 420px;
     margin-bottom: auto;
@@ -186,35 +180,28 @@
     align-items: center;
     justify-content: center;
     padding: 48px;
-    position: relative;
-    background:
-      radial-gradient(ellipse 60% 50% at 50% 0%, rgba($accent-light, 0.14) 0%, transparent 70%),
-      $glass-bg-2 !important;
-    backdrop-filter: blur($glass-blur-lg) saturate(140%);
-    -webkit-backdrop-filter: blur($glass-blur-lg) saturate(140%);
-    border-left: 1px solid $glass-border-strong;
+    background-color: $glass-bg-2 !important;
+    backdrop-filter: blur($glass-blur-lg);
+    -webkit-backdrop-filter: blur($glass-blur-lg);
+    border-left: none !important;
     box-sizing: border-box;
 
     @media (max-width: 868px) {
       min-height: 100vh;
       padding: $space-8 $space-6;
-      border-left: none;
     }
   }
 
   &__form-wrapper {
     width: 100%;
-    max-width: 400px;
-    position: relative;
-    padding: $space-12 $space-11;
+    max-width: 380px;
+    padding: $space-8 $space-7;
     border-radius: $radius-2xl;
-    overflow: hidden;
-    @include glass-surface($bg: rgba(22, 26, 38, 0.6), $blur: $glass-blur-md, $border: $glass-border-strong, $shadow: none);
-    box-shadow: $glass-shadow, inset 0 1px 0 rgba($white, 0.1), inset 1px 0 0 rgba($white, 0.04);
-
-    @media (max-width: 868px) {
-      padding: $space-9 $space-8;
-    }
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.12);
   }
 
   &__brand {
@@ -262,9 +249,10 @@
 
   .tr-inputform-panel {
     background-color: transparent !important;
+    padding: 0 !important;
     width: 100%;
     box-sizing: border-box;
-    @include flex-column($space-8);
+    @include flex-column($space-6);
   }
 
   .tr-inputform-panel__headers {
@@ -296,7 +284,7 @@
     box-shadow: none !important;
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
-    @include flex-column($space-6);
+    @include flex-column($space-4);
     width: 100%;
     box-sizing: border-box;
   }
@@ -305,13 +293,12 @@
     background-color: $input-bg-light !important;
     border: 1px solid $slate-200 !important;
     color: $slate-900 !important;
-    box-shadow: inset 0 1px 2px rgba($black, 0.12) !important;
     transition: all $transition-base ease;
 
     &:focus {
       background-color: $input-bg-hover !important;
       border-color: $accent !important;
-      box-shadow: inset 0 1px 2px rgba($black, 0.08), 0 0 0 4px rgba($accent, 0.18) !important;
+      box-shadow: 0 0 0 4px rgba($accent, 0.18) !important;
     }
 
     &::placeholder {
@@ -321,7 +308,7 @@
 
   .tr-login__btn {
     width: 100% !important;
-    background: linear-gradient(135deg, $accent 0%, $accent-alt 100%) !important;
+    background-color: $accent !important;
     color: $white !important;
     font-weight: $fw-semibold;
     margin-top: $space-2;
@@ -332,18 +319,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 4px 16px rgba($accent, 0.35);
     transition: all $transition-base ease;
 
     &:hover {
-      background: linear-gradient(135deg, $accent-dark 0%, $accent 100%) !important;
+      background-color: $accent-dark !important;
       transform: translateY(-1px);
-      box-shadow: 0 8px 24px rgba($accent, 0.45);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
     }
 
     &:active {
       transform: translateY(0);
-      box-shadow: 0 2px 10px rgba($accent, 0.3);
     }
 
     &:disabled {
@@ -357,7 +342,7 @@
 .tr-login__form-error {
   width: 100%;
   margin: 0;
-  padding: $space-6 $space-7;
+  padding: $space-4 $space-6;
   border-radius: $radius-lg;
   background: $red-50 !important;
   border: 1px solid $red-200 !important;
@@ -389,7 +374,7 @@
   text-align: center;
   font-size: $fs-sm;
   color: $slate-500 !important;
-  margin-top: $space-8;
+  margin-top: $space-6;
 
   a {
     color: $accent !important;
