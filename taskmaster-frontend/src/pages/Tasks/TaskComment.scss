@@ -18,10 +18,10 @@
     border-radius: $radius-md;
     padding: $space-4;
 
-    &:focus-within {
-      background-color: $white;
-      border-color: $blue-focus-border;
-    }
+    // &:focus-within {
+    //   background-color: $white;
+    //   border-color: $blue-focus-border;
+    // }
   }
 
   &__input-area {

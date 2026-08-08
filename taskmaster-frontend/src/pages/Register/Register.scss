@@ -210,7 +210,6 @@
 
   .tr-inputform-panel__headers {
     border: none !important;
-    padding: 0 !important;
     background: transparent !important;
     @include flex-column($space-2);
   }
@@ -231,7 +230,6 @@
 
   .tr-inputform {
     border: none !important;
-    padding: 0 !important;
     background: transparent !important;
     @include flex-column($space-4);
     width: 100%;
