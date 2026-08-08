@@ -19,6 +19,7 @@ function TaskComments({
   const [draft, setDraft] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
+  const [fullscreenImage, setFullscreenImage] = useState(null);
   const fileInputRef = useRef(null);
 
   const comments = useCommentStore((state) => state.comments);
@@ -33,7 +34,6 @@ function TaskComments({
     }
   }, [taskId, getComments]);
 
-  // Store the raw File object and generate a local URL for instant UI preview
   const handleImageSelect = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -50,7 +50,6 @@ function TaskComments({
     }
   };
 
-  // Converts File to Base64 Data URI inside the component before sending
   const convertFileToBase64 = (file) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -75,7 +74,6 @@ function TaskComments({
       }
     }
 
-    // Passes comment text, task ID, and converted base64 image to postComment
     await postComment(text, taskId, base64Image);
 
     setDraft("");
@@ -188,6 +186,7 @@ function TaskComments({
                         src={imageUrl}
                         alt="Comment attachment"
                         className="task-comments__attachment"
+                        onClick={() => setFullscreenImage(imageUrl)}
                       />
                     </div>
                   )}
@@ -204,6 +203,32 @@ function TaskComments({
               </div>
             );
           })}
+        </div>
+      )}
+
+      {/* LIGHTBOX MODAL */}
+      {fullscreenImage && (
+        <div
+          className="task-comments__modal-overlay"
+          onClick={() => setFullscreenImage(null)}
+        >
+          <div
+            className="task-comments__modal-content"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="task-comments__modal-close"
+              onClick={() => setFullscreenImage(null)}
+            >
+              <X size={20} />
+            </button>
+            <img
+              src={fullscreenImage}
+              alt="Fullscreen attachment"
+              className="task-comments__modal-img"
+            />
+          </div>
         </div>
       )}
     </div>
