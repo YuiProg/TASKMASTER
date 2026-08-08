@@ -37,7 +37,6 @@ class ViewProject extends React.Component {
         const data = await getProjectByName(newPath);
         
         if (data) {
-            // Extract the project object correctly from response structure
             const projectObj = data.project || data.data || data;
             const tasksList = data.tasks || projectObj?.tasks || [];
 
@@ -48,7 +47,6 @@ class ViewProject extends React.Component {
         }
     }
 
-    // Top details section
     topContainer = () => {
         const { project, tasks } = this.state;
         const taskCount = tasks ? tasks.length : 0;
@@ -63,7 +61,6 @@ class ViewProject extends React.Component {
         );
     }
 
-    // Project members table mapping
     projectMembers = () => {
         const members = this.state.project.members || [];
         const data = members.map(d => ({
@@ -71,32 +68,45 @@ class ViewProject extends React.Component {
             Email: d.email,
             ["Branch Location"]: d.branchLocation?.branchLocation || 'N/A'
         }));
-        return (
-            <Table data={data}/>
-        );
+        return <Table data={data} hasAction noEdit/>;
     }
 
     handleAddMember = async () => {
-        const email = this.state.newMemberEmail.trim();
-        if (!email) return;
+        const rawInput = this.state.newMemberEmail.trim();
+        if (!rawInput) return;
+
+        // Extract single or multiple comma/space separated emails
+        const emailsList = rawInput
+            .split(/[\s,]+/)
+            .map(e => e.trim())
+            .filter(e => e.length > 0);
+
+        if (emailsList.length === 0) return;
 
         this.setState({ isAddingMember: true, addMemberError: null });
 
         const { addProjectMembers } = useProjectStore.getState();
-        const success = await addProjectMembers(this.state.project.id, [email]);
+        
+        // Sends request body: { "emails": ["email1@gmail.com", "email2@gmail.com"] }
+        const success = await addProjectMembers(this.state.project.id, emailsList);
 
         if (success) {
             this.setState({ newMemberEmail: '', isAddingMember: false });
-            // Re-fetch so the members table/count reflect the real
-            // backend state rather than patching it in locally.
+            // Re-fetch project data to reflect updated backend state
             await this.initProjectData();
         } else {
             const { error } = useProjectStore.getState();
             this.setState({
                 isAddingMember: false,
-                addMemberError: error || 'Could not add that member.',
+                addMemberError: error || 'Could not add member(s).',
             });
         }
+    };
+
+    handleInputChange = (e) => {
+        // Handles both direct value strings and Synthetic Event objects
+        const value = e?.target ? e.target.value : e;
+        this.setState({ newMemberEmail: value, addMemberError: null });
     };
 
     viewTasks = () => {
@@ -108,7 +118,7 @@ class ViewProject extends React.Component {
                 ["Due Date"]: t.dueDate || 'N/A',
                 Assignee: t.assignee?.username || 'N/A',
                 Reporter: t.createdBy?.username || 'N/A',
-            }
+            };
 
             Object.defineProperty(row, "id", {
                 value: t.id,
@@ -176,7 +186,6 @@ class ViewProject extends React.Component {
                         <Label label="Action"/>
                         <div className="view-project__action-spacer"/>
                         
-                        {/* Show VIEW SPRINT if active sprint exists, otherwise show CREATE SPRINT */}
                         {hasActiveSprint ? (
                             <Button 
                                 className="view-project__action-btn" 
@@ -200,6 +209,7 @@ class ViewProject extends React.Component {
                         />
                     </div>
                 </PanelContainer>
+                
                 <PanelContainer title="Project Details">
                     {this.topContainer()}
                     <InputRow gap={16}>
@@ -212,29 +222,29 @@ class ViewProject extends React.Component {
                 </PanelContainer>
                 
                 <PanelContainer title="Project Members">
-                        <Label label={`Members: ${memberCount}`} style={{marginTop: '10px', marginBottom: '20px'}}/>
+                    <Label label={`Members: ${memberCount}`} style={{marginTop: '10px', marginBottom: '20px'}}/>
 
-                        <div className="view-project__add-member-row">
-                            <InputField
-                                placeholder="Add member by email"
-                                email
-                                value={newMemberEmail}
-                                onChange={(value) => this.setState({ newMemberEmail: value })}
-                                onEnterDown={this.handleAddMember}
-                            />
-                            <Button
-                                className="view-project__action-btn"
-                                text={isAddingMember ? "ADDING..." : "ADD"}
-                                disabled={isAddingMember || this.state.project?.archived === 1}
-                                customWidth={90}
-                                onClick={this.handleAddMember}
-                            />
-                        </div>
-                        {addMemberError && (
-                            <p className="view-project__add-member-error">{addMemberError}</p>
-                        )}
+                    <div className="view-project__add-member-row">
+                        <InputField
+                            placeholder="Add member by email (or comma separated)"
+                            email
+                            value={newMemberEmail}
+                            onChange={this.handleInputChange}
+                            onEnterDown={this.handleAddMember}
+                        />
+                        <Button
+                            className="view-project__action-btn"
+                            text={isAddingMember ? "ADDING..." : "ADD"}
+                            disabled={isAddingMember || this.state.project?.archived === 1}
+                            customWidth={90}
+                            onClick={this.handleAddMember}
+                        />
+                    </div>
+                    {addMemberError && (
+                        <p className="view-project__add-member-error">{addMemberError}</p>
+                    )}
 
-                        {this.projectMembers()}
+                    {this.projectMembers()}
                 </PanelContainer>
             </PanelPage>
         );
