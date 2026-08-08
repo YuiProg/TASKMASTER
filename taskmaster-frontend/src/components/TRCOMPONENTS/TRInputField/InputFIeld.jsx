@@ -26,29 +26,49 @@ export class InputField extends React.Component {
     }
   }
 
-  checkNumber = (e) => {
+  handleChange = (e) => {
     const value = e.target.value;
-    const { number, text, password, email } = this.props;
-    const regex = /^\d+$/;
+    const { number, email } = this.props;
 
-    if (value === "") {
-      this.setState({ error: null, value: "" });
-      return value;
-    }
-
-    if (text || password || email) {
-      this.setState({ error: null, value: value });
-      return value; 
-    }
-
+    // Handle Number Validation
     if (number) {
+      const regex = /^\d+$/;
+      if (value === "") {
+        this.setState({ error: null, value: "" });
+        return "";
+      }
       if (regex.test(value)) {
         this.setState({ error: null, value: value });
         return value;
       } else {
-        this.setState({ value: "", error: "Number only!" });
+        this.setState({ error: "Number only!" });
+        return undefined;
       }
     }
+
+    // Handle Email Format Validation
+    if (email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      this.setState({ value: value });
+
+      if (value === "") {
+        this.setState({ error: null });
+        return value;
+      }
+
+      if (!emailRegex.test(value)) {
+        this.setState({ error: "Please enter a valid email address (e.g., user@domain.com)" });
+        // Return undefined so parent callbacks (like state updates in ViewProject) don't process invalid emails
+        return undefined; 
+      } else {
+        this.setState({ error: null });
+        return value;
+      }
+    }
+
+    // Default fallback for general text/password
+    this.setState({ error: null, value: value });
+    return value;
   };
 
   handleSearch = (e) => {
@@ -60,7 +80,8 @@ export class InputField extends React.Component {
 
   handleEnterDown = (e, CB) => {
     const key = e.key;
-    if (key === "Enter" && CB) {
+    // Don't fire submission if there is an active validation error
+    if (key === "Enter" && CB && !this.state.error) {
       return CB(e.target.value);
     }
   };
@@ -108,7 +129,7 @@ export class InputField extends React.Component {
                 }
                 required={!!(required || isRequired)}
                 onChange={(e) => {
-                  const val = this.checkNumber(e);
+                  const val = this.handleChange(e);
                   if (val !== undefined && onChange) onChange(val);
                 }}
                 disabled={disabled}
@@ -161,26 +182,7 @@ export class InputField extends React.Component {
   }
 }
 
-/**
- * @class Label
- * @component Text label. If an `onClick` prop is passed, the label becomes
- * clickable: clicking it swaps the label out for an editable InputField.
- * Committing the edit — via Enter, or by clicking anywhere outside the
- * field — calls `onClick(newValue)`, and the label view is restored using
- * whatever `label`/`value` the parent re-renders with. Without an `onClick`
- * prop, it behaves as a plain, non-interactive label (no cursor change, no
- * edit mode).
- *
- * Props:
- * - label: the full display text, e.g. "Created By: John Doe"
- * - value: (optional) the raw underlying value to seed the edit box with,
- *   e.g. "John Doe". Defaults to `label` if omitted, so simple labels
- *   ("Unassigned") work with no extra wiring.
- * - onClick(newValue): called when an edit is committed (Enter key, or a
- *   click outside the field).
- */
 export class Label extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
@@ -199,7 +201,6 @@ export class Label extends React.Component {
   };
 
   addOutsideListener = () => {
-    // mousedown (not click) so it fires before any blur/re-render races.
     document.addEventListener("mousedown", this.handleOutsideClick);
   };
 
@@ -225,7 +226,6 @@ export class Label extends React.Component {
   };
 
   render() {
-
     const {
       label,
       value,

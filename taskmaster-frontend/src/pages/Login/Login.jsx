@@ -5,7 +5,7 @@ import { InputForm, TRInputFormPanel } from '../../components/TRCOMPONENTS/TRInp
 import Button from '../../components/TRCOMPONENTS/TRButton/Button';
 import { useAuthStore } from '../../context/AuthStore';
 import { InputField } from '../../components/TRCOMPONENTS/TRInputField/InputFIeld';
-import packageJson from '../../../package.json'; // Adjust relative path if package.json is in a different parent folder
+import packageJson from '../../../package.json';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -36,9 +36,7 @@ function Login() {
         <div className="tr-login__hero-content">
           <div className="tr-login__brand">
             <div className="tr-login__brand-mark">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
+              <img src="/taskmaster.svg" alt="Task Master Logo" width="20" height="20" />
             </div>
             <span className="tr-login__brand-name">TASK MASTER</span>
           </div>
@@ -69,9 +67,7 @@ function Login() {
           {/* Mobile-only Header */}
           <div className="tr-login__brand tr-login__brand--mobile">
             <div className="tr-login__brand-mark">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
+              <img src="/taskmaster.svg" alt="Task Master Logo" width="18" height="18" />
             </div>
             <span className="tr-login__brand-name">TASK MASTER</span>
           </div>
@@ -117,7 +113,6 @@ function Login() {
             Don&apos;t have an account? <Link to="/register">Sign up</Link>
           </p>
 
-          {/* Version tag placed below sign-up hint with dark text styling */}
           <p 
             className="tr-login__version-tag" 
             style={{ 

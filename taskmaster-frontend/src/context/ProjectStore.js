@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import api from '../lib/axios';
 import gateWayApi from '../lib/gateway';
 
 export const useProjectStore = create((set, get) => ({
@@ -57,46 +56,44 @@ export const useProjectStore = create((set, get) => ({
 
   getProjectTasks: async (projectId) => {
     try {
-        const res = await gateWayApi.get(`/getProjectTask/${projectId}`);
-        const tasksList = res.data.data || [];
-        set({ tasks: tasksList });
-        return tasksList;
+      const res = await gateWayApi.get(`/getProjectTask/${projectId}`);
+      const tasksList = res.data.data || [];
+      set({ tasks: tasksList });
+      return tasksList;
     } catch (err) {
-        set({
-          error: err.response?.data?.message || 'Something went wrong. Please try again.',
-        });
-        return [];
+      set({
+        error: err.response?.data?.message || 'Something went wrong. Please try again.',
+      });
+      return [];
     }
   },
 
   getProjectByName: async (projectName) => {
     try {
-        const res = await gateWayApi.get(`/getProjectByName/${projectName}`);
-        const projectData = res.data.data;
+      const res = await gateWayApi.get(`/getProjectByName/${projectName}`);
+      const projectData = res.data.data;
 
-        const projectId = projectData.id;
-        console.log(res);
-        set({ selectedProject: projectData });
+      const projectId = projectData.id;
+      set({ selectedProject: projectData });
 
-        const tasks = await get().getProjectTasks(projectId);
+      const tasks = await get().getProjectTasks(projectId);
 
-        return { project: projectData, tasks };
+      return { project: projectData, tasks };
     } catch (err) {
-        set({
-          error: err.response?.data?.message || 'Something went wrong. Please try again.',
-        });
+      set({
+        error: err.response?.data?.message || 'Something went wrong. Please try again.',
+      });
     }
   },
 
-  // PUT /addProjectMembers/{projectId}  { emails: [...] }
-  // Updates the matching project in the list with whatever the backend returns,
-  // if it returns the updated project; otherwise just reports success/failure.
+  // PUT /addProjectMembers/{projectId}
+  // Body sent: { "emails": ["email1@gmail.com", "email2@gmail.com"] }
   addProjectMembers: async (projectId, emails) => {
     set({ error: null });
     try {
-      const res = await api.put(`/addProjectMembers/${projectId}`, { emails });
+      const res = await gateWayApi.put(`/addProjectMembers/${projectId}`, { emails });
 
-      if (res.data.status === 'SUCCESS') {
+      if (String(res.data.status).toUpperCase() === 'SUCCESS') {
         if (res.data.data) {
           set({
             projects: get().projects.map((p) =>
@@ -138,7 +135,7 @@ export const useProjectStore = create((set, get) => ({
 
   fetchUserCreatedProjects: async () => {
     try {
-      set({isLoading: true});
+      set({ isLoading: true });
       const res = await gateWayApi.get("/getUserCreatedProjects");
       const list = Array.isArray(res.data?.data) ? res.data.data : [];
       set({ userProjects: list, isLoading: false });
@@ -160,9 +157,7 @@ export const useProjectStore = create((set, get) => ({
 
       if (projectData) {
         set({ selectedProject: projectData });
-        
         const tasks = await get().getProjectTasks(projectId);
-        
         return { project: projectData, tasks };
       }
       

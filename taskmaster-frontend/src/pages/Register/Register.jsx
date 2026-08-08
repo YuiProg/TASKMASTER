@@ -6,7 +6,7 @@ import { InputForm, TRInputFormPanel } from '../../components/TRCOMPONENTS/TRInp
 import Button from '../../components/TRCOMPONENTS/TRButton/Button';
 import { InputField } from '../../components/TRCOMPONENTS/TRInputField/InputFIeld';
 import { useAuthStore } from '../../context/AuthStore';
-import packageJson from '../../../package.json'; // Adjust relative path if package.json is in a different parent folder
+import packageJson from '../../../package.json';
 
 function Register() {
   const [username, setUsername] = useState('');
@@ -37,9 +37,7 @@ function Register() {
         <div className="tr-register__hero-content">
           <div className="tr-register__brand">
             <div className="tr-register__brand-mark">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
+              <img src="/taskmaster.svg" alt="Task Master Logo" width="20" height="20" />
             </div>
             <span className="tr-register__brand-name">TASK MASTER</span>
           </div>
@@ -68,9 +66,7 @@ function Register() {
           {/* Mobile Brand Header */}
           <div className="tr-register__brand tr-register__brand--mobile">
             <div className="tr-register__brand-mark">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <polyline points="20 6 9 17 4 12" />
-              </svg>
+              <img src="/taskmaster.svg" alt="Task Master Logo" width="18" height="18" />
             </div>
             <span className="tr-register__brand-name">TASK MASTER</span>
           </div>
