@@ -141,6 +141,24 @@ public class SprintServiceImpl implements SprintServiceInterface {
         for (Sprint sprint : sprints) {
             if (sprint.getDeadline() != null && sprint.getDeadline() <= new Date().getTime()
              && !sprint.getFinished().equals(StringCodes.TRUE.getCode())) {
+
+                //send email sa mga member
+                for (User members : sprint.getSprintMembers()) {
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                            .withZone(ZoneId.of("UTC"));
+                    emailService.sendTemplatedEmail(
+                            user.getEmail(),
+                            "SPRINT_FINISHED_EMAIL",
+                            Map.of(
+                                    "sprintName", sprint.getSprintName(),
+                                    "memberName", members.getUsername(),
+                                    "projectName", sprint.getProjectId().getProjectName(),
+                                    "initiatedBy", sprint.getInitiatedBy().getUsername(),
+                                    "deadline", formatter.format(Instant.ofEpochMilli(sprint.getDeadline()))
+                            )
+                    );
+                }
+
                 sprint.setFinished(StringCodes.TRUE.getCode());
                 sprintRepository.finishSprint(sprint.getId());
                 sprintCacheService.evictSprintCache();
