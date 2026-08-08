@@ -3,9 +3,13 @@
 .tr-addfile {
   width: auto;
   height: auto;
-  border: 1px dashed;
+  border: 1px dashed $glass-border-strong;
+  border-radius: $radius-lg;
   cursor: pointer;
   background: $dark-surface-alt;
+  backdrop-filter: blur($glass-blur-sm);
+  -webkit-backdrop-filter: blur($glass-blur-sm);
+  color: $slate-500;
 
   &__details {
     width: 100%;

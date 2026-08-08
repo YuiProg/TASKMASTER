@@ -13,7 +13,6 @@
     font-weight: $fw-semibold;
   }
 
-  /* Horizontal row for dropdowns right under the description */
   &__header-dropdowns {
     display: flex;
     flex-direction: row;
@@ -23,7 +22,6 @@
     margin-bottom: $space-9;
   }
 
-  /* Base dropdown sizing */
   &__status-dropdown,
   &__priority-dropdown {
     width: 160px;
@@ -50,7 +48,6 @@
     }
   }
 
-  /* --- Status Variants --- */
   &__status-dropdown--blue .tr-dropdown__button {
     background-color: $blue-50;
     color: $blue-600;
@@ -79,8 +76,6 @@
     color: $green-600;
   }
 
-  /* --- Priority State Variants --- */
-  /* CRITICAL Priority (Red) */
   &__priority-dropdown--red .tr-dropdown__button {
     background-color: $red-50;
     color: $red-600;
@@ -95,7 +90,6 @@
     color: $red-600;
   }
 
-  /* HIGH Priority (Amber/Orange) */
   &__priority-dropdown--amber .tr-dropdown__button {
     background-color: $amber-50;
     color: $amber-600;
@@ -110,7 +104,6 @@
     color: $amber-600;
   }
 
-  /* MEDIUM Priority (Blue) */
   &__priority-dropdown--blue .tr-dropdown__button {
     background-color: $blue-50;
     color: $blue-600;
@@ -125,7 +118,6 @@
     color: $blue-600;
   }
 
-  /* LOW Priority (Slate/Gray) */
   &__priority-dropdown--gray .tr-dropdown__button {
     background-color: $slate-50;
     color: $slate-600;
@@ -140,7 +132,6 @@
     color: $slate-500;
   }
 
-  /* Description & Grid */
   &__description {
     margin: 0;
     color: $slate-500;
@@ -150,6 +141,10 @@
 
   &__details-grid {
     @include flex-column($space-5);
+
+    .tr-label{
+      margin: 0;
+    }
   }
 
   &__assignee-row {
@@ -172,7 +167,6 @@
     border-radius: $radius-pill;
   }
 
-  /* Hover card shown when hovering assignee or member chip */
   &__user-hover {
     position: relative;
     display: inline-block;
@@ -192,7 +186,9 @@
     display: flex;
     align-items: center;
     gap: $space-4;
-    background-color: $white;
+    background-color: $glass-bg-strong;
+    backdrop-filter: blur($glass-blur-md);
+    -webkit-backdrop-filter: blur($glass-blur-md);
     border: 1px solid $border-light;
     padding: $space-4 $space-6;
     border-radius: $radius-lg;
@@ -249,7 +245,6 @@
   }
 }
 
-/* Equal-height Details/Project columns */
 .tr-inputrow__field {
   display: flex;
 
@@ -262,4 +257,15 @@
 .tr-panel-page__main .tr-panel-card + .tr-inputrow,
 .tr-panel-page__main .tr-inputrow + .tr-panel-card {
   margin-top: $space-8;
+}
+
+@include respond-to(mobile-nav) {
+  .view-task__header-dropdowns {
+    flex-wrap: wrap;
+  }
+
+  .view-task__status-dropdown,
+  .view-task__priority-dropdown {
+    width: auto;
+  }
 }

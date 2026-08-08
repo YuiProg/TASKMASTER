@@ -18,10 +18,10 @@
     border-radius: $radius-md;
     padding: $space-4;
 
-    &:focus-within {
-      background-color: $white;
-      border-color: $blue-focus-border;
-    }
+    // &:focus-within {
+    //   background-color: $white;
+    //   border-color: $blue-focus-border;
+    // }
   }
 
   &__input-area {
@@ -101,7 +101,6 @@
     height: 32px;
     flex-shrink: 0;
 
-    /* Ensure Lucide SVG renders visible dimensions */
     svg {
       width: 18px;
       height: 18px;
@@ -124,6 +123,27 @@
     font-weight: $fw-semibold;
     flex-shrink: 0;
     margin-top: 0;
+  }
+
+  &__textarea {
+    width: 100%;
+    background-color: $input-bg-light;
+    backdrop-filter: blur($glass-blur-sm);
+    -webkit-backdrop-filter: blur($glass-blur-sm);
+    border: 1px solid $slate-200;
+    border-radius: $radius-md;
+    color: $slate-800;
+    font-size: $fs-base;
+    padding: $space-6 $space-8;
+    box-sizing: border-box;
+    outline: none;
+    font-family: inherit;
+    resize: vertical;
+
+    &:focus {
+      background-color: $input-bg-hover;
+      border-color: $blue-focus-border;
+    }
   }
 
   &__empty {
@@ -229,7 +249,6 @@
   }
 }
 
-// Add pointer cursor to clickable image attachments
 .task-comments__attachment {
   cursor: pointer;
   transition: transform 0.2s ease, opacity 0.2s ease;
@@ -240,7 +259,6 @@
   }
 }
 
-// Lightbox Modal styles
 .task-comments__modal-overlay {
   position: fixed;
   top: 0;

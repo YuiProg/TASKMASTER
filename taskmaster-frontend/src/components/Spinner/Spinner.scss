@@ -12,8 +12,8 @@
   &__ring {
     width: 40px !important;
     height: 40px !important;
-    border: 4px solid $blue-ring-track !important; /* Soft light-blue track */
-    border-top-color: $blue-600 !important; /* Primary blue loader segment */
+    border: 4px solid $blue-ring-track !important;
+    border-top-color: $blue-600 !important;
     border-radius: $radius-circle !important;
     animation: spin 1s linear infinite !important;
   }

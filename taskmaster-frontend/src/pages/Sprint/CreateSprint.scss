@@ -1,3 +1,5 @@
+@use '../../styles/abstracts' as *;
+
 .create-sprint-container {
   width: 100%;
   max-width: 800px;
@@ -11,9 +13,9 @@
   gap: 1.5rem;
 
   &__error {
-    background-color: #fef2f2;
-    color: #991b1b;
-    border: 1px solid #fecaca;
+    background-color: $red-50;
+    color: $red-600;
+    border: 1px solid $red-200;
     padding: 0.875rem 1rem;
     border-radius: 8px;
     font-size: 0.875rem;
@@ -28,17 +30,17 @@
     label {
       font-weight: 600;
       font-size: 0.875rem;
-      color: #1f2937;
+      color: $slate-800;
     }
 
     .required {
-      color: #dc2626;
+      color: $error-red;
       margin-left: 0.25rem;
     }
 
     .note {
       font-size: 0.8125rem;
-      color: #6b7280;
+      color: $slate-400;
     }
   }
 
@@ -46,18 +48,21 @@
     width: 100%;
     height: 42px;
     padding: 0 0.875rem;
-    border: 1px solid #d1d5db;
+    border: 1px solid $border-light;
     border-radius: 8px;
     font-size: 0.875rem;
-    color: #111827;
-    background-color: #ffffff;
+    color: $slate-800;
+    background-color: $input-bg-light;
+    backdrop-filter: blur($glass-blur-sm);
+    -webkit-backdrop-filter: blur($glass-blur-sm);
     box-sizing: border-box;
     transition: all 0.2s ease;
+    color-scheme: dark;
 
     &:focus {
       outline: none;
-      border-color: #2563eb;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+      border-color: $blue-600;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
     }
   }
 
@@ -68,16 +73,17 @@
     max-height: 320px;
     overflow-y: auto;
     padding-right: 0.25rem;
+    @include custom-scrollbar($thumb: $slate-300, $thumb-hover: $slate-400);
   }
 
   &__empty-tasks {
     font-size: 0.875rem;
-    color: #9ca3af;
+    color: $slate-400;
     padding: 1rem;
     text-align: center;
-    background: #f9fafb;
+    background: $glass-bg-3;
     border-radius: 8px;
-    border: 1px dashed #e5e7eb;
+    border: 1px dashed $glass-border-strong;
   }
 
   &__task-card {
@@ -85,25 +91,25 @@
     align-items: center;
     justify-content: space-between;
     padding: 0.875rem 1.125rem;
-    border: 1px solid #e5e7eb;
+    border: 1px solid $border-light;
     border-radius: 8px;
-    background-color: #ffffff;
+    background-color: $glass-bg-3;
     cursor: pointer;
     transition: all 0.2s ease;
 
     &:hover {
-      border-color: #3b82f6;
-      background-color: #f8fafc;
+      border-color: $blue-500;
+      background-color: $input-bg-hover;
     }
 
     &--selected {
-      border-color: #2563eb;
-      background-color: #eff6ff;
-      box-shadow: 0 1px 2px rgba(37, 99, 235, 0.05);
+      border-color: $blue-600;
+      background-color: $blue-50;
+      box-shadow: 0 1px 2px rgba(37, 99, 235, 0.1);
 
       &:hover {
-        border-color: #1d4ed8;
-        background-color: #dbeafe;
+        border-color: $blue-700;
+        background-color: $blue-100;
       }
     }
   }
@@ -112,11 +118,12 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    min-width: 0;
 
     .title {
       font-size: 0.875rem;
       font-weight: 500;
-      color: #111827;
+      color: $slate-800;
     }
 
     .priority {
@@ -126,31 +133,32 @@
       border-radius: 9999px;
       letter-spacing: 0.025em;
       text-transform: uppercase;
-      background-color: #f3f4f6;
-      color: #4b5563;
+      background-color: $slate-100;
+      color: $slate-500;
+      flex-shrink: 0;
 
       &--critical, &--urgent {
-        background-color: #fef2f2;
-        color: #991b1b;
-        border: 1px solid #fecaca;
+        background-color: $red-50;
+        color: $red-600;
+        border: 1px solid $red-200;
       }
 
       &--high {
-        background-color: #fff7ed;
-        color: #c2410c;
-        border: 1px solid #ffedd5;
+        background-color: $amber-50;
+        color: $amber-600;
+        border: 1px solid $amber-200;
       }
 
       &--medium {
-        background-color: #fefce8;
-        color: #a16207;
-        border: 1px solid #fef08a;
+        background-color: $amber-50;
+        color: $amber-600;
+        border: 1px solid $amber-200;
       }
 
       &--low {
-        background-color: #f0fdf4;
-        color: #15803d;
-        border: 1px solid #bbf7d0;
+        background-color: $green-50;
+        color: $green-600;
+        border: 1px solid $green-200;
       }
     }
   }
@@ -158,18 +166,20 @@
   &__checkbox {
     width: 1.125rem;
     height: 1.125rem;
-    accent-color: #2563eb;
+    accent-color: $blue-600;
     cursor: pointer;
+    flex-shrink: 0;
   }
 
   &__actions {
     display: flex;
+    flex-wrap: wrap;
     justify-content: flex-end;
     align-items: center;
     gap: 0.875rem;
     margin-top: 1rem;
     padding-top: 1.25rem;
-    border-top: 1px solid #e5e7eb;
+    border-top: 1px solid $border-light;
 
     button {
       min-width: 130px;
@@ -179,38 +189,35 @@
       cursor: pointer;
       transition: all 0.2s ease;
 
-      /* Primary / Submit Button */
       &[type="submit"],
       &.submit,
       &:not([cancel]) {
-        background-color: #2563eb;
-        color: #ffffff;
+        background-color: $blue-600;
+        color: $white;
         border: none;
 
         &:hover:not(:disabled) {
-          background-color: #1d4ed8;
+          background-color: $blue-700;
         }
       }
 
-      /* Cancel Button */
       &[type="button"],
       &.cancel {
-        background-color: #ffffff;
-        color: #374151;
-        border: 1px solid #d1d5db;
+        background-color: $glass-bg-3;
+        color: $slate-700;
+        border: 1px solid $border-light;
 
         &:hover:not(:disabled) {
-          background-color: #f3f4f6;
+          background-color: $input-bg-hover;
         }
       }
 
-      /* Disabled state styling */
       &:disabled,
       &[disabled] {
-        opacity: 0.6;
-        background-color: #e5e7eb !important;
-        color: #9ca3af !important;
-        border-color: #d1d5db !important;
+        opacity: 0.5;
+        background-color: $slate-100 !important;
+        color: $slate-400 !important;
+        border-color: $border-light !important;
         cursor: not-allowed !important;
       }
     }
@@ -219,7 +226,22 @@
   &__loading {
     padding: 3rem;
     text-align: center;
-    color: #6b7280;
+    color: $slate-400;
     font-size: 0.9375rem;
+  }
+}
+
+@include respond-to(mobile-nav) {
+  .create-sprint-container {
+    padding: 1rem;
+  }
+
+  .create-sprint__actions {
+    justify-content: stretch;
+
+    button {
+      flex: 1;
+      min-width: 0;
+    }
   }
 }

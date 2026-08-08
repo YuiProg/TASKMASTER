@@ -38,7 +38,7 @@ const viewButtonStyle = {
   alignItems: "center",
   justifyContent: "center",
   backgroundColor: "transparent",
-  border: "1px solid #e2e8f0",
+  border: "1px solid transparent",
   borderRadius: "6px",
   padding: "4px 6px",
   color: "#64748b",
@@ -136,7 +136,7 @@ function renderPriorityIcon(priority) {
     case "LOW":
     default:
       return (
-        <span style={{ ...priorityContainerStyle, color: "#64748b" }}>
+        <span style={{ ...priorityContainerStyle, color: "#94a3b8" }}>
           <ArrowDown size={13} /> LOW
         </span>
       );
