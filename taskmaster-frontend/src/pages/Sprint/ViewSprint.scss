@@ -1,4 +1,4 @@
-// ViewSprint.scss
+@use '../../styles/abstracts' as *;
 
 .sprints-loading-container {
   display: flex;
@@ -19,13 +19,13 @@
   h3 {
     margin: 0 0 8px 0;
     font-size: 1.125rem;
-    color: #1e293b;
+    color: $slate-800;
   }
 
   p {
     margin: 0;
     font-size: 0.875rem;
-    color: #64748b;
+    color: $slate-400;
   }
 }
 
@@ -36,21 +36,21 @@
 }
 
 .sprint-card {
-  border: 1px solid #e1e8ed;
-  border-radius: 8px;
-  background: #ffffff;
+  @include card-surface($radius: 8px);
   transition: box-shadow 0.2s ease, border-color 0.2s ease;
 
   &:hover {
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-    border-color: #cbd5e1;
+    box-shadow: $glass-shadow;
+    border-color: $glass-border-strong;
   }
 
   .sprint-card-header {
     padding: 16px 20px;
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
+    gap: 12px;
     cursor: pointer;
     border-bottom: 1px solid transparent;
 
@@ -58,16 +58,17 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      flex-wrap: wrap;
 
       h3 {
         margin: 0;
         font-size: 1.125rem;
-        color: #1e293b;
+        color: $slate-800;
       }
 
       .project-badge {
-        background: #e0f2fe;
-        color: #0369a1;
+        background: $blue-50;
+        color: $blue-400;
         font-size: 0.75rem;
         padding: 3px 8px;
         border-radius: 4px;
@@ -78,14 +79,15 @@
     .sprint-meta-summary {
       display: flex;
       align-items: center;
+      flex-wrap: wrap;
       gap: 12px;
 
       .task-count-badge {
         font-size: 0.75rem;
         font-weight: 600;
-        color: #475569;
-        background: #f1f5f9;
-        border: 1px solid #cbd5e1;
+        color: $slate-500;
+        background: $slate-100;
+        border: 1px solid $border-light;
         padding: 3px 8px;
         border-radius: 12px;
       }
@@ -93,24 +95,24 @@
       .status-pill {
         font-size: 0.75rem;
         font-weight: 700;
-        color: #15803d;
-        background: #dcfce7;
+        color: $green-600;
+        background: $green-50;
         padding: 4px 10px;
         border-radius: 12px;
       }
 
       .toggle-btn {
         background: transparent;
-        border: 1px solid #cbd5e1;
+        border: 1px solid $border-light;
         border-radius: 4px;
         padding: 6px 12px;
         font-size: 0.8125rem;
         cursor: pointer;
-        color: #475569;
+        color: $slate-500;
         transition: background-color 0.15s ease;
 
         &:hover {
-          background: #f8fafc;
+          background: $glass-bg-3;
         }
       }
     }
@@ -121,6 +123,7 @@
 
     .info-row {
       display: flex;
+      flex-wrap: wrap;
       gap: 24px;
       margin-top: 12px;
       margin-bottom: 16px;
@@ -131,14 +134,14 @@
 
         label {
           font-size: 0.75rem;
-          color: #64748b;
+          color: $slate-400;
           margin-bottom: 2px;
         }
 
         span {
           font-size: 0.875rem;
           font-weight: 500;
-          color: #334155;
+          color: $slate-700;
         }
       }
     }
@@ -147,7 +150,7 @@
       label {
         display: block;
         font-size: 0.75rem;
-        color: #64748b;
+        color: $slate-400;
         margin-bottom: 6px;
       }
 
@@ -157,14 +160,14 @@
         gap: 6px;
 
         .member-tag {
-          background: #f1f5f9;
-          color: #475569;
+          background: $slate-100;
+          color: $slate-500;
           font-size: 0.8125rem;
           padding: 2px 8px;
           border-radius: 4px;
 
           small {
-            color: #2563eb;
+            color: $blue-500;
             font-weight: 600;
           }
         }
@@ -174,23 +177,23 @@
     .tasks-section {
       margin-top: 20px;
       padding-top: 16px;
-      border-top: 1px dashed #e2e8f0;
+      border-top: 1px dashed $border-light;
 
       h4 {
         margin: 0 0 12px 0;
         font-size: 0.9375rem;
-        color: #334155;
+        color: $slate-700;
 
         small {
           font-size: 0.8125rem;
-          color: #64748b;
+          color: $slate-400;
           font-weight: normal;
         }
       }
 
       .no-tasks {
         font-size: 0.875rem;
-        color: #94a3b8;
+        color: $slate-400;
         font-style: italic;
         margin: 0;
       }
@@ -202,9 +205,11 @@
 
         .task-item {
           display: flex;
+          flex-wrap: wrap;
           justify-content: space-between;
           align-items: center;
-          background: #f8fafc;
+          gap: 8px;
+          background: $glass-bg-3;
           padding: 10px 14px;
           border-radius: 6px;
           border: 1px solid transparent;
@@ -217,13 +222,13 @@
             .task-name {
               font-size: 0.875rem;
               font-weight: 600;
-              color: #1e293b;
+              color: $slate-800;
               transition: color 0.15s ease;
             }
 
             .task-assignee {
               font-size: 0.75rem;
-              color: #64748b;
+              color: $slate-400;
             }
           }
 
@@ -241,18 +246,18 @@
             }
 
             .priority-critical {
-              background: #fef2f2;
-              color: #dc2626;
+              background: $red-50;
+              color: $red-600;
             }
 
             .status-open {
-              background: #f0fdf4;
-              color: #16a34a;
+              background: $green-50;
+              color: $green-600;
             }
 
             .status-closed {
-              background: #f1f5f9;
-              color: #64748b;
+              background: $slate-100;
+              color: $slate-400;
             }
           }
 
@@ -260,13 +265,13 @@
             cursor: pointer;
 
             &:hover {
-              background-color: #f1f5f9;
-              border-color: #cbd5e1;
+              background-color: $input-bg-hover;
+              border-color: $glass-border-strong;
               transform: translateY(-1px);
-              box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+              box-shadow: $glass-shadow-sm;
 
               .task-name {
-                color: #2563eb;
+                color: $blue-500;
               }
             }
 
@@ -282,7 +287,7 @@
 
   &.expanded {
     .sprint-card-header {
-      border-bottom-color: #f1f5f9;
+      border-bottom-color: $border-lighter;
     }
   }
 }

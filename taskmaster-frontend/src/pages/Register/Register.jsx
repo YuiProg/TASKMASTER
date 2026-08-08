@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import { Link } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import './Register.scss';
 import { InputForm, TRInputFormPanel } from '../../components/TRCOMPONENTS/TRInputForm/TRInputForm';
 import Button from '../../components/TRCOMPONENTS/TRButton/Button';
@@ -8,12 +8,16 @@ import { InputField } from '../../components/TRCOMPONENTS/TRInputField/InputFIel
 import { useAuthStore } from '../../context/AuthStore';
 import packageJson from '../../../package.json';
 
+const PAGE_TRANSITION_MS = 220;
+
 function Register() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [isLeaving, setIsLeaving] = useState(false);
 
+  const navigate = useNavigate();
   const { register, isLoading, error, clearError } = useAuthStore();
   const appVersion = packageJson.version || '0.0.0';
 
@@ -27,8 +31,16 @@ function Register() {
     register(username, email, password, confirmPassword);
   };
 
+  const goToLogin = (e) => {
+    e.preventDefault();
+    clearError();
+    if (isLeaving) return;
+    setIsLeaving(true);
+    setTimeout(() => navigate('/'), PAGE_TRANSITION_MS);
+  };
+
   const registerContent = (
-    <div className="tr-register">
+    <div className={`tr-register${isLeaving ? ' tr-register--leaving' : ''}`}>
       {/* Left Visual Hero Section */}
       <div className="tr-register__hero">
         <div className="tr-register__hero-overlay" />
@@ -122,7 +134,7 @@ function Register() {
           </TRInputFormPanel>
 
           <p className="tr-register__signup-hint">
-            Already have an account? <Link to="/" onClick={clearError}>Log in</Link>
+            Already have an account? <Link to="/" onClick={goToLogin}>Log in</Link>
           </p>
 
           {/* Dynamic Version Tag */}

@@ -8,8 +8,7 @@
   box-sizing: border-box;
 
   &__column {
-    background-color: $surface-app;
-    border: 1px solid $border-light;
+    @include glass-surface($bg: $glass-bg-3, $blur: $glass-blur-sm, $border: $border-light);
     border-radius: $radius-xl;
     padding: $space-6;
     box-sizing: border-box;
@@ -48,7 +47,7 @@
     font-size: 0.7rem;
     font-weight: $fw-semibold;
     color: $slate-400;
-    background-color: $white;
+    background-color: $glass-bg-3;
     border: 1px solid $slate-200;
     padding: 1px 7px;
     border-radius: $radius-pill;
@@ -110,7 +109,7 @@
   }
 }
 
-@include respond-to(640px) {
+@include respond-to(mobile-nav) {
   .kb-board {
     grid-template-columns: 1fr;
   }
