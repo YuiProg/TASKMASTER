@@ -1,5 +1,73 @@
 @use '../../styles/abstracts' as *;
 
+@keyframes sidebar-subrow-loading {
+  0% {
+    transform: scaleX(0);
+    opacity: 1;
+  }
+  85% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 0;
+  }
+}
+
+@keyframes sidebar-subrow-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes sidebar-content-leave-down {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes sidebar-content-leave-up {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+@keyframes sidebar-content-enter-down {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sidebar-content-enter-up {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 body {
   margin: 0;
   overflow: hidden;
@@ -341,6 +409,36 @@ body {
     flex-shrink: 0;
   }
 
+  &__sub-spinner {
+    width: 10px;
+    height: 10px;
+    border-radius: $radius-circle;
+    border: 2px solid rgba($white, 0.2);
+    border-top-color: $blue-400;
+    flex-shrink: 0;
+    animation: sidebar-subrow-spin 0.6s linear infinite;
+  }
+
+  &__sub-row--pending a {
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba($blue-600, 0.2);
+      transform: scaleX(0);
+      transform-origin: left;
+      animation: sidebar-subrow-loading 1s ease-in-out infinite;
+    }
+
+    > * {
+      position: relative;
+      z-index: 1;
+    }
+  }
+
   &__user-panel {
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     padding: $space-8 $space-5;
@@ -454,6 +552,24 @@ body {
     background-color: $surface-app;
     @include hidden-scrollbar;
     position: relative;
+
+    &--leaving-down {
+      animation: sidebar-content-leave-down 0.2s $ease-standard both;
+      pointer-events: none;
+    }
+
+    &--leaving-up {
+      animation: sidebar-content-leave-up 0.2s $ease-standard both;
+      pointer-events: none;
+    }
+
+    &--entering-down {
+      animation: sidebar-content-enter-down 0.3s $ease-out-standard both;
+    }
+
+    &--entering-up {
+      animation: sidebar-content-enter-up 0.3s $ease-out-standard both;
+    }
   }
 
   &__avatar-loading {
