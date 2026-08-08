@@ -10,4 +10,6 @@ public class CommentResponseDTO {
     private String updatedBy;
     private Integer like;
     private TaskDTO task;
+    private String imageUrl;
+    private String imageId;
 }

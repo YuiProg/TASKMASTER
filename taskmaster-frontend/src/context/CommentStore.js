@@ -25,12 +25,13 @@ export const useCommentStore = create((set) => ({
         }
     },
 
-    postComment: async (comment, taskId) => {
+    postComment: async (comment, taskId, image) => {
         set({loadButton: true});
         try {
             const response = await gateWayApi.post("/comments/newComment", {
                 comment,
-                taskId
+                taskId,
+                image
             });
             const newCommentData = response?.data?.data; 
             
@@ -40,7 +41,7 @@ export const useCommentStore = create((set) => ({
                 }));
             }
         } catch (error) {
-            console.log(error.messagge);
+            console.log(error.message);
         } finally {
             set({loadButton: false});
         }
