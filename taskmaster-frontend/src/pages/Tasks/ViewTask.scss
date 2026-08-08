@@ -150,6 +150,10 @@
 
   &__details-grid {
     @include flex-column($space-5);
+
+    .tr-label{
+      margin: 0;
+    }
   }
 
   &__assignee-row {
