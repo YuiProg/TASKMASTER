@@ -157,4 +157,32 @@ public class CommentService implements CommentServiceInterface{
                 .status(HttpStatus.OK)
                 .body(ApiResponseModel.success("COMMENTS FOUND", "SUCCESS", commentResponseDTOs));
     }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<CommentResponseDTO>> deleteComment(String id) {
+        Comment comment = commentRepository.findById(id).orElse(null);
+        if (comment == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ApiResponseModel.error("COMMENT NOT FOUND", "ERROR"));
+        }
+
+        if (comment.getImageId() != null && comment.getImageUrl() != null) {
+            try {
+                cloudinary.uploader().destroy(comment.getImageId(), ObjectUtils.emptyMap());
+            } catch (IOException e) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ApiResponseModel.error(e.getMessage(), "ERROR"));
+            }
+        }
+
+        CommentResponseDTO dto = new CommentResponseDTO();
+        dto.setId(comment.getId());
+        dto.setImageId(comment.getImageId());
+        dto.setImageUrl(comment.getImageUrl());
+        dto.setComment(comment.getComment());
+        dto.setUpdatedBy(comment.getUpdatedBy());
+        dto.setLike(comment.getLike());
+
+        commentRepository.deleteById(comment.getId());
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponseModel.success("COMMENT DELETED", "SUCCESS", dto));
+    }
 }

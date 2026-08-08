@@ -12,4 +12,5 @@ public interface CommentServiceInterface {
     ResponseEntity<ApiResponseModel<CommentResponseDTO>> newComment (CommentRequest commentRequest);
     ResponseEntity<ApiResponseModel<Comment>> editComment (String id, CommentRequest commentRequest);
     ResponseEntity<ApiResponseModel<List<CommentResponseDTO>>> getTaskComments (String taskId);
+    ResponseEntity<ApiResponseModel<CommentResponseDTO>> deleteComment (String id);
 }
