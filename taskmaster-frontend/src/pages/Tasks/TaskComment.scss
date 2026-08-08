@@ -126,6 +126,27 @@
     margin-top: 0;
   }
 
+  &__textarea {
+    width: 100%;
+    background-color: $input-bg-light;
+    backdrop-filter: blur($glass-blur-sm);
+    -webkit-backdrop-filter: blur($glass-blur-sm);
+    border: 1px solid $slate-200;
+    border-radius: $radius-md;
+    color: $slate-800;
+    font-size: $fs-base;
+    padding: $space-6 $space-8;
+    box-sizing: border-box;
+    outline: none;
+    font-family: inherit;
+    resize: vertical;
+
+    &:focus {
+      background-color: $input-bg-hover;
+      border-color: $blue-focus-border;
+    }
+  }
+
   &__empty {
     color: $slate-400;
     font-size: 0.85rem;

@@ -7,6 +7,8 @@
 
   &__button {
     background-color: $input-bg-light; /* Matches your dashboard input background color */
+    backdrop-filter: blur($glass-blur-sm);
+    -webkit-backdrop-filter: blur($glass-blur-sm);
     color: $slate-800;
     height: 50px; /* Aligns smoothly with InputField height sizing lines */
     border-radius: $radius-md;
@@ -82,7 +84,9 @@
   /* ── Portal Container Architecture ── */
   &__list {
     position: absolute !important; /* Managed cleanly via component matrix coordinates */
-    background-color: $white; /* Card surface matching design system light accents */
+    background-color: $glass-bg-strong; /* Frosted glass surface, floats via portal above any content */
+    backdrop-filter: blur($glass-blur-md);
+    -webkit-backdrop-filter: blur($glass-blur-md);
     border: 1px solid $slate-200;
     border-radius: $radius-lg;
     list-style: none;

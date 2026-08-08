@@ -136,7 +136,7 @@ function renderPriorityIcon(priority) {
     case "LOW":
     default:
       return (
-        <span style={{ ...priorityContainerStyle, color: "#64748b" }}>
+        <span style={{ ...priorityContainerStyle, color: "#94a3b8" }}>
           <ArrowDown size={13} /> LOW
         </span>
       );

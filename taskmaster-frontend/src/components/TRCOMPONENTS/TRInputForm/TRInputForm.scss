@@ -12,7 +12,7 @@
   /* ── Headers ── */
   &__headers {
     @include flex-column($space-2);
-    border: 1px solid $border-light;
+    @include glass-surface($bg: $glass-bg-3, $blur: $glass-blur-sm);
     border-radius: $radius-xl;
     padding: $space-8;
   }
@@ -36,7 +36,7 @@
 .tr-inputform {
   @include flex(column, flex-start, flex-start, $space-8);
   width: 100%;
-  border: 1px solid $border-light;
+  @include glass-surface($bg: $glass-bg-3, $blur: $glass-blur-sm);
   border-radius: $radius-xl;
   padding: $space-10;
   box-sizing: border-box;

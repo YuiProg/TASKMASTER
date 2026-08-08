@@ -24,12 +24,36 @@
   @include flex(row, $align, space-between, $gap);
 }
 
-// Frosted card surface used by tables, panels and kanban cards
-@mixin card-surface($radius: s.$radius-xl, $shadow: v.$shadow-card) {
-  background-color: c.$white;
-  border: 1px solid c.$border-light;
+// Frosted glass card surface used by tables, panels and kanban cards
+@mixin card-surface($radius: s.$radius-xl, $shadow: c.$glass-shadow-sm, $bg: c.$glass-bg-2, $blur: c.$glass-blur-md) {
+  background: $bg;
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+  border: 1px solid c.$glass-border;
   border-radius: $radius;
   box-shadow: $shadow;
+}
+
+// General-purpose glass panel — used for chrome that isn't a "card"
+// (sidebar, topbars, dropdown lists, modal panels).
+@mixin glass-surface($bg: c.$glass-bg-1, $blur: c.$glass-blur-md, $border: c.$glass-border, $shadow: c.$glass-shadow-sm) {
+  background: $bg;
+  backdrop-filter: blur($blur);
+  -webkit-backdrop-filter: blur($blur);
+  border: 1px solid $border;
+  box-shadow: $shadow;
+}
+
+// Animated gradient-mesh backdrop that glass panels float over.
+@mixin gradient-mesh-bg {
+  background-color: c.$glass-bg-app;
+  background-image:
+    radial-gradient(at 12% 18%, rgba(239, 68, 68, 0.16) 0px, transparent 50%),
+    radial-gradient(at 85% 12%, rgba(37, 99, 235, 0.16) 0px, transparent 50%),
+    radial-gradient(at 78% 78%, rgba(139, 92, 246, 0.14) 0px, transparent 50%),
+    radial-gradient(at 15% 85%, rgba(16, 185, 129, 0.1) 0px, transparent 50%);
+  background-attachment: fixed;
+  background-size: 180% 180%;
 }
 
 @mixin truncate {
@@ -73,6 +97,10 @@
     }
   } @else if $breakpoint == mobile {
     @media (max-width: s.$bp-mobile) {
+      @content;
+    }
+  } @else if $breakpoint == mobile-nav {
+    @media (max-width: s.$bp-mobile-nav) {
       @content;
     }
   } @else {

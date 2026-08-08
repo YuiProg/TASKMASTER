@@ -16,24 +16,33 @@ body {
   @include flex(row);
   height: 100vh;
   overflow: hidden;
+  position: relative;
 
-  /* ── Sidebar shell (Modern Obsidian/Black) ───────────────── */
+  /* ── Sidebar shell — frosted glass panel ─────────────────── */
   &__aside {
     width: $sidebar-width;
     min-width: $sidebar-width;
     @include flex-column;
-    background-color: #0d1117;
+    @include glass-surface($bg: $glass-bg-1, $blur: $glass-blur-lg, $border: $glass-border);
+    border-top: none;
+    border-bottom: none;
+    border-left: none;
     height: 100vh;
     flex-shrink: 0;
     overflow: hidden;
-    border-right: 1px solid rgba(255, 255, 255, 0.08);
     transition: width $transition-slow $ease-standard,
-                min-width $transition-slow $ease-standard;
+                min-width $transition-slow $ease-standard,
+                transform $transition-slow $ease-standard;
 
     &--collapsed {
       width: $sidebar-width-collapsed;
       min-width: $sidebar-width-collapsed;
     }
+  }
+
+  /* ── Mobile backdrop — dims the content behind the drawer ── */
+  &__backdrop {
+    display: none;
   }
 
   /* ── Top bar ─────────────────────────────────────────────── */
@@ -87,7 +96,12 @@ body {
 
     &:hover {
       color: #ffffff;
-      background: #21262d;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    /* Collapse/expand rail — desktop only */
+    &--close {
+      display: none;
     }
   }
 
@@ -452,6 +466,7 @@ body {
     overflow-y: auto;
     width: 100%;
     background-color: $surface-app;
+    position: relative;
   }
 
   &__avatar-loading {
@@ -487,6 +502,63 @@ body {
 
     &--email {
       width: 90%;
+    }
+  }
+}
+
+/* ── Mobile off-canvas drawer (≤749px) ──────────────────────
+   The sidebar is hidden by default and only slides in when the
+   burger button in the page header (TRPanelPage) toggles it. */
+@include respond-to(mobile-nav) {
+  .sidebar {
+    &__aside {
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: min(300px, 84vw);
+      min-width: 0;
+      max-width: 320px;
+      transform: translateX(-100%);
+      z-index: 60;
+      box-shadow: $glass-shadow;
+
+      &--collapsed {
+        /* Collapsing to an icon rail is a desktop-only affordance —
+           on mobile the drawer is always full width when open. */
+        width: min(300px, 84vw);
+        min-width: 0;
+      }
+
+      &--mobile-open {
+        transform: translateX(0);
+      }
+    }
+
+    &__burger--collapse {
+      display: none;
+    }
+
+    &__burger--close {
+      display: flex;
+    }
+
+    &__backdrop {
+      display: block;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 59;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity $transition-med ease;
+
+      &--visible {
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
+
+    &__content {
+      width: 100%;
     }
   }
 }

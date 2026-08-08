@@ -15,7 +15,7 @@ body,
 }
 
 body {
-  background: $bg-app-dark;
+  @include gradient-mesh-bg;
   /* Primary font stack with clean system fallbacks */
   font-family: $font-family-base;
 

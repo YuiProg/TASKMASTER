@@ -58,3 +58,22 @@
     flex-shrink: 0;
   }
 }
+
+@include respond-to(mobile-nav) {
+  .dashboard {
+    &__stats-row {
+      grid-template-columns: 1fr 1fr;
+      gap: $space-5;
+    }
+
+    &__table-header {
+      flex-wrap: wrap;
+    }
+  }
+}
+
+@include respond-to(mobile) {
+  .dashboard__stats-row {
+    grid-template-columns: 1fr;
+  }
+}

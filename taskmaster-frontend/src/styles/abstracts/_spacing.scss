@@ -27,3 +27,6 @@ $sidebar-width-collapsed: 60px;
 // Breakpoints
 $bp-tablet: 768px;
 $bp-mobile: 480px;
+// The app-wide cutoff where the sidebar becomes an off-canvas drawer
+// and multi-column layouts collapse to a single column.
+$bp-mobile-nav: 749px;

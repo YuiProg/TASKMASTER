@@ -30,11 +30,14 @@
 
   &__status-dropdown {
     width: 200px;
+    max-width: 100%;
   }
 
   &__textarea {
     width: 100%;
-    background-color: $white;
+    background-color: $input-bg-light;
+    backdrop-filter: blur($glass-blur-sm);
+    -webkit-backdrop-filter: blur($glass-blur-sm);
     border: 1px solid $border-light;
     border-radius: $radius-lg;
     color: $slate-800;
@@ -51,7 +54,7 @@
     }
 
     &:focus {
-      background-color: $white;
+      background-color: $input-bg-hover;
       border-color: $blue-500; /* Blue active border */
       box-shadow: $shadow-focus-ring; /* Blue glow ring */
     }

@@ -451,8 +451,8 @@ export class TableData extends React.Component {
     }
     if (value === 'INACTIVE') {
       return (
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#6B7280', fontWeight: 500 }}>
-          <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#6B7280', display: 'inline-block' }} />
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: '#9ca3af', fontWeight: 500 }}>
+          <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#9ca3af', display: 'inline-block' }} />
           INACTIVE
         </span>
       )

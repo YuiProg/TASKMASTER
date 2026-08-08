@@ -97,8 +97,9 @@
 
 .tr-modal__panel--error {
   width: 450px;
+  max-width: 90vw;
   height: auto;
-  background-color: $dark-surface;
+  @include glass-surface($bg: $glass-bg-strong, $blur: $glass-blur-lg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -106,6 +107,7 @@
   flex-direction: column;
   gap: $space-9;
   padding: 50px;
+  box-sizing: border-box;
 }
 
 .tr-modal__error-icon {
@@ -128,8 +130,9 @@
 
 .tr-modal__panel--confirm {
   width: 450px;
+  max-width: 90vw;
   height: auto;
-  background-color: $dark-surface;
+  @include glass-surface($bg: $glass-bg-strong, $blur: $glass-blur-lg);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -137,6 +140,7 @@
   flex-direction: column;
   gap: $space-9;
   padding: 50px;
+  box-sizing: border-box;
 }
 
 .tr-modal__confirm-icon {
@@ -166,13 +170,13 @@
   width: 80%;
   height: auto;
   max-height: 95vh;
-  background-color: $dark-surface;
+  @include glass-surface($bg: $glass-bg-strong, $blur: $glass-blur-lg);
   border-radius: $radius-2xl;
   padding: $space-9;
-  box-shadow: $shadow-sm;
   overflow-y: auto;
   overflow-x: hidden;
   box-shadow: $shadow-modal;
+  box-sizing: border-box;
 }
 
 .tr-modal__title {
@@ -204,21 +208,27 @@
 
 .tr-modal__panel--yesno {
   width: 30%;
+  min-width: 260px;
+  max-width: 90vw;
   height: 25%;
+  min-height: 180px;
   display: flex;
   flex-direction: column;
   justify-content: space-around;
-  background: $dark-surface;
+  @include glass-surface($bg: $glass-bg-strong, $blur: $glass-blur-lg);
   padding: $space-9;
   border-radius: 25px;
+  box-sizing: border-box;
 }
 
 /* edit modal */
 
 .tr-modal__edit-panel {
   width: 400px;
+  max-width: 90vw;
   height: 400px;
-  background-color: $dark-surface;
+  @include glass-surface($bg: $glass-bg-strong, $blur: $glass-blur-lg);
+  box-sizing: border-box;
 }
 
 .tr-modal__time-details {

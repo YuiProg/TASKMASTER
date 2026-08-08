@@ -1,3 +1,5 @@
+@use '../../styles/abstracts' as *;
+
 .sprint-details {
   display: flex;
   flex-direction: column;
@@ -9,14 +11,11 @@
     align-items: center;
     gap: 1.25rem;
     padding: 1.5rem;
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+    @include card-surface($radius: 12px);
 
     button {
-      background-color: #0f172a !important;
-      color: #ffffff !important;
+      background-color: $accent !important;
+      color: $white !important;
       font-weight: 600;
       border: none;
       border-radius: 8px;
@@ -25,9 +24,9 @@
       transition: all 0.2s ease;
 
       &:hover {
-        background-color: #1e293b !important;
+        background-color: $accent-dark !important;
         transform: translateY(-1px);
-        box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.15);
+        box-shadow: $glass-shadow-sm;
       }
     }
   }
@@ -41,14 +40,14 @@
       font-size: 0.7rem;
       font-weight: 700;
       text-transform: uppercase;
-      color: #64748b;
+      color: $slate-400;
       letter-spacing: 0.06em;
     }
 
     .value {
       font-size: 0.95rem;
       font-weight: 600;
-      color: #0f172a;
+      color: $slate-800;
     }
 
     &--action {
@@ -63,15 +62,13 @@
     display: flex;
     flex-direction: column;
     gap: 1rem;
-    background: #ffffff;
+    @include card-surface($radius: 12px);
     padding: 1.25rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
 
     h3 {
       font-size: 1rem;
       font-weight: 700;
-      color: #0f172a;
+      color: $slate-800;
       letter-spacing: -0.01em;
       margin: 0;
     }
@@ -80,19 +77,20 @@
   &__empty {
     padding: 2rem;
     text-align: center;
-    color: #64748b;
-    background: #f8fafc;
-    border: 1px dashed #cbd5e1;
+    color: $slate-400;
+    background: $glass-bg-3;
+    border: 1px dashed $glass-border-strong;
     border-radius: 8px;
     font-size: 0.875rem;
   }
 
   &__actions {
     display: flex;
+    flex-wrap: wrap;
     justify-content: flex-end;
     margin-top: 0.5rem;
     padding-top: 1.25rem;
-    border-top: 1px solid #e2e8f0;
+    border-top: 1px solid $border-light;
 
     button {
       min-width: 110px;
@@ -103,7 +101,7 @@
       transition: all 0.2s ease;
 
       &:hover {
-        background-color: #f1f5f9;
+        background-color: $glass-bg-3;
       }
     }
   }
@@ -117,13 +115,13 @@
   }
 
   &__loading {
-    color: #64748b;
+    color: $slate-400;
   }
 
   &__error {
-    background-color: #fef2f2;
-    color: #991b1b;
-    border: 1px solid #fecaca;
+    background-color: $red-50;
+    color: $red-600;
+    border: 1px solid $red-200;
   }
 }
 
@@ -140,14 +138,28 @@
   width: fit-content;
 
   &--active {
-    background-color: #eff6ff;
-    color: #1d4ed8;
-    border: 1px solid #bfdbfe;
+    background-color: $blue-50;
+    color: $blue-400;
+    border: 1px solid $blue-200;
   }
 
   &--completed {
-    background-color: #f0fdf4;
-    color: #15803d;
-    border: 1px solid #bbf7d0;
+    background-color: $green-50;
+    color: $green-600;
+    border: 1px solid $green-200;
+  }
+}
+
+@include respond-to(mobile-nav) {
+  .sprint-details__overview {
+    padding: 1rem;
+  }
+
+  .sprint-details__meta-item--action {
+    justify-content: flex-start;
+
+    button {
+      width: 100%;
+    }
   }
 }

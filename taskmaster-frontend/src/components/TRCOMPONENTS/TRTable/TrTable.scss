@@ -342,3 +342,20 @@
     transform: rotate(360deg);
   }
 }
+
+/* ── Mobile (≤749px) ─────────────────────────────────────── */
+@include respond-to(mobile-nav) {
+  .tr-table {
+    padding: $space-6;
+
+    &__header {
+      flex-wrap: wrap;
+      gap: $space-4;
+    }
+
+    &__pagination {
+      flex-wrap: wrap;
+      gap: $space-4;
+    }
+  }
+}

@@ -1,10 +1,11 @@
 import React from "react";
 import { useAuthStore } from "../../context/AuthStore";
 import { Link } from "react-router-dom";
+import MobileNavContext from "../../context/MobileNavContext";
 import './Sidebar.scss';
 import {
     LayoutDashboard, Folder, CheckSquare, Users,
-    LogOut, Menu, ChevronDown, Settings,
+    LogOut, Menu, X, ChevronDown, Settings,
 
     Rotate3D
 } from 'lucide-react';
@@ -55,6 +56,9 @@ class Sidebar extends React.Component {
             projectsExpanded: savedProjectsExpanded !== null ? savedProjectsExpanded : false,
             tasksExpanded: savedTasksExpanded !== null ? savedTasksExpanded : false,
             showChangePasswordModal: false,
+            // Off-canvas drawer state for ≤749px — always starts closed,
+            // regardless of the desktop collapsed/expanded state above.
+            mobileNavOpen: false,
             // No hardcoded fallback anymore — starts null until
             // fetchCurrentUser resolves (or login() has already run).
             user: useAuthStore.getState().user,
@@ -105,6 +109,14 @@ class Sidebar extends React.Component {
         });
     }
 
+    toggleMobileNav = () => {
+        this.setState(prev => ({ mobileNavOpen: !prev.mobileNavOpen }));
+    }
+
+    closeMobileNav = () => {
+        this.setState({ mobileNavOpen: false });
+    }
+
     toggleMenu = (key) => (e) => {
         e.preventDefault();
         this.setState(prev => {
@@ -147,7 +159,7 @@ class Sidebar extends React.Component {
                         const pathname = window.location.pathname;
                         return (
                             <li key={path} className={`sidebar__sub-row${pathname === path ? ' sidebar__sub-row--active' : ''}`}>
-                                <Link to={path}>
+                                <Link to={path} onClick={this.closeMobileNav}>
                                     <span className="sidebar__sub-dot"></span>
                                     <span className="sidebar__sub-title">{title}</span>
                                 </Link>
@@ -163,7 +175,7 @@ class Sidebar extends React.Component {
         const { collapsed } = this.state;
         return (
             <li className={`sidebar__row${pathname === path ? ' sidebar__row--active' : ''}`}>
-                <Link to={path}>
+                <Link to={path} onClick={this.closeMobileNav}>
                     <span className="sidebar__icon-wrap">{icon}</span>
                     <span className="sidebar__title">{label}</span>
                 </Link>
@@ -173,7 +185,7 @@ class Sidebar extends React.Component {
     }
 
     render() {
-        const { collapsed, projectsExpanded, tasksExpanded, user } = this.state;
+        const { collapsed, mobileNavOpen, projectsExpanded, tasksExpanded, user } = this.state;
 
         const pathname = window.location.pathname;
 
@@ -189,15 +201,25 @@ class Sidebar extends React.Component {
 
         return (
             <div className="sidebar">
-                <aside className={`sidebar__aside${collapsed ? ' sidebar__aside--collapsed' : ''}`}>
+                {/* Backdrop — only rendered/visible on mobile drawer mode */}
+                <div
+                    className={`sidebar__backdrop${mobileNavOpen ? ' sidebar__backdrop--visible' : ''}`}
+                    onClick={this.closeMobileNav}
+                    aria-hidden="true"
+                />
+
+                <aside className={`sidebar__aside${collapsed ? ' sidebar__aside--collapsed' : ''}${mobileNavOpen ? ' sidebar__aside--mobile-open' : ''}`}>
 
                     {/* Top Section */}
                     <div className="sidebar__top">
                         <div className="sidebar__logo-area">
                             {!collapsed && <span className="sidebar__logo-text">Task Master</span>}
                         </div>
-                        <button className="sidebar__burger" onClick={this.toggleSidebar} aria-label="Toggle sidebar">
+                        <button className="sidebar__burger sidebar__burger--collapse" onClick={this.toggleSidebar} aria-label="Toggle sidebar">
                             <Menu size={20} />
+                        </button>
+                        <button className="sidebar__burger sidebar__burger--close" onClick={this.closeMobileNav} aria-label="Close menu">
+                            <X size={20} />
                         </button>
                     </div>
 
@@ -301,9 +323,11 @@ class Sidebar extends React.Component {
                     </div>
                 </aside>
 
-                <main className="sidebar__content">
-                    {this.passProps()}
-                </main>
+                <MobileNavContext.Provider value={{ toggleMobileNav: this.toggleMobileNav }}>
+                    <main className="sidebar__content">
+                        {this.passProps()}
+                    </main>
+                </MobileNavContext.Provider>
             </div>
         );
     }

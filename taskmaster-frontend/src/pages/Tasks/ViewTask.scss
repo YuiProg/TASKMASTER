@@ -192,7 +192,9 @@
     display: flex;
     align-items: center;
     gap: $space-4;
-    background-color: $white;
+    background-color: $glass-bg-strong;
+    backdrop-filter: blur($glass-blur-md);
+    -webkit-backdrop-filter: blur($glass-blur-md);
     border: 1px solid $border-light;
     padding: $space-4 $space-6;
     border-radius: $radius-lg;
@@ -262,4 +264,15 @@
 .tr-panel-page__main .tr-panel-card + .tr-inputrow,
 .tr-panel-page__main .tr-inputrow + .tr-panel-card {
   margin-top: $space-8;
+}
+
+@include respond-to(mobile-nav) {
+  .view-task__header-dropdowns {
+    flex-wrap: wrap;
+  }
+
+  .view-task__status-dropdown,
+  .view-task__priority-dropdown {
+    width: auto;
+  }
 }
