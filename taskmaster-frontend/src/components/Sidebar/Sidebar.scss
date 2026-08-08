@@ -1,6 +1,73 @@
 @use '../../styles/abstracts' as *;
 
-/* ── Layout ──────────────────────────────────────────────── */
+@keyframes sidebar-subrow-loading {
+  0% {
+    transform: scaleX(0);
+    opacity: 1;
+  }
+  85% {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scaleX(1);
+    opacity: 0;
+  }
+}
+
+@keyframes sidebar-subrow-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes sidebar-content-leave-down {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes sidebar-content-leave-up {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+}
+
+@keyframes sidebar-content-enter-down {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes sidebar-content-enter-up {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 body {
   margin: 0;
   overflow: hidden;
@@ -16,19 +83,22 @@ body {
   @include flex(row);
   height: 100vh;
   overflow: hidden;
+  position: relative;
 
-  /* ── Sidebar shell (Modern Obsidian/Black) ───────────────── */
   &__aside {
     width: $sidebar-width;
     min-width: $sidebar-width;
     @include flex-column;
-    background-color: #0d1117;
+    @include glass-surface($bg: $glass-bg-1, $blur: $glass-blur-lg, $border: $glass-border);
+    border-top: none;
+    border-bottom: none;
+    border-left: none;
     height: 100vh;
     flex-shrink: 0;
     overflow: hidden;
-    border-right: 1px solid rgba(255, 255, 255, 0.08);
     transition: width $transition-slow $ease-standard,
-                min-width $transition-slow $ease-standard;
+                min-width $transition-slow $ease-standard,
+                transform $transition-slow $ease-standard;
 
     &--collapsed {
       width: $sidebar-width-collapsed;
@@ -36,7 +106,10 @@ body {
     }
   }
 
-  /* ── Top bar ─────────────────────────────────────────────── */
+  &__backdrop {
+    display: none;
+  }
+
   &__top {
     @include flex-between;
     padding: 0 $space-8;
@@ -87,11 +160,14 @@ body {
 
     &:hover {
       color: #ffffff;
-      background: #21262d;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    &--close {
+      display: none;
     }
   }
 
-  /* ── Nav list & Sections ─────────────────────────────────── */
   &__nav {
     flex: 1;
     overflow-y: auto;
@@ -148,7 +224,7 @@ body {
       transition: background $transition-fast, color $transition-fast;
 
       svg {
-        color: inherit; /* Ensure SVGs inherit highlight color */
+        color: inherit;
       }
     }
 
@@ -157,19 +233,17 @@ body {
       color: #f0f6fc;
     }
 
-    /* Fix: Active link styling explicitly targeted to child text & icons */
     &--active {
       > a {
-        background: #1c1917;
-        color: #ef4444 !important;
+        background: #152238;
+        color: #3b82f6 !important;
         font-weight: $fw-semibold;
 
         * {
-          color: #ef4444 !important;
+          color: #3b82f6 !important;
         }
       }
 
-      /* Fix: Indicator line absolute placement relative to row */
       &::before {
         content: '';
         position: absolute;
@@ -179,19 +253,18 @@ body {
         width: 4px;
         height: 22px;
         border-radius: 0 4px 4px 0;
-        background: #ef4444;
+        background: #3b82f6;
         z-index: 2;
       }
     }
 
-    /* Fix: Parent item highlighting when submenu is active */
     &--parent-active > a {
-      color: #ef4444 !important;
+      color: #3b82f6 !important;
 
       .sidebar__title,
       .sidebar__chevron,
       svg {
-        color: #ef4444 !important;
+        color: #3b82f6 !important;
       }
     }
 
@@ -223,7 +296,6 @@ body {
     }
   }
 
-  /* ── Collapsed tooltip ───────────────────────────────────── */
   &__tooltip {
     display: none;
     position: absolute;
@@ -242,7 +314,6 @@ body {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
   }
 
-  /* ── Accordion Dropdown Submenu ──────────────────────────── */
   &__dropdown-trigger {
     justify-content: space-between;
     width: 100%;
@@ -262,7 +333,7 @@ body {
 
     &--rotated {
       transform: rotate(180deg);
-      color: #ef4444;
+      color: #3b82f6;
     }
   }
 
@@ -283,7 +354,7 @@ body {
   }
 
   &__row--expanded &__submenu-list {
-    max-height: 300px; /* Increased from 160px to prevent list clipping */
+    max-height: 300px;
     margin-top: $space-3;
     margin-bottom: $space-3;
   }
@@ -303,22 +374,21 @@ body {
     }
 
     &:hover .sidebar__sub-dot {
-      background-color: #ef4444;
+      background-color: #3b82f6;
     }
 
-    /* Fix: Active Submenu row targeting */
     &--active {
       a {
-        background: #1c1917;
+        background: #152238;
       }
 
       .sidebar__sub-title {
-        color: #ef4444 !important;
+        color: #3b82f6 !important;
         font-weight: $fw-semibold;
       }
 
       .sidebar__sub-dot {
-        background-color: #ef4444 !important;
+        background-color: #3b82f6 !important;
         transform: scale(1.3);
       }
     }
@@ -339,7 +409,36 @@ body {
     flex-shrink: 0;
   }
 
-  /* ── User panel ──────────────────────────────────────────── */
+  &__sub-spinner {
+    width: 10px;
+    height: 10px;
+    border-radius: $radius-circle;
+    border: 2px solid rgba($white, 0.2);
+    border-top-color: $blue-400;
+    flex-shrink: 0;
+    animation: sidebar-subrow-spin 0.6s linear infinite;
+  }
+
+  &__sub-row--pending a {
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba($blue-600, 0.2);
+      transform: scaleX(0);
+      transform-origin: left;
+      animation: sidebar-subrow-loading 1s ease-in-out infinite;
+    }
+
+    > * {
+      position: relative;
+      z-index: 1;
+    }
+  }
+
   &__user-panel {
     border-top: 1px solid rgba(255, 255, 255, 0.08);
     padding: $space-8 $space-5;
@@ -387,7 +486,7 @@ body {
   }
 
   &__avatar {
-    @include avatar(34px, #dc2626);
+    @include avatar(34px, #2563eb);
     font-size: $fs-xs;
     font-weight: $fw-semibold;
     color: #ffffff;
@@ -423,7 +522,7 @@ body {
     transition: color $transition-fast;
 
     &:hover {
-      color: #ef4444;
+      color: #3b82f6;
     }
   }
 
@@ -440,18 +539,37 @@ body {
     transition: color $transition-fast, background $transition-fast;
 
     &:hover {
-      color: #ef4444;
-      background: #1c1917;
+      color: #3b82f6;
+      background: #152238;
     }
   }
 
-  /* ── Main content area ───────────────────────────────────── */
   &__content {
     flex: 1;
     height: 100vh;
     overflow-y: auto;
     width: 100%;
     background-color: $surface-app;
+    @include hidden-scrollbar;
+    position: relative;
+
+    &--leaving-down {
+      animation: sidebar-content-leave-down 0.2s $ease-standard both;
+      pointer-events: none;
+    }
+
+    &--leaving-up {
+      animation: sidebar-content-leave-up 0.2s $ease-standard both;
+      pointer-events: none;
+    }
+
+    &--entering-down {
+      animation: sidebar-content-enter-down 0.3s $ease-out-standard both;
+    }
+
+    &--entering-up {
+      animation: sidebar-content-enter-up 0.3s $ease-out-standard both;
+    }
   }
 
   &__avatar-loading {
@@ -487,6 +605,58 @@ body {
 
     &--email {
       width: 90%;
+    }
+  }
+}
+
+@include respond-to(mobile-nav) {
+  .sidebar {
+    &__aside {
+      position: fixed;
+      inset: 0 auto 0 0;
+      width: min(300px, 84vw);
+      min-width: 0;
+      max-width: 320px;
+      transform: translateX(-100%);
+      z-index: 60;
+      box-shadow: $glass-shadow;
+
+      &--collapsed {
+        width: min(300px, 84vw);
+        min-width: 0;
+      }
+
+      &--mobile-open {
+        transform: translateX(0);
+      }
+    }
+
+    &__burger--collapse {
+      display: none;
+    }
+
+    &__burger--close {
+      display: flex;
+    }
+
+    &__backdrop {
+      display: block;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 59;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity $transition-med ease;
+
+      &--visible {
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
+
+    &__content {
+      width: 100%;
     }
   }
 }

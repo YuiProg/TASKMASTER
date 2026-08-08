@@ -33,21 +33,21 @@ class Button extends React.Component {
                     type={`${submit ? 'submit' : 'button'}`} 
                     style={{
                         background: `${
-                            success ? "#22C55E" 
-                            : warning ? "#F59E0B" 
-                            : error ? "#EF4444" 
-                            : cancel && "transparent"}`,
+                            success ? "#22C55E"
+                            : warning ? "#F59E0B"
+                            : error ? "#EF4444"
+                            : cancel && "rgba(255, 255, 255, 0.06)"}`,
                         width: `${
-                            maxWidth ? "100%" 
-                            : customWidth ? `${customWidth}px` 
+                            maxWidth ? "100%"
+                            : customWidth ? `${customWidth}px`
                             : "auto"
                         }`,
                         border: `${
                             customBorder ? customBorder
-                            : cancel ? "1px solid #cbd5e1" 
+                            : cancel ? "1px solid rgba(255, 255, 255, 0.22)"
                             : null
                         }`,
-                        color: cancel ? "#334155" : "#ffffff"
+                        color: cancel ? "#e2e8f0" : "#ffffff"
                     }}
                     className={`tr-button ${disabled ? 'tr-button--disabled' : ''} ${className || ''}`}
                     onClick={() => onClick()}

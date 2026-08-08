@@ -24,7 +24,7 @@
   }
 
   &__required {
-    color: $blue-600; 
+    color: $blue-600;
     margin-left: $space-1;
   }
 
@@ -36,7 +36,9 @@
 
   &__textarea {
     width: 100%;
-    background-color: $white;
+    background-color: $input-bg-light;
+    backdrop-filter: blur($glass-blur-sm);
+    -webkit-backdrop-filter: blur($glass-blur-sm);
     border: 1px solid $border-light;
     border-radius: $radius-lg;
     color: $slate-800;
@@ -53,9 +55,9 @@
     }
 
     &:focus {
-      background-color: $white;
-      border-color: $blue-500; 
-      box-shadow: $shadow-focus-ring; 
+      background-color: $input-bg-hover;
+      border-color: $blue-500;
+      box-shadow: $shadow-focus-ring;
     }
   }
 
@@ -69,14 +71,14 @@
     }
 
     .tr-button {
-      background: $white;
+      background: $glass-bg-3;
       border: 1px solid $border-light;
       color: $slate-800;
       font-weight: $fw-semibold;
       transition: background-color $transition-fast ease, border-color $transition-fast ease;
 
       &:hover {
-        background: $slate-50;
+        background: $input-bg-hover;
         border-color: $slate-300;
         color: $slate-900;
       }
@@ -90,16 +92,14 @@
     margin-top: $space-2;
   }
 
-  /* ── Member Tag Chips (Soft Blue Tint) ── */
   &__chip {
     display: inline-flex;
     align-items: center;
     gap: $space-3;
     padding: 5px $space-3 5px $space-6;
     border-radius: $radius-pill;
-    background-color: $blue-50; /* Very soft light blue background */
+    background-color: $blue-50;
     border: 1px solid $blue-100;
-    color: $blue-700; /* Darker blue text for readability */
     font-size: 0.78rem;
     font-weight: $fw-medium;
   }
@@ -136,16 +136,26 @@
     }
   }
 
-  /* ── Primary Submit Button ── */
   &__submit-btn {
-    background: $blue-600 !important; /* Primary Blue */
+    background: $blue-600 !important;
     font-weight: $fw-semibold;
     color: $white !important;
     border: none !important;
     transition: background-color $transition-fast ease;
 
     &:hover {
-      background: $blue-700 !important; /* Darker Blue Hover State */
+      background: $blue-700 !important;
+    }
+  }
+}
+
+@include respond-to(mobile-nav) {
+  .new-project-form__member-row {
+    flex-direction: column;
+    align-items: stretch;
+
+    .tr-button {
+      width: 100%;
     }
   }
 }

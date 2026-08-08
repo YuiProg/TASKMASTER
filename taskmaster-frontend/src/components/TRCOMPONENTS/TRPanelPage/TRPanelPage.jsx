@@ -3,6 +3,8 @@ import './TRPanelPage.scss';
 import DropDown from '../TRDropDown/Dropdown';
 import PropTypes from 'prop-types';
 import Button from '../TRButton/Button';
+import { Menu } from 'lucide-react';
+import MobileNavContext from '../../../context/MobileNavContext';
 
 
 export class RightPanel extends React.Component {
@@ -16,6 +18,8 @@ export class RightPanel extends React.Component {
 }
 
 export class PanelPage extends React.Component {
+  static contextType = MobileNavContext;
+
   passPropsToChildren = () => {
     const { hasTableFilters, onFilterToggle } = this.props;
 
@@ -42,8 +46,9 @@ export class PanelPage extends React.Component {
       onClickBack,
       hasStepper,
       nextButtonLabel,
-      backButtonLabel
+      backButtonLabel,
     } = this.props;
+    const { toggleMobileNav } = this.context;
 
     const mainChildren = React.Children.toArray(this.passPropsToChildren()).filter(
       (child) => child.type !== RightPanel
@@ -53,8 +58,18 @@ export class PanelPage extends React.Component {
       <div className="tr-panel-page">
         <header className="tr-panel-page__topbar">
           <div className="tr-panel-page__header">
-            <h1 className="tr-panel-page__title">{titlePage}</h1>
-            {subTitle && <p className="tr-panel-page__subtitle">{subTitle}</p>}
+            <button
+              type="button"
+              className="tr-panel-page__nav-burger"
+              onClick={toggleMobileNav}
+              aria-label="Open menu"
+            >
+              <Menu size={20} />
+            </button>
+            <div className="tr-panel-page__header-texts">
+              <h1 className="tr-panel-page__title">{titlePage}</h1>
+              {subTitle && <p className="tr-panel-page__subtitle">{subTitle}</p>}
+            </div>
           </div>
 
           <div className="tr-panel-page__top-right">

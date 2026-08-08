@@ -12,11 +12,13 @@
       width: 100%;
       height: 50px;
       background-color: $input-bg-light;
+      backdrop-filter: blur($glass-blur-sm);
+      -webkit-backdrop-filter: blur($glass-blur-sm);
       border: 1px solid $slate-200;
       border-radius: $radius-md;
       color: $slate-800;
       font-size: $fs-md;
-      padding: 22px $space-8 $space-4 $space-8; /* Adjusted padding to push input values down */
+      padding: 22px $space-8 $space-4 $space-8;
       box-sizing: border-box;
       outline: none;
       font-family: $font-family-fallback;
@@ -33,35 +35,32 @@
     input[type='text']:focus,
     input[type='password']:focus,
     input[type='email']:focus {
-      background-color: $white;
+      background-color: $input-bg-hover;
       border-color: $blue-focus-border;
     }
 
-    /* ── FIX: Floating Label Core Engine ── */
     .tr-input__label {
       position: absolute;
       left: $space-8;
-      top: 14px; /* Set a reliable static top offset */
+      top: 14px;
       color: $slate-400;
       font-size: $fs-md;
       font-family: $font-family-fallback;
       pointer-events: none;
-      transform-origin: top left; /* Smoothes text scaling transformations */
+      transform-origin: top left;
       transition: transform $transition-med $ease-out-standard, color $transition-med ease;
     }
 
-    /* ── FIX: Smooth CSS Matrix Transform Transitions ── */
     input[type='text']:focus + .tr-input__label,
     input[type='text']:not(:placeholder-shown) + .tr-input__label,
     input[type='password']:focus + .tr-input__label,
     input[type='password']:not(:placeholder-shown) + .tr-input__label,
     input[type='email']:focus + .tr-input__label,
     input[type='email']:not(:placeholder-shown) + .tr-input__label {
-      transform: translateY(-8px) scale(0.72); /* Safely resizes layout rules without text clipping */
+      transform: translateY(-8px) scale(0.72);
       color: $slate-500;
     }
 
-    /* ── Search variant ── */
     input.tr-input__search-field {
       padding: 22px $space-8 $space-4 38px;
 
@@ -71,11 +70,10 @@
 
       &:focus + .tr-input__label,
       &:not(:placeholder-shown) + .tr-input__label {
-        transform: translate(-22px, -8px) scale(0.72); /* Re-aligns left boundary cleanly on zoom */
+        transform: translate(-22px, -8px) scale(0.72);
       }
     }
 
-    /* ── Eye icon ── */
     .tr-input__eye-icon {
       position: absolute;
       right: 14px;
@@ -102,7 +100,6 @@
     font-size: $fs-sm;
   }
 
-  /* ── Search icon ── */
   &__search-icon {
     position: absolute;
     left: 14px;
