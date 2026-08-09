@@ -1,27 +1,20 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="100%" height="100%">
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Pure Black Background -->
+  <rect width="512" height="512" rx="128" fill="#000000"/>
+  
+  <g>
+    <!-- White Letter T -->
+    <path d="M160 160 C160 142.327 174.327 128 192 128 H320 C337.673 128 352 142.327 352 160 C352 177.673 337.673 192 320 192 H276 V352 C276 369.673 261.673 384 244 384 C226.327 384 212 369.673 212 352 V192 H192 C174.327 192 160 177.673 160 160 Z" fill="#FFFFFF"/>
+    
+    <!-- Vibrant Blue Checkmark -->
+    <path d="M280 270 L325 320 L395 220" stroke="url(#blue-gradient-black)" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Gradient definition -->
   <defs>
-    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#0f172a"/>
-      <stop offset="100%" stop-color="#1e293b"/>
-    </linearGradient>
-    <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#38bdf8"/>
-      <stop offset="100%" stop-color="#2563eb"/>
+    <linearGradient id="blue-gradient-black" x1="280" y1="220" x2="395" y2="320" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#2563EB"/>
     </linearGradient>
   </defs>
-  
-  <!-- Base Container -->
-  <rect width="512" height="512" rx="112" fill="url(#bgGradient)"/>
-  
-  <!-- Stylized T & Checkmark Graphic -->
-  <g transform="translate(0, 0)">
-    <!-- Main Top Bar of T -->
-    <path d="M 128 160 C 128 142.327 142.327 128 160 128 L 352 128 C 369.673 128 384 142.327 384 160 C 384 177.673 369.673 192 352 192 L 160 192 C 142.327 192 128 177.673 128 160 Z" fill="#f8fafc"/>
-    
-    <!-- Vertical Stem of T -->
-    <path d="M 224 192 L 288 192 L 288 352 C 288 369.673 273.673 384 256 384 C 238.327 384 224 369.673 224 352 L 224 192 Z" fill="#f8fafc"/>
-    
-    <!-- Dynamic Accent Checkmark Badge -->
-    <path d="M 304 272 L 352 320 L 424 224" fill="none" stroke="url(#accentGradient)" stroke-width="40" stroke-linecap="round" stroke-linejoin="round"/>
-  </g>
 </svg>
