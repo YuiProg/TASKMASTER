@@ -369,6 +369,22 @@ public class UserProcessServiceImpl implements UserProcessService{
         );
     }
 
+    @Override
+    public ResponseEntity<ApiResponseModel<String>> confirmResetPasswordCode(UserRequest userRequest, String code) {
+        User user = userCacheService.getUserInCacheByEmail(userRequest.getEmail());
+        String codeRequest = userCacheService.getCode(user.getEmail());
+
+        if (!Objects.equals(code, codeRequest)) {
+            userCacheService.evictResetCode(user.getEmail());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponseModel.error("CODE IS NOT VALID", StringCodes.ERROR.getPath()));
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ApiResponseModel.success("CODE IS VALID", StringCodes.SUCCESS.getPath(), codeRequest)
+        );
+    }
+
     public String generateCode (Integer length) {
         Random random = new Random();
         String characters = StringCodes.RANDOM_STRING.getPath();

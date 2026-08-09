@@ -28,4 +28,6 @@ public interface UserProcessService {
     ResponseEntity<ApiResponseModel<User>> getAuthUser ();
 
     ResponseEntity<ApiResponseModel<User>> resetPassword (UserRequest userRequest, String code);
+
+    ResponseEntity<ApiResponseModel<String>> confirmResetPasswordCode (UserRequest userRequest, String code);
 }
