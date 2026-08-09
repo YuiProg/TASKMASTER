@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import { createPortal } from "react-dom";
 import { Heart, Image as ImageIcon, X } from "lucide-react";
 
 import "./TaskComment.scss";
@@ -207,30 +208,32 @@ function TaskComments({
       )}
 
       {/* LIGHTBOX MODAL */}
-      {fullscreenImage && (
-        <div
-          className="task-comments__modal-overlay"
-          onClick={() => setFullscreenImage(null)}
-        >
+      {fullscreenImage &&
+        createPortal(
           <div
-            className="task-comments__modal-content"
-            onClick={(e) => e.stopPropagation()}
+            className="task-comments__modal-overlay"
+            onClick={() => setFullscreenImage(null)}
           >
-            <button
-              type="button"
-              className="task-comments__modal-close"
-              onClick={() => setFullscreenImage(null)}
+            <div
+              className="task-comments__modal-content"
+              onClick={(e) => e.stopPropagation()}
             >
-              <X size={20} />
-            </button>
-            <img
-              src={fullscreenImage}
-              alt="Fullscreen attachment"
-              className="task-comments__modal-img"
-            />
-          </div>
-        </div>
-      )}
+              <button
+                type="button"
+                className="task-comments__modal-close"
+                onClick={() => setFullscreenImage(null)}
+              >
+                <X size={20} />
+              </button>
+              <img
+                src={fullscreenImage}
+                alt="Fullscreen attachment"
+                className="task-comments__modal-img"
+              />
+            </div>
+          </div>,
+          document.body
+        )}
     </div>
   );
 }
