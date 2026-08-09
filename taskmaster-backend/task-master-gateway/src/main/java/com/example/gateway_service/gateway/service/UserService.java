@@ -192,4 +192,54 @@ public class UserService implements UserClient{
                             "ERROR"));
         }
     }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<UserDTO>> resetPassword(UserRequest userRequest, String code) {
+        try {
+            log.info("resetPassword REQUEST email: {}", userRequest.getEmail());
+            ResponseEntity<ApiResponseModel<UserDTO>> response = userClient.resetPassword(userRequest, code);
+            log.info("resetPassword RESPONSE status: {} data: {}", response.getStatusCode(), response.getBody());
+            ResponseEntity.BodyBuilder builder = ResponseEntity.status(response.getStatusCode());
+            return builder.body(response.getBody());
+        } catch (FeignException e) {
+            log.error("RESPONSE resetPassword (error) -> status: {}, cause: {}",
+                    e.status(), e.getCause() != null ? e.getCause().getMessage() : e.getMessage(), e);
+
+            HttpStatus status = (e.status() > 0)
+                    ? HttpStatus.valueOf(e.status())
+                    : HttpStatus.SERVICE_UNAVAILABLE;
+
+            ResponseCookie responseCookie = jwtUtil.deleteCookie();
+            return ResponseEntity.status(status)
+                    .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                    .body(ApiResponseModel.error(
+                            e.status() > 0 ? e.contentUTF8() : "Backend service unavailable, please try again",
+                            "ERROR"));
+        }
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<String>> confirmResetPasswordCode(UserRequest userRequest, String code) {
+        try {
+            log.info("confirmResetPasswordCode REQUEST email: {}", userRequest.getEmail());
+            ResponseEntity<ApiResponseModel<String>> response = userClient.confirmResetPasswordCode(userRequest, code);
+            log.info("confirmResetPasswordCode RESPONSE status: {} data: {}", response.getStatusCode(), response.getBody());
+            ResponseEntity.BodyBuilder builder = ResponseEntity.status(response.getStatusCode());
+            return builder.body(response.getBody());
+        } catch (FeignException e) {
+            log.error("RESPONSE confirmResetPasswordCode (error) -> status: {}, cause: {}",
+                    e.status(), e.getCause() != null ? e.getCause().getMessage() : e.getMessage(), e);
+
+            HttpStatus status = (e.status() > 0)
+                    ? HttpStatus.valueOf(e.status())
+                    : HttpStatus.SERVICE_UNAVAILABLE;
+
+            ResponseCookie responseCookie = jwtUtil.deleteCookie();
+            return ResponseEntity.status(status)
+                    .header(HttpHeaders.SET_COOKIE, responseCookie.toString())
+                    .body(ApiResponseModel.error(
+                            e.status() > 0 ? e.contentUTF8() : "Backend service unavailable, please try again",
+                            "ERROR"));
+        }
+    }
 }

@@ -49,6 +49,18 @@ public class UserController implements UserClient{
         return userService.registerUser(userRequest);
     }
 
+    @Override
+    @PostMapping("/resetPassword/{code}")
+    public ResponseEntity<ApiResponseModel<UserDTO>> resetPassword(@RequestBody UserRequest userRequest, @PathVariable String code) {
+        return userService.resetPassword(userRequest, code);
+    }
+
+    @Override
+    @PostMapping("/confirmResetPasswordCode/{code}")
+    public ResponseEntity<ApiResponseModel<String>> confirmResetPasswordCode(@RequestBody UserRequest userRequest, @PathVariable String code) {
+        return userService.confirmResetPasswordCode(userRequest, code);
+    }
+
     @GetMapping("/ping")
     public ResponseEntity<Map<String, String>> pingGateway () {
         return ResponseEntity.ok(Map.of(

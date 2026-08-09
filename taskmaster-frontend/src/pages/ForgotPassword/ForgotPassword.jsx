@@ -6,6 +6,7 @@ import { InputForm, TRInputFormPanel } from '../../components/TRCOMPONENTS/TRInp
 import Button from '../../components/TRCOMPONENTS/TRButton/Button';
 import { InputField } from '../../components/TRCOMPONENTS/TRInputField/InputFIeld';
 import packageJson from '../../../package.json';
+import { useAuthStore } from '../../context/AuthStore.js';
 
 const PAGE_TRANSITION_MS = 220;
 const STEP_EXIT_MS = 200;
@@ -19,7 +20,7 @@ const STEPS = [
 
 const HEADERS = {
   1: { title: 'Reset your password', subtitle: "Enter the email linked to your account and we'll send you a code." },
-  2: { title: 'Check your email', subtitle: 'Enter the 6-digit code we sent to your email.' },
+  2: { title: 'Check your email', subtitle: 'Enter the 4-digit code we sent to your email.' },
   3: { title: 'Set a new password', subtitle: 'Choose a new password for your account.' },
 };
 
@@ -42,7 +43,18 @@ function ForgotPassword() {
   const navigate = useNavigate();
   const appVersion = packageJson.version || '0.0.0';
 
+  // Auth store state and methods
+  const {
+    requestPasswordResetCode,
+    verifyPasswordResetCode,
+    resetPassword,
+    isLoading,
+    error,
+    clearError,
+  } = useAuthStore();
+
   const changeStep = (nextStep, direction) => {
+    clearError();
     setStepTransition({ phase: 'leaving', direction });
     setTimeout(() => {
       setStep(nextStep);
@@ -54,19 +66,43 @@ function ForgotPassword() {
   const goToLogin = (e) => {
     if (e && e.preventDefault) e.preventDefault();
     if (leavingTo) return;
+    clearError();
     setLeavingTo('login');
     setTimeout(() => navigate('/', { state: { fromForgot: true } }), PAGE_TRANSITION_MS);
   };
 
-  const goNextStep = (e) => {
+  const handleStepSubmit = async (e) => {
     if (e && e.preventDefault) e.preventDefault();
-    if (step < STEPS.length) {
-      changeStep(step + 1, 'forward');
+    if (isLoading) return;
+
+    if (step === 1) {
+      if (!email) return;
+      const success = await requestPasswordResetCode(email);
+      if (success) {
+        changeStep(2, 'forward');
+      }
+    } else if (step === 2) {
+      if (!code) return;
+      const success = await verifyPasswordResetCode(email, code);
+      if (success) {
+        changeStep(3, 'forward');
+      }
+    } else if (step === 3) {
+      if (!password || !confirmPassword) return;
+      const success = await resetPassword(email, code, password, confirmPassword);
+      if (success) {
+        goToLogin();
+      }
     }
   };
 
+  const handleResendCode = async () => {
+    if (!email || isLoading) return;
+    await requestPasswordResetCode(email);
+  };
+
   const goBackStep = () => {
-    if (step === 1) return;
+    if (step === 1 || isLoading) return;
     changeStep(step - 1, 'backward');
   };
 
@@ -109,10 +145,12 @@ function ForgotPassword() {
             <TRInputFormPanel
               header={HEADERS[step].title}
               subHeader={HEADERS[step].subtitle}
-              onSubmit={goNextStep}
+              onSubmit={handleStepSubmit}
               noBtn
             >
               <InputForm noBtn>
+                {error && <div className="tr-forgot__error-message" style={{ color: '#ff4d4f', fontSize: '14px', marginBottom: '10px' }}>{error}</div>}
+
                 {step === 1 && (
                   <InputField
                     placeholder="Email address"
@@ -125,15 +163,16 @@ function ForgotPassword() {
                 {step === 2 && (
                   <InputField
                     placeholder="Verification code"
-                    number
-                    maxLength={6}
+                    maxLength={4}
                     value={code}
                     onChange={setCode}
                   />
                 )}
                 {step === 2 && (
                   <div className="tr-forgot__row">
-                    <a className="tr-forgot__resend">Resend code</a>
+                    <a className="tr-forgot__resend" style={{ cursor: 'pointer' }} onClick={handleResendCode}>
+                      Resend code
+                    </a>
                   </div>
                 )}
 
@@ -157,16 +196,17 @@ function ForgotPassword() {
                 <Button
                   submit
                   maxWidth
-                  text={BUTTON_TEXT[step]}
+                  text={isLoading ? 'PLEASE WAIT...' : BUTTON_TEXT[step]}
                   customBorder="none"
                   className="tr-forgot__btn"
-                  onClick={goNextStep}
+                  onClick={handleStepSubmit}
+                  disabled={isLoading}
                 />
               </InputForm>
             </TRInputFormPanel>
 
             {step > 1 && (
-              <button type="button" className="tr-forgot__back-step" onClick={goBackStep}>
+              <button type="button" className="tr-forgot__back-step" onClick={goBackStep} disabled={isLoading}>
                 &larr; Back
               </button>
             )}
