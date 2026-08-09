@@ -27,6 +27,8 @@ import com.example.backend.request.UserRequest;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Random;
 
 @Service
 @RequiredArgsConstructor
@@ -310,5 +312,72 @@ public class UserProcessServiceImpl implements UserProcessService{
     public ResponseEntity<ApiResponseModel<User>> getAuthUser() {
         User user = authenticatedUser.getAuthenticatedUser();
         return ResponseEntity.status(HttpStatus.OK).body(ApiResponseModel.success("USER FOUND", StringCodes.SUCCESS.getPath(), user));
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<User>> resetPassword(UserRequest userRequest, String code) {
+
+        String randomCode = this.generateCode(4);
+
+        User user = userCacheService.getUserInCacheByEmail(userRequest.getEmail());
+
+        if (user == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponseModel.error("USER NOT FOUND", StringCodes.ERROR.getPath()));
+        }
+        if (userRequest.isReset.equals(StringCodes.FALSE.getFlag())) {
+            userCacheService.saveCode(user.getEmail(), randomCode);
+        }
+
+        if (userRequest.isReset.equals(StringCodes.FALSE.getFlag())) {
+            emailService.sendTemplatedEmail(
+                    user.getEmail(),
+                    "RESET_PASSWORD_EMAIL",
+                    Map.of(
+                            "passwordCode", randomCode,
+                            "memberName", user.getUsername()
+                    )
+            );
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    ApiResponseModel.success("Reset password code has been sent to " + user.getEmail(), StringCodes.SUCCESS.getPath(), user)
+            );
+        }
+
+        String codeRequest = userCacheService.getCode(userRequest.getEmail());
+        System.out.println(codeRequest);
+        if (!Objects.equals(code, codeRequest)) {
+            userCacheService.evictResetCode(user.getEmail());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponseModel.error("CODE IS NOT VALID", StringCodes.ERROR.getPath()));
+        }
+
+        String password = passwordEncoder.encode(userRequest.getPassword());
+        user.setPassword(password);
+
+        userRepository.save(user);
+
+        emailService.sendTemplatedEmail(
+            user.getEmail(),
+            "RESET_PASSWORD_EMAIL_SUCCESS",
+                Map.of(
+                        "memberName", user.getUsername()
+                )
+        );
+        userCacheService.evictResetCode(user.getEmail());
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ApiResponseModel.success("RESET PASSWORD SUCCESS", StringCodes.SUCCESS.getPath(), user)
+        );
+    }
+
+    public String generateCode (Integer length) {
+        Random random = new Random();
+        String characters = StringCodes.RANDOM_STRING.getPath();
+        StringBuilder sb = new StringBuilder(length);
+
+        for (int i = 0; i < length; i++) {
+            int index = random.nextInt(characters.length());
+            sb.append(characters.charAt(index));
+        }
+        return sb.toString();
     }
 }

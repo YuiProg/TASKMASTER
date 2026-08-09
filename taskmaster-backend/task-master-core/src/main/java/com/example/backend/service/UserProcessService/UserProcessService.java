@@ -26,4 +26,6 @@ public interface UserProcessService {
     ResponseEntity<ApiResponseModel<User>> getUserById(String id);
 
     ResponseEntity<ApiResponseModel<User>> getAuthUser ();
+
+    ResponseEntity<ApiResponseModel<User>> resetPassword (UserRequest userRequest, String code);
 }
