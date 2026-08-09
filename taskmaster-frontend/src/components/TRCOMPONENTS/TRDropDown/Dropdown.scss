@@ -20,7 +20,7 @@
     padding: 0 $space-8;
     cursor: pointer;
     outline: none;
-    font-family: $font-family-fallback;
+    font-family: $font-family-base;
     transition: background-color $transition-med ease;
 
     &:hover:not(.tr-dropdown__button--disabled) {
@@ -93,7 +93,7 @@
     max-height: 240px;
     overflow-y: auto;
     box-sizing: border-box;
-    font-family: $font-family-fallback;
+    font-family: $font-family-base;
 
     @include custom-scrollbar($width: 6px, $thumb: $slate-300, $thumb-hover: $slate-400, $radius: 20px);
   }

@@ -13,7 +13,7 @@
   top: 0;
   left: 0;
   z-index: $z-modal;
-  color: $white;
+  color: $slate-900;
   animation: fadeIn 0.15s ease-in-out;
 
   &--closing {
@@ -251,7 +251,7 @@
 .tr-modal__close-btn {
   background: none;
   border: none;
-  color: $white;
+  color: $slate-900;
   cursor: pointer;
   padding: $space-2;
   display: flex;
@@ -262,10 +262,10 @@
   flex-shrink: 0;
 
   &:hover {
-    background-color: rgba($white, 0.1);
+    background-color: rgba($black, 0.08);
   }
 
   &:active {
-    background-color: rgba($white, 0.2);
+    background-color: rgba($black, 0.14);
   }
 }

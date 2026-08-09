@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "./pages/Login/Login";
 import Register from "./pages/Register/Register";
+import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import NewProject from "./pages/Project/NewProject";
@@ -22,6 +23,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/dashboard" element={
           <Sidebar>
             <Dashboard/>

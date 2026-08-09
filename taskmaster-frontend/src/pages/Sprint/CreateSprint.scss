@@ -57,12 +57,12 @@
     -webkit-backdrop-filter: blur($glass-blur-sm);
     box-sizing: border-box;
     transition: all 0.2s ease;
-    color-scheme: dark;
+    color-scheme: light;
 
     &:focus {
       outline: none;
       border-color: $blue-600;
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.25);
+      box-shadow: 0 0 0 3px rgba($blue-600, 0.25);
     }
   }
 
@@ -105,7 +105,7 @@
     &--selected {
       border-color: $blue-600;
       background-color: $blue-50;
-      box-shadow: 0 1px 2px rgba(37, 99, 235, 0.1);
+      box-shadow: 0 1px 2px rgba($blue-600, 0.1);
 
       &:hover {
         border-color: $blue-700;

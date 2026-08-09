@@ -106,7 +106,7 @@
   }
 
   &__text {
-    color: $white;
+    color: $slate-900;
   }
 
   &__title {
@@ -119,6 +119,6 @@
   &__subtitle {
     font-size: $fs-xs;
     line-height: 1;
-    color: rgba($white, 0.75);
+    color: rgba($black, 0.6);
   }
 }

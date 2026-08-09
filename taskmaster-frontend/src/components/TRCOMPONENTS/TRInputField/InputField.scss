@@ -21,7 +21,7 @@
       padding: 22px $space-8 $space-4 $space-8;
       box-sizing: border-box;
       outline: none;
-      font-family: $font-family-fallback;
+      font-family: $font-family-base;
     }
 
     input[type='password'] {
@@ -45,7 +45,7 @@
       top: 14px;
       color: $slate-400;
       font-size: $fs-md;
-      font-family: $font-family-fallback;
+      font-family: $font-family-base;
       pointer-events: none;
       transform-origin: top left;
       transition: transform $transition-med $ease-out-standard, color $transition-med ease;
