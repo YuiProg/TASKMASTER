@@ -65,8 +65,6 @@ public class ProjectServiceImpl implements ProjectServiceInterface{
         }
 
         List<User> members = new ArrayList<>();
-
-        members.add(authUser);
         project.setMembers(members);
         if (!projectRequest.getEmails().isEmpty()) {
             for (String email : projectRequest.getEmails()) {

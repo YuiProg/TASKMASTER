@@ -67,6 +67,14 @@ public class SprintServiceImpl implements SprintServiceInterface {
 
         sprint = new Sprint();
         sprint.setSprintName(sprintRequest.getSprintName());
+
+        if (project.getMembers().isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ApiResponseModel.error(
+                            "PROJECT HAS NO MEMBERS",
+                            "ERROR"
+                    ));
+        }
         sprint.setSprintMembers(project.getMembers());
         sprint.setCreatedAt(new Date().getTime());
         sprint.setInitiatedBy(user);
