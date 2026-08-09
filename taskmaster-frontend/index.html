@@ -9,6 +9,14 @@
       content="TaskMaster is a project and task management platform for tracking team workflows, sprints, and project milestones." 
     />
     <title>TaskMaster</title>
+    <script>
+      (function () {
+        var darkPaths = ['/', '/register', '/forgot-password'];
+        if (darkPaths.indexOf(window.location.pathname) !== -1) {
+          document.documentElement.style.backgroundColor = '#0a0a0a';
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
