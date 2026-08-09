@@ -32,4 +32,7 @@ public interface UserClient {
 
     @PostMapping("/resetPassword/{code}")
     ResponseEntity<ApiResponseModel<UserDTO>> resetPassword (@RequestBody UserRequest userRequest, @PathVariable String code);
+
+    @PostMapping("/confirmResetPasswordCode/{code}")
+    ResponseEntity<ApiResponseModel<String>> confirmResetPasswordCode (@RequestBody UserRequest userRequest, @PathVariable String code);
 }
