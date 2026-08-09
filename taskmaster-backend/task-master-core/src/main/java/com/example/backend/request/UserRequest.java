@@ -20,4 +20,5 @@ public class UserRequest {
     public String branchId;
     public Integer del;
     public String selectedBranch;
+    public Boolean isReset;
 }
