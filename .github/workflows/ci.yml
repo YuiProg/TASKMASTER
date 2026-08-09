@@ -54,7 +54,7 @@ jobs:
 
       - name: Run Trivy Vulnerability Scanner (Frontend)
         if: env.VERSION_CHANGED == 'true'
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@0.20.0
         with:
           scan-type: 'fs'
           scan-ref: 'taskmaster-frontend'
@@ -148,7 +148,7 @@ jobs:
           fi
 
       - name: Run Trivy Vulnerability Scanner (Backend)
-        uses: aquasecurity/trivy-action@0.28.0
+        uses: aquasecurity/trivy-action@0.20.0
         with:
           scan-type: 'fs'
           scan-ref: '${{ matrix.path }}'
