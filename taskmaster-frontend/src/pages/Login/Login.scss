@@ -12,23 +12,28 @@
 
 @keyframes tr-login-enter {
   from {
-    opacity: 0;
-    transform: scale(0.98);
+    transform: translateX(-100%);
   }
   to {
-    opacity: 1;
-    transform: scale(1);
+    transform: translateX(0);
   }
 }
 
-@keyframes tr-login-exit {
+@keyframes tr-login-exit-register {
   from {
-    opacity: 1;
-    transform: scale(1);
+    transform: translateX(0);
   }
   to {
-    opacity: 0;
-    transform: scale(0.98);
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes tr-login-exit-forgot {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
   }
 }
 
@@ -45,8 +50,23 @@
   z-index: 999999;
   animation: tr-login-enter 0.32s $ease-out-standard both;
 
-  &--leaving {
-    animation: tr-login-exit 0.2s $ease-standard both;
+  a,
+  button {
+    -webkit-tap-highlight-color: transparent;
+
+    &:focus,
+    &:focus-visible {
+      outline: none;
+    }
+  }
+
+  &--leaving-register {
+    animation: tr-login-exit-register 0.22s $ease-standard both;
+    pointer-events: none;
+  }
+
+  &--leaving-forgot {
+    animation: tr-login-exit-forgot 0.22s $ease-standard both;
     pointer-events: none;
   }
 
@@ -184,32 +204,6 @@
     border-left: none !important;
     box-sizing: border-box;
     overflow: hidden;
-
-    &::before,
-    &::after {
-      content: '';
-      position: absolute;
-      border-radius: 50%;
-      pointer-events: none;
-      z-index: 0;
-      filter: blur(4px);
-    }
-
-    &::before {
-      width: 480px;
-      height: 480px;
-      top: -140px;
-      right: -140px;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(200, 205, 215, 0.35) 40%, transparent 72%);
-    }
-
-    &::after {
-      width: 420px;
-      height: 420px;
-      bottom: -160px;
-      left: -120px;
-      background: radial-gradient(circle, rgba(255, 255, 255, 0.55) 0%, transparent 70%);
-    }
 
     @media (max-width: 868px) {
       min-height: 100vh;

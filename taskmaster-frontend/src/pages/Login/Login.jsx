@@ -12,7 +12,7 @@ const PAGE_TRANSITION_MS = 220;
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isLeaving, setIsLeaving] = useState(false);
+  const [leavingTo, setLeavingTo] = useState(null);
 
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
@@ -31,13 +31,20 @@ function Login() {
 
   const goToRegister = (e) => {
     e.preventDefault();
-    if (isLeaving) return;
-    setIsLeaving(true);
+    if (leavingTo) return;
+    setLeavingTo('register');
     setTimeout(() => navigate('/register'), PAGE_TRANSITION_MS);
   };
 
+  const goToForgotPassword = (e) => {
+    e.preventDefault();
+    if (leavingTo) return;
+    setLeavingTo('forgot');
+    setTimeout(() => navigate('/forgot-password'), PAGE_TRANSITION_MS);
+  };
+
   return (
-    <div className={`tr-login${isLeaving ? ' tr-login--leaving' : ''}`}>
+    <div className={`tr-login${leavingTo ? ` tr-login--leaving-${leavingTo}` : ''}`}>
       {/* Left Visual Hero Section */}
       <div className="tr-login__hero">
         <div className="tr-login__hero-overlay" />
@@ -105,7 +112,7 @@ function Login() {
               />
 
               <div className="tr-login__row">
-                <a href="#forgot" className="tr-login__forgot">Forgot password?</a>
+                <Link to="/forgot-password" className="tr-login__forgot" onClick={goToForgotPassword}>Forgot password?</Link>
               </div>
 
               <Button
