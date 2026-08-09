@@ -1,6 +1,6 @@
 import './Spinner.scss';
 
-const Spinner = ({ size = 40, strokeWidth = 4, color = '#ff4d4d', trackColor = '#2a2a2a' }) => {
+const Spinner = ({ size = 40, strokeWidth = 4, color = '#000000', trackColor = '#e5e5e5' }) => {
   const spinnerStyle = {
     width: `${size}px`,
     height: `${size}px`,
