@@ -71,8 +71,8 @@
     inset: 0;
     background: linear-gradient(
       135deg,
-      rgba(15, 23, 42, 0.92) 0%,
-      rgba(30, 41, 59, 0.82) 100%
+      rgba(0, 0, 0, 0.92) 0%,
+      rgba(17, 17, 17, 0.82) 100%
     );
     z-index: 1;
   }
@@ -127,7 +127,6 @@
     p {
       font-size: 1.05rem;
       line-height: 1.6;
-      color: $slate-300;
       max-width: 440px;
     }
   }
@@ -152,13 +151,11 @@
 
   &__stat-label {
     font-size: $fs-sm;
-    color: $slate-300;
   }
 
   &__hero-footer {
     p {
       font-size: $fs-sm;
-      color: $slate-400;
       margin: 0;
     }
   }
@@ -166,15 +163,43 @@
   &__form-section {
     flex: 1;
     height: 100%;
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
     padding: 48px;
-    background-color: $glass-bg-2 !important;
+    background-color: #0c0c0d !important;
     backdrop-filter: blur($glass-blur-lg);
     -webkit-backdrop-filter: blur($glass-blur-lg);
     border-left: none !important;
     box-sizing: border-box;
+    overflow: hidden;
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(4px);
+    }
+
+    &::before {
+      width: 480px;
+      height: 480px;
+      top: -140px;
+      right: -140px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.95) 0%, rgba(200, 205, 215, 0.35) 40%, transparent 72%);
+    }
+
+    &::after {
+      width: 420px;
+      height: 420px;
+      bottom: -160px;
+      left: -120px;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.55) 0%, transparent 70%);
+    }
 
     @media (max-width: 868px) {
       min-height: 100vh;
@@ -187,11 +212,34 @@
     max-width: 380px;
     padding: $space-8 $space-7;
     border-radius: $radius-2xl;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.12);
+    position: relative;
+    z-index: 1;
+    isolation: isolate;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: linear-gradient(155deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%);
+    backdrop-filter: blur(50px) saturate(150%);
+    -webkit-backdrop-filter: blur(50px) saturate(150%);
+    box-shadow:
+      0 24px 70px rgba(0, 0, 0, 0.55),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.07;
+      mix-blend-mode: overlay;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    > * {
+      position: relative;
+      z-index: 1;
+    }
   }
 
   &__brand {
@@ -214,13 +262,14 @@
     width: 38px;
     height: 38px;
     border-radius: $radius-lg;
-    background: #121929;
+    background: $black;
     color: $white;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(18, 25, 41, 0.25);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 
     img {
       display: block;
@@ -257,14 +306,14 @@
   .tr-inputform-panel__title {
     font-size: 1.85rem;
     font-weight: $fw-bold;
-    color: $slate-900 !important;
+    color: $white !important;
     margin: 0;
     letter-spacing: $letter-spacing-tight;
   }
 
   .tr-inputform-panel__subtitle {
     font-size: 0.925rem;
-    color: $slate-500 !important;
+    color: rgba($white, 0.6) !important;
     margin: 0;
   }
 
@@ -280,26 +329,26 @@
   }
 
   input {
-    background-color: $input-bg-light !important;
-    border: 1px solid $slate-200 !important;
-    color: $slate-900 !important;
+    background-color: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    color: $white !important;
     transition: all $transition-base ease;
 
     &:focus {
-      background-color: $input-bg-hover !important;
-      border-color: $accent !important;
-      box-shadow: 0 0 0 4px rgba($accent, 0.18) !important;
+      background-color: rgba(255, 255, 255, 0.1) !important;
+      border-color: rgba(255, 255, 255, 0.4) !important;
+      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.12) !important;
     }
 
     &::placeholder {
-      color: $slate-400 !important;
+      color: rgba(255, 255, 255, 0.4) !important;
     }
   }
 
   .tr-register__btn {
     width: 100% !important;
-    background-color: $accent !important;
-    color: $white !important;
+    background-color: $white !important;
+    color: $black !important;
     font-weight: $fw-semibold;
     margin-top: $space-2;
     border-radius: $radius-lg;
@@ -312,9 +361,9 @@
     transition: all $transition-base ease;
 
     &:hover {
-      background-color: $accent-dark !important;
+      background-color: rgba(255, 255, 255, 0.85) !important;
       transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
 
     &:active {
@@ -328,9 +377,9 @@
   margin: 0;
   padding: $space-4 $space-6;
   border-radius: $radius-lg;
-  background: $red-50 !important;
-  border: 1px solid $red-200 !important;
-  color: $red-600 !important;
+  background: rgba(211, 32, 42, 0.16) !important;
+  border: 1px solid rgba(211, 32, 42, 0.4) !important;
+  color: #ff7a7f !important;
   font-size: $fs-sm;
   box-sizing: border-box;
 }
@@ -338,17 +387,17 @@
 .tr-register__signup-hint {
   text-align: center;
   font-size: $fs-sm;
-  color: $slate-500 !important;
+  color: rgba($white, 0.6) !important;
   margin-top: $space-6;
 
   a {
-    color: $accent !important;
-    text-decoration: none;
+    color: $white !important;
+    text-decoration: underline;
+    text-underline-offset: 2px;
     font-weight: $fw-semibold;
 
     &:hover {
-      color: $accent-dark !important;
-      text-decoration: underline;
+      opacity: 0.65;
     }
   }
 }

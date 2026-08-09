@@ -125,9 +125,9 @@ function Login() {
 
           <p 
             className="tr-login__version-tag" 
-            style={{ 
-              color: '#64748b', 
-              fontSize: '12px', 
+            style={{
+              color: '#8f8f8f',
+              fontSize: '12px',
               textAlign: 'center', 
               marginTop: '12px',
               fontWeight: 500
