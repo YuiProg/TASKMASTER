@@ -181,6 +181,8 @@ public class UserProcessServiceImpl implements UserProcessService{
                     )
             );
 
+            userCacheService.evictResetCode(queryResult.getEmail());
+
             return ResponseEntity.status(HttpStatus.OK)
                     .body(ApiResponseModel.success(StringCodes.USER_LOG_IN.getPath(), StringCodes.SUCCESS.getPath(), queryResult));
 
