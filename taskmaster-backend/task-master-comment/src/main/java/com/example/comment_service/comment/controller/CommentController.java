@@ -40,6 +40,13 @@ public class CommentController implements CommentServiceInterface {
         return commentServiceInterface.getTaskComments(id);
     }
 
+    //to be tested
+    @Override
+    @DeleteMapping("/deleteComment/{id}")
+    public ResponseEntity<ApiResponseModel<CommentResponseDTO>> deleteComment(@PathVariable String id) {
+        return commentServiceInterface.deleteComment(id);
+    }
+
     @GetMapping("/test-feign/{id}")
     public ResponseEntity<ApiResponseModel<UserDTO>> testFeignConnection(@PathVariable String id) {
         // This directly calls your Feign client interface
