@@ -55,6 +55,8 @@ public class CommentService implements CommentServiceInterface{
         comment.setTask(task.getData().getId());
         if (commentRequest.getComment() != null && !commentRequest.getComment().trim().isEmpty()) {
             comment.setComment(commentRequest.getComment());
+        } else {
+            comment.setComment(" ");
         }
         comment.setCreatedBy(user.getId());
         comment.setUpdatedBy(user.getUsername());
