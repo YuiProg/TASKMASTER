@@ -57,7 +57,13 @@ public class SecurityConfig {
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**", "/api/v1/ping").permitAll()
+                        .requestMatchers(
+                                HttpMethod.OPTIONS,
+                                "/**",
+                                "/api/v1/ping",
+                                "/api/v1/confirmResetPasswordCode/**",
+                                "/api/v1/resetPassword/**"
+                        ).permitAll()
                         .requestMatchers("/api/v1/**").permitAll()
                         .anyRequest().authenticated()
                 )
