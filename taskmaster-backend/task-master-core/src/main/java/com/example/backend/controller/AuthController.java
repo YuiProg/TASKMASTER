@@ -76,6 +76,12 @@ public class AuthController implements UserProcessService {
         return userProcessService.getAuthUser();
     }
 
+    @Override
+    @PostMapping("/api/v1/resetPassword/{code}")
+    public ResponseEntity<ApiResponseModel<User>> resetPassword(@RequestBody UserRequest userRequest, @PathVariable String code) {
+        return userProcessService.resetPassword(userRequest, code);
+    }
+
     @GetMapping("/api/v1/ping")
     public ResponseEntity<Map<String, String>> pingCore () {
         return ResponseEntity.ok(Map.of(

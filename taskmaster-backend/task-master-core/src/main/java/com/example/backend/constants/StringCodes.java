@@ -17,6 +17,8 @@ public enum StringCodes {
     SUCCESS("SUCCESS"),
     ERROR("ERROR"),
 
+    RANDOM_STRING("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"),
+
     TRUE("yes", 1, true),
     FALSE("no", 0, false);
 
