@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import './Login.scss';
 import { InputForm, TRInputFormPanel } from '../../components/TRCOMPONENTS/TRInputForm/TRInputForm';
 import Button from '../../components/TRCOMPONENTS/TRButton/Button';
@@ -15,6 +15,8 @@ function Login() {
   const [leavingTo, setLeavingTo] = useState(null);
 
   const navigate = useNavigate();
+  const location = useLocation();
+  const enteredFromForgot = location.state?.fromForgot;
   const login = useAuthStore((state) => state.login);
   const isLoading = useAuthStore((state) => state.isLoading);
   const error = useAuthStore((state) => state.error);
@@ -44,7 +46,7 @@ function Login() {
   };
 
   return (
-    <div className={`tr-login${leavingTo ? ` tr-login--leaving-${leavingTo}` : ''}`}>
+    <div className={`tr-login${enteredFromForgot ? ' tr-login--enter-up' : ''}${leavingTo ? ` tr-login--leaving-${leavingTo}` : ''}`}>
       {/* Left Visual Hero Section */}
       <div className="tr-login__hero">
         <div className="tr-login__hero-overlay" />

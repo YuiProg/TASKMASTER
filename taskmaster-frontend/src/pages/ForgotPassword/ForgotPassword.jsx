@@ -55,7 +55,7 @@ function ForgotPassword() {
     if (e && e.preventDefault) e.preventDefault();
     if (leavingTo) return;
     setLeavingTo('login');
-    setTimeout(() => navigate('/'), PAGE_TRANSITION_MS);
+    setTimeout(() => navigate('/', { state: { fromForgot: true } }), PAGE_TRANSITION_MS);
   };
 
   const goNextStep = (e) => {
