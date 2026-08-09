@@ -2,6 +2,25 @@ import { create } from 'zustand';
 import gateWayApi from '../lib/gateway';
 import navigateTo from '../lib/navigate.js';
 
+const extractErrorMessage = (rawError, fallbackMessage = 'Something went wrong. Please try again.') => {
+  if (!rawError) return fallbackMessage;
+
+  const input = typeof rawError === 'object' ? rawError.message || rawError : rawError;
+
+  if (typeof input === 'string') {
+    try {
+      const parsed = JSON.parse(input);
+      if (parsed && parsed.message) {
+        return parsed.message;
+      }
+    } catch {
+      return input;
+    }
+  }
+
+  return fallbackMessage;
+};
+
 export const useAuthStore = create((set) => ({
   user: null,
   isAuthenticated: false,
@@ -25,17 +44,16 @@ export const useAuthStore = create((set) => ({
 
       set({
         isLoading: false,
-        error: res.data.message || 'Login failed.',
+        error: extractErrorMessage(res.data?.message, 'Login failed.'),
       });
       return false;
     } catch (err) {
-      const error = JSON.parse(err.response?.data?.message || '{}');
-      console.log(error.message);
+      const rawError = err.response?.data?.message || err.response?.data;
+      const parsedMessage = extractErrorMessage(rawError, 'Something went wrong. Please try again.');
+
       set({
         isLoading: false,
-        error:
-          err.response?.data?.message ||
-          'Something went wrong. Please try again.',
+        error: parsedMessage,
       });
       return false;
     }
@@ -75,18 +93,17 @@ export const useAuthStore = create((set) => ({
 
       set({
         isLoading: false,
-        error: res.data.message || 'Registration failed.',
+        error: extractErrorMessage(res.data?.message, 'Registration failed.'),
       });
       return false;
 
     } catch (err) {
-      const data = JSON.parse(err.response?.data?.message || '{}');
+      const rawError = err.response?.data?.message || err.response?.data;
+      const parsedMessage = extractErrorMessage(rawError, 'Something went wrong. Please try again.');
 
       set({
         isLoading: false,
-        error:
-          data.message ||
-          'Something went wrong. Please try again.',
+        error: parsedMessage,
       });
       return false;
     }
@@ -94,7 +111,7 @@ export const useAuthStore = create((set) => ({
 
   // --- Forgot Password Flow ---
 
-  // Step 1: Request code (Pass placeholder string like "code" for path param)
+  // Step 1: Request code
   requestPasswordResetCode: async (email) => {
     set({ isLoading: true, error: null });
     try {
@@ -111,13 +128,15 @@ export const useAuthStore = create((set) => ({
 
       set({
         isLoading: false,
-        error: res.data.message || 'Failed to send reset code.',
+        error: extractErrorMessage(res.data?.message, 'Failed to send reset code.'),
       });
       return false;
     } catch (err) {
+      const rawError = err.response?.data?.message || err.response?.data;
+
       set({
         isLoading: false,
-        error: err.response?.data?.message || 'Something went wrong. Please try again.',
+        error: extractErrorMessage(rawError, 'Something went wrong. Please try again.'),
       });
       return false;
     }
@@ -140,13 +159,15 @@ export const useAuthStore = create((set) => ({
 
       set({
         isLoading: false,
-        error: res.data.message || 'Invalid or expired code.',
+        error: extractErrorMessage(res.data?.message, 'Invalid or expired code.'),
       });
       return false;
     } catch (err) {
+      const rawError = err.response?.data?.message || err.response?.data;
+
       set({
         isLoading: false,
-        error: err.response?.data?.message || 'Invalid verification code.',
+        error: extractErrorMessage(rawError, 'Invalid verification code.'),
       });
       return false;
     }
@@ -177,13 +198,15 @@ export const useAuthStore = create((set) => ({
 
       set({
         isLoading: false,
-        error: res.data.message || 'Failed to reset password.',
+        error: extractErrorMessage(res.data?.message, 'Failed to reset password.'),
       });
       return false;
     } catch (err) {
+      const rawError = err.response?.data?.message || err.response?.data;
+
       set({
         isLoading: false,
-        error: err.response?.data?.message || 'Something went wrong. Please try again.',
+        error: extractErrorMessage(rawError, 'Something went wrong. Please try again.'),
       });
       return false;
     }
