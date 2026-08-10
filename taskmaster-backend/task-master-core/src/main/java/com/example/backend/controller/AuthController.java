@@ -91,6 +91,12 @@ public class AuthController implements UserProcessService {
         return userProcessService.confirmResetPasswordCode(userRequest, code);
     }
 
+    @Override
+    @PostMapping("/api/v1/emailUsers")
+    public ResponseEntity<ApiResponseModel<String>> emailUsers() {
+        return userProcessService.emailUsers();
+    }
+
     @GetMapping("/api/v1/ping")
     public ResponseEntity<Map<String, String>> pingCore () {
         return ResponseEntity.ok(Map.of(

@@ -5,8 +5,10 @@ import com.example.backend.config.JwtUtil;
 import com.example.backend.constants.StringCodes;
 import com.example.backend.dto.ApiResponseModel;
 import com.example.backend.model.Branch;
+import com.example.backend.model.Task;
 import com.example.backend.repository.BranchRepository;
 import com.example.backend.service.EmailService.EmailService;
+import com.example.backend.service.TaskService.TaskCacheService;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.Query;
@@ -14,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import com.example.backend.model.User;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpHeaders;
@@ -30,6 +33,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Random;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserProcessServiceImpl implements UserProcessService{
@@ -42,6 +46,8 @@ public class UserProcessServiceImpl implements UserProcessService{
     private final AuthenticatedUser authenticatedUser;
     private final UserCacheService userCacheService;
     private final EmailService emailService;
+    private final TaskCacheService taskCacheService;
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -397,5 +403,28 @@ public class UserProcessServiceImpl implements UserProcessService{
             sb.append(characters.charAt(index));
         }
         return sb.toString();
+    }
+
+    public ResponseEntity<ApiResponseModel<String>> emailUsers () {
+        List<User> users = userRepository.findRandomUsers();
+
+        for (User user : users) {
+            List<Task> userTasks = taskCacheService.getAllOpenTaskCache(user.getId());
+            Integer userTaskCount = userTasks.size();
+            log.info("SENDING EMAIL TO: {}", user.getEmail());
+            emailService.sendTemplatedEmail(
+                    user.getEmail(),
+                    "PENDING_TASKS_EMAIL",
+                    Map.of(
+                            "memberName", user.getUsername(),
+                            "taskCount", userTaskCount.toString()
+                    )
+            );
+
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                ApiResponseModel.success("EMAIL SENT TO USERS", "SUCCESS", null)
+        );
     }
 }
