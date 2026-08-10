@@ -18,7 +18,7 @@ public class UserService implements UserClient {
     private final UserClient userClient;
 
     @Override
-    @Scheduled(cron = "0 * 8 * * ?", zone = "Asia/Manila")
+    @Scheduled(cron = "0 0 8 * * ?", zone = "Asia/Manila")
     //@Scheduled(fixedRate = 60000)
     public ResponseEntity<ApiResponseModel<String>> emailUsers() {
         try {
