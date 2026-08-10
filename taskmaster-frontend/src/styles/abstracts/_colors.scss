@@ -1,93 +1,98 @@
 $white: #ffffff;
 $black: #000000;
 
-$slate-50: rgba(0, 0, 0, 0.03);
-$slate-100: rgba(0, 0, 0, 0.05);
-$slate-200: rgba(0, 0, 0, 0.09);
-$slate-300: rgba(0, 0, 0, 0.14);
-$slate-400: #8f8f8f;
-$slate-500: #6b6b6b;
-$slate-600: #525252;
-$slate-700: #3a3a3a;
-$slate-800: #1a1a1a;
-$slate-900: #0a0a0a;
+// Neutral scale — same roles as before (50-300 = subtle overlay tints,
+// 400-900 = increasing text contrast) but inverted for a dark canvas.
+$slate-50: rgba(255, 255, 255, 0.03);
+$slate-100: rgba(255, 255, 255, 0.06);
+$slate-200: rgba(255, 255, 255, 0.1);
+$slate-300: rgba(255, 255, 255, 0.16);
+$slate-400: #949494;
+$slate-500: #a8a8a8;
+$slate-600: #bfbfbf;
+$slate-700: #dadada;
+$slate-800: #f2f2f2;
+$slate-900: #ffffff;
 
-$border-light: rgba(0, 0, 0, 0.1);
-$border-lighter: rgba(0, 0, 0, 0.06);
-$input-bg-light: rgba(0, 0, 0, 0.03);
-$input-bg-hover: rgba(0, 0, 0, 0.05);
-$surface-app: rgba(0, 0, 0, 0.02);
-$table-header-bg: rgba(0, 0, 0, 0.03);
+$border-light: rgba(255, 255, 255, 0.12);
+$border-lighter: rgba(255, 255, 255, 0.08);
+$input-bg-light: rgba(255, 255, 255, 0.04);
+$input-bg-hover: rgba(255, 255, 255, 0.08);
+$surface-app: rgba(255, 255, 255, 0.03);
+$table-header-bg: rgba(255, 255, 255, 0.04);
 
-$bg-app-dark: #ffffff;
-$dark-surface: rgba(255, 255, 255, 0.6);
-$dark-surface-alt: rgba(250, 250, 250, 0.65);
-$dark-border: rgba(0, 0, 0, 0.1);
-$dark-muted-text: #6b6b6b;
+$bg-app-dark: #0c0c0d;
+$dark-surface: rgba(255, 255, 255, 0.06);
+$dark-surface-alt: rgba(255, 255, 255, 0.05);
+$dark-border: rgba(255, 255, 255, 0.12);
+$dark-muted-text: rgba(255, 255, 255, 0.6);
 
-$blue-50: rgba(0, 0, 0, 0.05);
-$blue-100: rgba(0, 0, 0, 0.08);
-$blue-200: rgba(0, 0, 0, 0.16);
-$blue-400: #525252;
-$blue-500: #1a1a1a;
-$blue-600: #000000;
-$blue-700: #000000;
-$blue-800: #000000;
-$blue-active-bg: rgba(0, 0, 0, 0.06);
-$blue-gradient-start: #2a2a2a;
+// Interactive accent — unified green (previously a monochrome black,
+// which reads as invisible ink on a black canvas).
+$blue-50: rgba(34, 197, 94, 0.12);
+$blue-100: rgba(34, 197, 94, 0.2);
+$blue-200: rgba(34, 197, 94, 0.35);
+$blue-400: #4ade80;
+$blue-500: #22c55e;
+$blue-600: #22c55e;
+$blue-700: #22c55e;
+$blue-800: #22c55e;
+$blue-active-bg: rgba(34, 197, 94, 0.15);
+$blue-gradient-start: #1e1e1e;
 
-$slate-icon-muted: #6b6b6b;
-$slate-chevron: #8f8f8f;
+$slate-icon-muted: #9a9a9a;
+$slate-chevron: #9a9a9a;
 
-$accent: #000000;
-$accent-dark: #262626;
-$accent-alt: #404040;
+$accent: #2a2a2a;
+$accent-dark: #3d3d3d;
+$accent-alt: #4ade80;
 $accent-light: #6b6b6b;
 
-$green-50: rgba(15, 122, 78, 0.1);
-$green-100: rgba(15, 122, 78, 0.18);
-$green-200: rgba(15, 122, 78, 0.32);
-$green-500: #0f7a4e;
-$green-600: #0a5c3a;
+$green-50: rgba(34, 197, 94, 0.14);
+$green-100: rgba(34, 197, 94, 0.22);
+$green-200: rgba(34, 197, 94, 0.38);
+$green-500: #22c55e;
+$green-600: #16a34a;
 
-$red-50: rgba(211, 32, 42, 0.08);
-$red-100: rgba(211, 32, 42, 0.16);
-$red-200: rgba(211, 32, 42, 0.3);
-$red-600: #d3202a;
-$red-hover: #b21925;
-$red-hover-bg: rgba(211, 32, 42, 0.12);
-$red-tint-bg: rgba(211, 32, 42, 0.08);
-$error-red: #d3202a;
+$red-50: rgba(211, 32, 42, 0.16);
+$red-100: rgba(211, 32, 42, 0.24);
+$red-200: rgba(211, 32, 42, 0.4);
+$red-600: #ff7a7f;
+$red-hover: #ffaeb2;
+$red-hover-bg: rgba(211, 32, 42, 0.18);
+$red-tint-bg: rgba(211, 32, 42, 0.14);
+$error-red: #ff7a7f;
 
-$amber-50: rgba(180, 83, 9, 0.1);
-$amber-100: rgba(180, 83, 9, 0.18);
-$amber-200: rgba(180, 83, 9, 0.32);
-$amber-600: #b45309;
+$amber-50: rgba(245, 158, 11, 0.16);
+$amber-100: rgba(245, 158, 11, 0.24);
+$amber-200: rgba(245, 158, 11, 0.4);
+$amber-600: #fbbf24;
 
-$switch-orange: #b45309;
+$switch-orange: #f59e0b;
 $switch-blue: #404040;
-$switch-track-light: #e5e5e5;
-$switch-track-gray: rgba(0, 0, 0, 0.14);
-$switch-track-active-green: #0f7a4e;
-$switch-track-neutral: rgba(0, 0, 0, 0.14);
+$switch-track-light: #f0f0f0;
+$switch-track-gray: rgba(255, 255, 255, 0.16);
+$switch-track-active-green: #22c55e;
+$switch-track-neutral: rgba(255, 255, 255, 0.16);
 
-$blue-focus-border: #000000;
-$blue-ring-track: rgba(0, 0, 0, 0.15);
+$blue-focus-border: #22c55e;
+$blue-ring-track: rgba(34, 197, 94, 0.18);
 
 $shadow-color: $black;
 $overlay-color: $black;
 
-$glass-bg-app: #fafafa;
-$glass-bg-1: rgba(255, 255, 255, 0.45);
-$glass-bg-2: rgba(255, 255, 255, 0.4);
-$glass-bg-3: rgba(0, 0, 0, 0.03);
-$glass-bg-strong: rgba(255, 255, 255, 0.65);
-$glass-border: rgba(0, 0, 0, 0.09);
-$glass-border-strong: rgba(0, 0, 0, 0.15);
+$glass-remove-bg: #000000;
+$glass-bg-app: #0c0c0d;
+$glass-bg-1: rgba(255, 255, 255, 0.06);
+$glass-bg-2: rgba(255, 255, 255, 0.05);
+$glass-bg-3: rgba(255, 255, 255, 0.035);
+$glass-bg-strong: rgba(255, 255, 255, 0.1);
+$glass-border: rgba(255, 255, 255, 0.12);
+$glass-border-strong: rgba(255, 255, 255, 0.22);
 
-$glass-blur-sm: 4px;
-$glass-blur-md: 6px;
-$glass-blur-lg: 8px;
+$glass-blur-sm: 6px;
+$glass-blur-md: 12px;
+$glass-blur-lg: 20px;
 
-$glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
-$glass-shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.08);
+$glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+$glass-shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.3);

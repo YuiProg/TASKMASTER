@@ -41,7 +41,7 @@ body {
 body:has(.tr-login),
 body:has(.tr-register),
 body:has(.tr-forgot) {
-  background-color: $slate-900;
+  background-color: $glass-bg-app;
   background-image: none;
 }
 

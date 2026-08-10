@@ -4,7 +4,7 @@ import { InputField } from "../../components/TRCOMPONENTS/TRInputField/InputFIel
 import Button from "../../components/TRCOMPONENTS/TRButton/Button";
 import { useProjectStore } from "../../context/ProjectStore.js";
 import navigateTo from "../../lib/navigate";
-import "./NewProject.scss";
+import "../../styles/pages/new-project.scss";
 
 class NewProject extends React.Component {
   constructor(props) {

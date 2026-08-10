@@ -1,0 +1,1 @@
+.projects-page__header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:20px}.projects-page__header .tr-input{max-width:280px;flex:1}.projects-page__new-btn{background:#2a2a2a;font-weight:600;flex-shrink:0}@media(max-width: 749px){.projects-page__header{flex-direction:column;align-items:stretch}.projects-page__header .tr-input{max-width:none}}

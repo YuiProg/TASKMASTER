@@ -4,7 +4,7 @@ import { useSprintStore } from "../../context/SprintStore.js";
 import { PanelPage, PanelContainer } from "../../components/TRCOMPONENTS/TRPanelPage/TRPanelPage";
 import Spinner from "../../components/Spinner/Spinner.jsx";
 import navigateTo from "../../lib/navigate";
-import "./ViewSprint.scss";
+import "../../styles/pages/view-sprint.scss";
 
 const ViewSprint = () => {
   const { sprints, isLoading, error, fetchSprints } = useSprintStore();

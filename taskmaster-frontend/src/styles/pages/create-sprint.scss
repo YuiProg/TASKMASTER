@@ -1,0 +1,247 @@
+@use '../abstracts' as *;
+
+.create-sprint-container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+
+.create-sprint {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+
+  &__error {
+    background-color: $red-50;
+    color: $red-600;
+    border: 1px solid $red-200;
+    padding: 0.875rem 1rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+
+  &__field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    label {
+      font-weight: 600;
+      font-size: 0.875rem;
+      color: $slate-800;
+    }
+
+    .required {
+      color: $error-red;
+      margin-left: 0.25rem;
+    }
+
+    .note {
+      font-size: 0.8125rem;
+      color: $slate-400;
+    }
+  }
+
+  &__input-date {
+    width: 100%;
+    height: 42px;
+    padding: 0 0.875rem;
+    border: 1px solid $border-light;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    color: $slate-800;
+    background-color: $input-bg-light;
+    backdrop-filter: blur($glass-blur-sm);
+    -webkit-backdrop-filter: blur($glass-blur-sm);
+    box-sizing: border-box;
+    transition: all 0.2s ease;
+    color-scheme: light;
+
+    &:focus {
+      outline: none;
+      border-color: $blue-600;
+      box-shadow: 0 0 0 3px rgba($blue-600, 0.25);
+    }
+  }
+
+  &__tasks-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.625rem;
+    max-height: 320px;
+    overflow-y: auto;
+    padding-right: 0.25rem;
+    @include custom-scrollbar($thumb: $slate-300, $thumb-hover: $slate-400);
+  }
+
+  &__empty-tasks {
+    font-size: 0.875rem;
+    color: $slate-400;
+    padding: 1rem;
+    text-align: center;
+    background: $glass-bg-3;
+    border-radius: 8px;
+    border: 1px dashed $glass-border-strong;
+  }
+
+  &__task-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.875rem 1.125rem;
+    border: 1px solid $border-light;
+    border-radius: 8px;
+    background-color: $glass-bg-3;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      border-color: $blue-500;
+      background-color: $input-bg-hover;
+    }
+
+    &--selected {
+      border-color: $blue-600;
+      background-color: $blue-50;
+      box-shadow: 0 1px 2px rgba($blue-600, 0.1);
+
+      &:hover {
+        border-color: $blue-700;
+        background-color: $blue-100;
+      }
+    }
+  }
+
+  &__task-info {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    min-width: 0;
+
+    .title {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: $slate-800;
+    }
+
+    .priority {
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 9999px;
+      letter-spacing: 0.025em;
+      text-transform: uppercase;
+      background-color: $slate-100;
+      color: $slate-500;
+      flex-shrink: 0;
+
+      &--critical, &--urgent {
+        background-color: $red-50;
+        color: $red-600;
+        border: 1px solid $red-200;
+      }
+
+      &--high {
+        background-color: $amber-50;
+        color: $amber-600;
+        border: 1px solid $amber-200;
+      }
+
+      &--medium {
+        background-color: $amber-50;
+        color: $amber-600;
+        border: 1px solid $amber-200;
+      }
+
+      &--low {
+        background-color: $green-50;
+        color: $green-600;
+        border: 1px solid $green-200;
+      }
+    }
+  }
+
+  &__checkbox {
+    width: 1.125rem;
+    height: 1.125rem;
+    accent-color: $blue-600;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.875rem;
+    margin-top: 1rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid $border-light;
+
+    button {
+      min-width: 130px;
+      height: 40px;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &[type="submit"],
+      &.submit,
+      &:not([cancel]) {
+        background-color: $blue-600;
+        color: $white;
+        border: none;
+
+        &:hover:not(:disabled) {
+          background-color: $blue-700;
+        }
+      }
+
+      &[type="button"],
+      &.cancel {
+        background-color: $glass-bg-3;
+        color: $slate-700;
+        border: 1px solid $border-light;
+
+        &:hover:not(:disabled) {
+          background-color: $input-bg-hover;
+        }
+      }
+
+      &:disabled,
+      &[disabled] {
+        opacity: 0.5;
+        background-color: $slate-100 !important;
+        color: $slate-400 !important;
+        border-color: $border-light !important;
+        cursor: not-allowed !important;
+      }
+    }
+  }
+
+  &__loading {
+    padding: 3rem;
+    text-align: center;
+    color: $slate-400;
+    font-size: 0.9375rem;
+  }
+}
+
+@include respond-to(mobile-nav) {
+  .create-sprint-container {
+    padding: 1rem;
+  }
+
+  .create-sprint__actions {
+    justify-content: stretch;
+
+    button {
+      flex: 1;
+      min-width: 0;
+    }
+  }
+}
