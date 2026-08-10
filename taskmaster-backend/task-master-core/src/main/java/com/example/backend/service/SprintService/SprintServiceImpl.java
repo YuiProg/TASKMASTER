@@ -180,6 +180,14 @@ public class SprintServiceImpl implements SprintServiceInterface {
     @Override
     public ResponseEntity<ApiResponseModel<Sprint>> getSprintById(String id) {
         Sprint sprint = sprintCacheService.viewSprintCache(id);
+
+        if (sprint.getDeadline() != null && sprint.getDeadline() <= new Date().getTime()
+                && !sprint.getFinished().equals(StringCodes.TRUE.getCode())) {
+            sprint.setFinished(StringCodes.TRUE.getCode());
+            sprintRepository.finishSprint(sprint.getId());
+            sprintCacheService.evictSprintCache();
+
+        }
         return ResponseEntity.ok(ApiResponseModel.success("SPRINT FOUND", "SUCCESS", sprint));
     }
 }
