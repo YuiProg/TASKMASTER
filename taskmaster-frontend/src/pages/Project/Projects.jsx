@@ -5,7 +5,7 @@ import { Table } from "../../components/TRCOMPONENTS/TRTable/TrTable";
 import Button from "../../components/TRCOMPONENTS/TRButton/Button";
 import { InputField } from "../../components/TRCOMPONENTS/TRInputField/InputFIeld";
 import { useProjectStore } from "../../context/ProjectStore.js";
-import "./Projects.scss";
+import "../../styles/pages/projects.scss";
 import navigateTo from "../../lib/navigate";
 import formatDate from "../../lib/formatDate";
 

@@ -1,0 +1,33 @@
+@use '../abstracts' as *;
+
+.tasks-page {
+  &__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $space-8;
+    margin-bottom: $space-9;
+
+    .tr-input {
+      max-width: 280px;
+      flex: 1;
+    }
+  }
+
+  &__new-btn {
+    background: $accent;
+    font-weight: $fw-semibold;
+    flex-shrink: 0;
+  }
+}
+
+@include respond-to(mobile-nav) {
+  .tasks-page__header {
+    flex-direction: column;
+    align-items: stretch;
+
+    .tr-input {
+      max-width: none;
+    }
+  }
+}

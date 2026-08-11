@@ -10,7 +10,7 @@ import Button from '../../components/TRCOMPONENTS/TRButton/Button';
 import { Plus, Zap, Eye } from 'lucide-react';
 import navigateTo from '../../lib/navigate';
 
-import './ViewProject.scss';
+import '../../styles/pages/view-project.scss';
 import KanbanBoard from './KanbanBoard.jsx';
 
 class ViewProject extends React.Component {

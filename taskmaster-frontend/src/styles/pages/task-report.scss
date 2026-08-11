@@ -1,0 +1,80 @@
+@use '../abstracts' as *;
+
+.task-reports {
+  @include flex-column(14px);
+
+  &__count {
+    margin: 0;
+    font-size: 0.78rem;
+    color: $slate-400;
+  }
+
+  &__loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $space-5;
+    padding: $space-9 0;
+    color: $slate-400;
+    font-size: 0.85rem;
+
+    .spinner {
+      width: auto;
+      flex: 0 0 auto;
+    }
+  }
+
+  &__empty {
+    color: $slate-400;
+    font-size: 0.85rem;
+    margin: 0;
+  }
+
+  &__list {
+    @include flex-column(14px);
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: $space-2;
+
+    @include custom-scrollbar($thumb: $slate-300, $thumb-hover: $slate-400);
+  }
+
+  &__item {
+    display: flex;
+    gap: $space-6;
+    padding-bottom: 14px;
+    border-bottom: 1px solid $border-light;
+
+    &:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+  }
+
+  &__icon {
+    width: 28px;
+    height: 28px;
+    border-radius: $radius-circle;
+    background-color: rgba($accent, 0.08);
+    color: $accent;
+    @include flex-center;
+    flex-shrink: 0;
+  }
+
+  &__body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__description {
+    margin: 0 0 $space-2 0;
+    color: $slate-800;
+    font-size: 0.85rem;
+    line-height: $line-height-normal;
+  }
+
+  &__meta {
+    font-size: 0.75rem;
+    color: $slate-400;
+  }
+}

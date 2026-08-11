@@ -1,0 +1,363 @@
+@use '../abstracts' as *;
+
+.tr-register {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  overflow: hidden;
+  @include gradient-mesh-bg;
+
+  a,
+  button {
+    -webkit-tap-highlight-color: transparent;
+
+    &:focus,
+    &:focus-visible {
+      outline: none;
+    }
+  }
+
+  @media (max-width: 868px) {
+    flex-direction: column;
+    overflow-y: auto;
+    height: auto;
+    min-height: 100%;
+  }
+
+  &__hero {
+    flex: 1.25;
+    height: 100%;
+    position: relative;
+    background-image: url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1600&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    padding: 48px 56px;
+    box-sizing: border-box;
+    border-right: none !important;
+
+    @media (max-width: 868px) {
+      display: none;
+    }
+  }
+
+  &__hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      135deg,
+      rgba(0, 0, 0, 0.92) 0%,
+      rgba(17, 17, 17, 0.82) 100%
+    );
+    z-index: 1;
+  }
+
+  &__hero-pattern {
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(255, 255, 255, 0.1) 1px, transparent 1px);
+    background-size: 24px 24px;
+    z-index: 1;
+    opacity: 0.5;
+  }
+
+  &__hero-content {
+    position: relative;
+    z-index: 2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: $white;
+  }
+
+  &__badge {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    font-size: 0.75rem;
+    font-weight: $fw-semibold;
+    color: $white;
+    letter-spacing: 0.5px;
+    margin-bottom: $space-5;
+    text-transform: uppercase;
+  }
+
+  &__hero-text {
+    margin: auto 0 24px 0;
+
+    h2 {
+      font-size: 2.85rem;
+      font-weight: $fw-bold;
+      line-height: 1.18;
+      letter-spacing: $letter-spacing-tight;
+      margin-bottom: $space-4;
+      color: $white;
+      max-width: 520px;
+    }
+
+    p {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      max-width: 440px;
+    }
+  }
+
+  &__glass-card {
+    background: rgba(255, 255, 255, 0.07);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: $radius-xl;
+    padding: 18px 24px;
+    max-width: 420px;
+    margin-bottom: auto;
+  }
+
+  &__stat-number {
+    font-size: 1.25rem;
+    font-weight: $fw-bold;
+    color: $accent-light;
+    margin-bottom: 2px;
+  }
+
+  &__stat-label {
+    font-size: $fs-sm;
+  }
+
+  &__hero-footer {
+    p {
+      font-size: $fs-sm;
+      margin: 0;
+    }
+  }
+
+  &__form-section {
+    flex: 1;
+    height: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px;
+    background-color: #0c0c0d !important;
+    backdrop-filter: blur($glass-blur-lg);
+    -webkit-backdrop-filter: blur($glass-blur-lg);
+    border-left: none !important;
+    box-sizing: border-box;
+    overflow: hidden;
+
+    @media (max-width: 868px) {
+      min-height: 100%;
+      padding: $space-8 $space-6;
+    }
+  }
+
+  &__form-wrapper {
+    width: 100%;
+    max-width: 380px;
+    padding: $space-8 $space-7;
+    border-radius: $radius-2xl;
+    position: relative;
+    z-index: 1;
+    isolation: isolate;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    background: linear-gradient(155deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.03) 100%);
+    backdrop-filter: blur(50px) saturate(150%);
+    -webkit-backdrop-filter: blur(50px) saturate(150%);
+    box-shadow:
+      0 24px 70px rgba(0, 0, 0, 0.55),
+      inset 0 1px 0 rgba(255, 255, 255, 0.25),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.07;
+      mix-blend-mode: overlay;
+      pointer-events: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    }
+
+    > * {
+      position: relative;
+      z-index: 1;
+    }
+  }
+
+  &__brand {
+    display: flex;
+    align-items: center;
+    gap: $space-4;
+
+    &--mobile {
+      display: none;
+      justify-content: center;
+      margin-bottom: $space-8;
+
+      @media (max-width: 868px) {
+        display: flex;
+      }
+    }
+  }
+
+  &__brand-mark {
+    width: 38px;
+    height: 38px;
+    border-radius: $radius-lg;
+    background: $black;
+    color: $white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+
+    img {
+      display: block;
+      width: 20px;
+      height: 20px;
+      object-fit: contain;
+    }
+  }
+
+  &__brand-name {
+    font-size: 18px;
+    font-weight: $fw-bold;
+    color: $white;
+    letter-spacing: $letter-spacing-tight;
+  }
+
+  .tr-inputform-panel {
+    background-color: transparent !important;
+    padding: 0 !important;
+    width: 100%;
+    box-sizing: border-box;
+    @include flex-column($space-6);
+  }
+
+  .tr-inputform-panel__headers {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    @include flex-column($space-2);
+
+    &::before,
+    &::after {
+      display: none !important;
+    }
+  }
+
+  .tr-inputform-panel__title {
+    font-size: 1.85rem;
+    font-weight: $fw-bold;
+    color: $white !important;
+    margin: 0;
+    letter-spacing: $letter-spacing-tight;
+  }
+
+  .tr-inputform-panel__subtitle {
+    font-size: 0.925rem;
+    color: rgba($white, 0.6) !important;
+    margin: 0;
+  }
+
+  .tr-inputform {
+    border: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    @include flex-column($space-4);
+    width: 100%;
+    box-sizing: border-box;
+
+    &::before,
+    &::after {
+      display: none !important;
+    }
+  }
+
+  input {
+    background-color: rgba(255, 255, 255, 0.06) !important;
+    border: 1px solid rgba(255, 255, 255, 0.16) !important;
+    color: $white !important;
+    transition: all $transition-base ease;
+
+    &:focus {
+      background-color: rgba(255, 255, 255, 0.1) !important;
+      border-color: rgba(255, 255, 255, 0.4) !important;
+      box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.12) !important;
+    }
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.4) !important;
+    }
+  }
+
+  .tr-register__btn {
+    width: 100% !important;
+    background-color: $white !important;
+    color: $black !important;
+    font-weight: $fw-semibold;
+    margin-top: $space-2;
+    border-radius: $radius-lg;
+    padding: 14px $space-10;
+    cursor: pointer;
+    border: none !important;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all $transition-base ease;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.85) !important;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
+.tr-register__form-error {
+  width: 100%;
+  margin: 0;
+  padding: $space-4 $space-6;
+  border-radius: $radius-lg;
+  background: rgba(211, 32, 42, 0.16) !important;
+  border: 1px solid rgba(211, 32, 42, 0.4) !important;
+  color: #ff7a7f !important;
+  font-size: $fs-sm;
+  box-sizing: border-box;
+}
+
+.tr-register__signup-hint {
+  text-align: center;
+  font-size: $fs-sm;
+  color: rgba($white, 0.6) !important;
+  margin-top: $space-6;
+
+  a {
+    color: $white !important;
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-weight: $fw-semibold;
+
+    &:hover {
+      opacity: 0.65;
+    }
+  }
+}

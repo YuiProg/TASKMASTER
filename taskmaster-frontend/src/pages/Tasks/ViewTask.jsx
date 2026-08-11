@@ -8,7 +8,7 @@ import Dropdown from "../../components/TRCOMPONENTS/TRDropDown/Dropdown";
 import Spinner from "../../components/Spinner/Spinner";
 import { useTaskStore } from "../../context/TaskStore.js";
 import navigateTo from "../../lib/navigate";
-import "./ViewTask.scss";
+import "../../styles/pages/view-task.scss";
 import TaskComments from "./TaskComment";
 import TaskReports from "./TaskReport";
 import { useCommentStore } from "../../context/CommentStore.js";

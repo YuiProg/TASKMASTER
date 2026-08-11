@@ -5,7 +5,7 @@ import { Table } from "../../components/TRCOMPONENTS/TRTable/TrTable";
 import Button from "../../components/TRCOMPONENTS/TRButton/Button";
 import { InputField } from "../../components/TRCOMPONENTS/TRInputField/InputFIeld";
 import { useTaskStore } from "../../context/TaskStore.js";
-import "./MyTasks.scss";
+import "../../styles/pages/my-tasks.scss";
 import navigateTo from "../../lib/navigate";
 import formatDate from "../../lib/formatDate";
 

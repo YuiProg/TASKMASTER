@@ -1,0 +1,98 @@
+@use '../abstracts' as *;
+
+.auth-flow {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  z-index: 999999;
+
+  &__card {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  &__card--exiting {
+    z-index: 1;
+    pointer-events: none;
+    animation: auth-flow-exit-shrink 0.3s $ease-standard both;
+  }
+
+  &__card--entering {
+    z-index: 2;
+
+    &.auth-flow__card--from-right {
+      animation: auth-flow-enter-from-right 0.42s $ease-out-standard both;
+    }
+
+    &.auth-flow__card--from-left {
+      animation: auth-flow-enter-from-left 0.42s $ease-out-standard both;
+    }
+
+    &.auth-flow__card--from-bottom {
+      animation: auth-flow-enter-from-bottom 0.42s $ease-out-standard both;
+    }
+
+    &.auth-flow__card--from-top {
+      animation: auth-flow-enter-from-top 0.42s $ease-out-standard both;
+    }
+  }
+}
+
+@keyframes auth-flow-exit-shrink {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.82);
+    opacity: 0;
+  }
+}
+
+@keyframes auth-flow-enter-from-right {
+  from {
+    transform: translateX(100%) scale(0.96);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes auth-flow-enter-from-left {
+  from {
+    transform: translateX(-100%) scale(0.96);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes auth-flow-enter-from-bottom {
+  from {
+    transform: translateY(100%) scale(0.96);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes auth-flow-enter-from-top {
+  from {
+    transform: translateY(-100%) scale(0.96);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
