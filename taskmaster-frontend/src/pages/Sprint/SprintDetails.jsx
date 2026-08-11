@@ -6,7 +6,7 @@ import { Table } from "../../components/TRCOMPONENTS/TRTable/TrTable";
 import Spinner from "../../components/Spinner/Spinner.jsx";
 import { useSprintStore } from "../../context/SprintStore.js";
 import navigateTo from "../../lib/navigate";
-import "./SprintDetails.scss";
+import "../../styles/pages/sprint-details.scss";
 
 class SprintDetails extends React.Component {
   constructor(props) {

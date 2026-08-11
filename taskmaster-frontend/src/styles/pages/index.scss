@@ -1,0 +1,22 @@
+// One place to find every page-level stylesheet. Not imported by any .jsx
+// file directly (each page imports its own file above) — this is purely a
+// map for humans and Sass tooling that want everything forwarded at once.
+@forward 'auth-flow';
+@forward 'login';
+@forward 'register';
+@forward 'forgot-password';
+@forward 'dashboard';
+@forward 'archive';
+@forward 'kanban-board';
+@forward 'new-project';
+@forward 'projects';
+@forward 'user-projects';
+@forward 'view-project';
+@forward 'create-sprint';
+@forward 'sprint-details';
+@forward 'view-sprint';
+@forward 'my-tasks';
+@forward 'new-task';
+@forward 'task-comment';
+@forward 'task-report';
+@forward 'view-task';

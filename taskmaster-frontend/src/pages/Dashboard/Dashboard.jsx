@@ -6,7 +6,7 @@ import Button from '../../components/TRCOMPONENTS/TRButton/Button';
 import { useProjectStore } from '../../context/ProjectStore.js';
 import { useTaskStore } from '../../context/TaskStore.js';
 import { useAuthStore } from '../../context/AuthStore.js';
-import './Dashboard.scss';
+import '../../styles/pages/dashboard.scss';
 import formatDate from '../../lib/formatDate';
 import navigateTo from '../../lib/navigate';
 

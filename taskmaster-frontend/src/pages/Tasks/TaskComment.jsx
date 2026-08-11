@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { createPortal } from "react-dom";
 import { Heart, Image as ImageIcon, X } from "lucide-react";
 
-import "./TaskComment.scss";
+import "../../styles/pages/task-comment.scss";
 import Button from "../../components/TRCOMPONENTS/TRButton/Button";
 import Spinner from "../../components/Spinner/Spinner";
 import { useCommentStore } from "../../context/CommentStore.js";

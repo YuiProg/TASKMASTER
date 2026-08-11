@@ -1,0 +1,293 @@
+@use '../abstracts' as *;
+
+.sprints-loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 240px;
+  width: 100%;
+}
+
+.sprints-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+  text-align: center;
+
+  h3 {
+    margin: 0 0 8px 0;
+    font-size: 1.125rem;
+    color: $slate-800;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+    color: $slate-400;
+  }
+}
+
+.sprints-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.sprint-card {
+  @include card-surface($radius: 8px);
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+
+  &:hover {
+    box-shadow: $glass-shadow;
+    border-color: $glass-border-strong;
+  }
+
+  .sprint-card-header {
+    padding: 16px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    border-bottom: 1px solid transparent;
+
+    .sprint-title-area {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+
+      h3 {
+        margin: 0;
+        font-size: 1.125rem;
+        color: $slate-800;
+      }
+
+      .project-badge {
+        background: $blue-50;
+        color: $blue-400;
+        font-size: 0.75rem;
+        padding: 3px 8px;
+        border-radius: 4px;
+        font-weight: 600;
+      }
+    }
+
+    .sprint-meta-summary {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+
+      .task-count-badge {
+        font-size: 0.75rem;
+        font-weight: 600;
+        color: $slate-500;
+        background: $slate-100;
+        border: 1px solid $border-light;
+        padding: 3px 8px;
+        border-radius: 12px;
+      }
+
+      .status-pill {
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: $green-600;
+        background: $green-50;
+        padding: 4px 10px;
+        border-radius: 12px;
+      }
+
+      .toggle-btn {
+        background: transparent;
+        border: 1px solid $border-light;
+        border-radius: 4px;
+        padding: 6px 12px;
+        font-size: 0.8125rem;
+        cursor: pointer;
+        color: $slate-500;
+        transition: background-color 0.15s ease;
+
+        &:hover {
+          background: $glass-bg-3;
+        }
+      }
+    }
+  }
+
+  .sprint-card-body {
+    padding: 0 20px 20px 20px;
+
+    .info-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 24px;
+      margin-top: 12px;
+      margin-bottom: 16px;
+
+      div {
+        display: flex;
+        flex-direction: column;
+
+        label {
+          font-size: 0.75rem;
+          color: $slate-400;
+          margin-bottom: 2px;
+        }
+
+        span {
+          font-size: 0.875rem;
+          font-weight: 500;
+          color: $slate-700;
+        }
+      }
+    }
+
+    .members-section {
+      label {
+        display: block;
+        font-size: 0.75rem;
+        color: $slate-400;
+        margin-bottom: 6px;
+      }
+
+      .member-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+
+        .member-tag {
+          background: $slate-100;
+          color: $slate-500;
+          font-size: 0.8125rem;
+          padding: 2px 8px;
+          border-radius: 4px;
+
+          small {
+            color: $blue-500;
+            font-weight: 600;
+          }
+        }
+      }
+    }
+
+    .tasks-section {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px dashed $border-light;
+
+      h4 {
+        margin: 0 0 12px 0;
+        font-size: 0.9375rem;
+        color: $slate-700;
+
+        small {
+          font-size: 0.8125rem;
+          color: $slate-400;
+          font-weight: normal;
+        }
+      }
+
+      .no-tasks {
+        font-size: 0.875rem;
+        color: $slate-400;
+        font-style: italic;
+        margin: 0;
+      }
+
+      .task-list {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+
+        .task-item {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-between;
+          align-items: center;
+          gap: 8px;
+          background: $glass-bg-3;
+          padding: 10px 14px;
+          border-radius: 6px;
+          border: 1px solid transparent;
+          transition: all 0.2s ease-in-out;
+
+          .task-info {
+            display: flex;
+            flex-direction: column;
+
+            .task-name {
+              font-size: 0.875rem;
+              font-weight: 600;
+              color: $slate-800;
+              transition: color 0.15s ease;
+            }
+
+            .task-assignee {
+              font-size: 0.75rem;
+              color: $slate-400;
+            }
+          }
+
+          .task-badges {
+            display: flex;
+            gap: 8px;
+
+            .priority-tag,
+            .status-tag {
+              font-size: 0.6875rem;
+              font-weight: 700;
+              padding: 2px 6px;
+              border-radius: 4px;
+              text-transform: uppercase;
+            }
+
+            .priority-critical {
+              background: $red-50;
+              color: $red-600;
+            }
+
+            .status-open {
+              background: $green-50;
+              color: $green-600;
+            }
+
+            .status-closed {
+              background: $slate-100;
+              color: $slate-400;
+            }
+          }
+
+          &.task-item--clickable {
+            cursor: pointer;
+
+            &:hover {
+              background-color: $input-bg-hover;
+              border-color: $glass-border-strong;
+              transform: translateY(-1px);
+              box-shadow: $glass-shadow-sm;
+
+              .task-name {
+                color: $blue-500;
+              }
+            }
+
+            &:active {
+              transform: translateY(0);
+              box-shadow: none;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  &.expanded {
+    .sprint-card-header {
+      border-bottom-color: $border-lighter;
+    }
+  }
+}
