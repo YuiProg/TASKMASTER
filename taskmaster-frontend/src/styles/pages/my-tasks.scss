@@ -1,33 +1,316 @@
 @use '../abstracts' as *;
 
-.tasks-page {
+.tasks-grid {
   &__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: $space-8;
-    margin-bottom: $space-9;
+    gap: $space-6;
+    margin-bottom: $space-8;
 
     .tr-input {
-      max-width: 280px;
+      max-width: 300px;
       flex: 1;
     }
   }
 
   &__new-btn {
-    background: $accent;
+    background: #22c55e;
+    color: #ffffff;
     font-weight: $fw-semibold;
     flex-shrink: 0;
+
+    &:hover {
+      background: #16a34a;
+    }
+  }
+
+  &__loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: $space-9 0;
+  }
+
+  &__empty {
+    text-align: center;
+    padding: $space-9 $space-4;
+    color: #9ca3af;
+    font-size: 0.9rem;
+    font-style: italic;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px dashed rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+  }
+
+  /* --- Grid Matrix --- */
+  &__matrix {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: $space-6;
+  }
+
+  /* --- Task Ticket Card --- */
+  &__card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: $space-5 $space-6;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 14px;
+    backdrop-filter: blur(8px);
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+    /* Left Priority Accent Line (Green Default, Warm Warn Colors for Urgent) */
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 4px;
+      height: 100%;
+      background: #22c55e;
+      transition: width 0.2s ease;
+    }
+
+    &.border-priority--high::before,
+    &.border-priority--urgent::before {
+      background: #ef4444;
+    }
+
+    &.border-priority--medium::before {
+      background: #f59e0b;
+    }
+
+    &.border-priority--low::before {
+      background: #22c55e;
+    }
+
+    /* Green Hover State */
+    &:hover {
+      border-color: rgba(34, 197, 94, 0.5);
+      transform: translateY(-3px);
+      box-shadow: 0 10px 25px rgba(34, 197, 94, 0.12);
+
+      &::before {
+        width: 6px;
+      }
+
+      .tasks-grid__hover-arrow {
+        opacity: 1;
+        transform: translate(2px, -2px);
+        color: #22c55e;
+      }
+    }
+
+    &.is-done {
+      opacity: 0.6;
+
+      .tasks-grid__title {
+        text-decoration: line-through;
+        color: #9ca3af;
+      }
+    }
+  }
+
+  &__card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $space-2;
+    margin-bottom: $space-4;
+  }
+
+  &__project-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.72rem;
+    font-weight: $fw-semibold;
+    color: #9ca3af;
+    background: rgba(255, 255, 255, 0.04);
+    padding: 3px 8px;
+    border-radius: 6px;
+  }
+
+  &__status-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.7rem;
+    font-weight: $fw-semibold;
+    color: #22c55e;
+    background: rgba(34, 197, 94, 0.12);
+    border: 1px solid rgba(34, 197, 94, 0.25);
+    padding: 3px 8px;
+    border-radius: 6px;
+    text-transform: capitalize;
+  }
+
+  &__card-body {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: $space-3;
+    margin-bottom: $space-5;
+  }
+
+  &__title {
+    font-size: 1rem;
+    font-weight: $fw-semibold;
+    color: #ffffff;
+    margin: 0;
+    line-height: 1.4;
+  }
+
+  &__hover-arrow {
+    color: #6b7280;
+    opacity: 0.3;
+    transition: all 0.2s ease;
+    flex-shrink: 0;
+  }
+
+  &__card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: $space-3;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  &__priority-indicator {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.7rem;
+    font-weight: $fw-semibold;
+    text-transform: uppercase;
+    color: #d1d5db;
+
+    .icon-urgent {
+      color: #ef4444;
+    }
+    .icon-medium {
+      color: #f59e0b;
+    }
+    .icon-green {
+      color: #22c55e;
+    }
+  }
+
+  &__meta-group {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+  }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.73rem;
+    color: #9ca3af;
+
+    svg {
+      color: #6b7280;
+    }
+  }
+
+  /* --- Pagination --- */
+  &__pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: $space-8;
+    padding: $space-4 0;
+  }
+
+  &__pagination-info {
+    font-size: 0.8rem;
+    color: #6b7280;
+
+    span {
+      color: #d1d5db;
+      font-weight: $fw-medium;
+    }
+  }
+
+  &__pagination-nav {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__page-arrow {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(255, 255, 255, 0.02);
+    color: #d1d5db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover:not(:disabled) {
+      background: rgba(34, 197, 94, 0.1);
+      border-color: rgba(34, 197, 94, 0.5);
+      color: #22c55e;
+    }
+
+    &:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
+    }
+  }
+
+  &__page-pill {
+    min-width: 32px;
+    height: 32px;
+    padding: 0 6px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: #9ca3af;
+    font-size: 0.8rem;
+    font-weight: $fw-medium;
+    cursor: pointer;
+
+    &:hover {
+      color: #22c55e;
+    }
+
+    &.is-active {
+      background: #22c55e;
+      color: #ffffff;
+    }
   }
 }
 
 @include respond-to(mobile-nav) {
-  .tasks-page__header {
-    flex-direction: column;
-    align-items: stretch;
+  .tasks-grid {
+    &__header {
+      flex-direction: column;
+      align-items: stretch;
 
-    .tr-input {
-      max-width: none;
+      .tr-input {
+        max-width: none;
+      }
+    }
+
+    &__matrix {
+      grid-template-columns: 1fr;
+    }
+
+    &__pagination {
+      flex-direction: column;
+      gap: $space-4;
     }
   }
 }
