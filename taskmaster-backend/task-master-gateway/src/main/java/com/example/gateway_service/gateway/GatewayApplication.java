@@ -12,12 +12,11 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 		TaskClient.class,
 		ProjectClient.class,
 		ReportClient.class,
-		SprintClient.class
+		SprintClient.class,
+		SettingsClient.class
 })
 public class GatewayApplication {
-
 	public static void main(String[] args) {
 		SpringApplication.run(GatewayApplication.class, args);
 	}
-
 }

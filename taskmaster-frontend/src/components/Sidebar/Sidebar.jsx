@@ -4,7 +4,7 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import MobileNavContext from "../../context/MobileNavContext";
 import './Sidebar.scss';
 import {
-    LayoutDashboard, Folder, CheckSquare, Users,
+    LayoutDashboard, Folder, CheckSquare,
     LogOut, Menu, X, ChevronDown, Settings,
 
     Rotate3D
@@ -388,8 +388,8 @@ class Sidebar extends React.Component {
                                     items: [
                                         { path: '/tasks/my-tasks', title: 'Assigned to Me' },
                                         { path: '/tasks/open-tasks', title: 'Open Tasks' },
-                                        { path: '/tasks/created-tasks', title: 'Filed Tasks' },
-                                        { path: '/tasks/backlog', title: 'Backlog'}
+                                        // { path: '/tasks/created-tasks', title: 'Filed Tasks' },
+                                        // { path: '/tasks/backlog', title: 'Backlog'}
                                     ],
                                 })}
                                 {this.renderSimpleItem({ path: '/sprint', icon: <Rotate3D size={20} />, label: 'Sprint', pathname })}
@@ -397,12 +397,12 @@ class Sidebar extends React.Component {
                         </div>
 
                         {/* ── TEAM ── */}
-                        <div className="sidebar__section">
+                        {/* <div className="sidebar__section">
                             <p className="sidebar__section-label">Team</p>
                             <ul className="sidebar__list">
                                 {this.renderSimpleItem({ path: '/team', icon: <Users size={20} />, label: 'Members', pathname })}
                             </ul>
-                        </div>
+                        </div> */}
 
                         {/* ── SYSTEM ── */}
                         <div className="sidebar__section">
@@ -423,12 +423,12 @@ class Sidebar extends React.Component {
                                         <div className="sidebar__user-info">
                                             <p className="sidebar__user-name">{displayName}</p>
                                             <p className="sidebar__user-role">{displayEmail}</p>
-                                            <a
+                                            {/* <a
                                                 className="sidebar__change-password"
                                                 onClick={() => this.setState({ showChangePasswordModal: true })}
                                             >
                                                 Change password
-                                            </a>
+                                            </a> */}
                                         </div>
                                     )}
                                 </>
