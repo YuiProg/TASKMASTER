@@ -5,7 +5,7 @@ import Button from "../../components/TRCOMPONENTS/TRButton/Button";
 import { useProjectStore } from "../../context/ProjectStore.js";
 import { useSprintStore } from "../../context/SprintStore.js";
 import navigateTo from "../../lib/navigate";
-import "./CreateSprint.scss"; // Import SCSS
+import "../../styles/pages/create-sprint.scss"; // Import SCSS
 
 class CreateSprint extends React.Component {
   constructor(props) {

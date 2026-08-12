@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Activity } from "lucide-react";
 
-import "./TaskReport.scss";
+import "../../styles/pages/task-report.scss";
 import Spinner from "../../components/Spinner/Spinner";
 import { useReportStore } from "../../context/ReportStore.js";
 

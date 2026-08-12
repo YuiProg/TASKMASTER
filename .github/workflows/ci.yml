@@ -8,7 +8,7 @@ on:
 
 jobs:
   check-frontend:
-    name: Frontend (Version Check & Docker Build)
+    name: Frontend (Version Check, Security & Docker Build)
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -52,13 +52,24 @@ jobs:
 
           echo "VERSION_CHANGED=true" >> $GITHUB_ENV
 
+      - name: Run Trivy Vulnerability Scanner (Frontend)
+        if: env.VERSION_CHANGED == 'true'
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: 'fs'
+          scan-ref: 'taskmaster-frontend'
+          format: 'table'
+          exit-code: '1'
+          ignore-unfixed: true
+          severity: 'HIGH,CRITICAL'
+
       - name: Set up Docker Buildx
         if: env.VERSION_CHANGED == 'true'
         uses: docker/setup-buildx-action@v3
 
       - name: Test Frontend Production Docker Build
         if: env.VERSION_CHANGED == 'true'
-        working-directory: taskmaster-frontend # Matches your compose context location
+        working-directory: taskmaster-frontend
         run: |
           docker compose build taskmaster-frontend
 
@@ -136,8 +147,8 @@ jobs:
             mvn -B clean verify -DskipTests
           fi
 
-      - name: Run Trivy Vulnerability Scanner
-        uses: aquasecurity/trivy-action@master
+      - name: Run Trivy Vulnerability Scanner (Backend)
+        uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: 'fs'
           scan-ref: '${{ matrix.path }}'

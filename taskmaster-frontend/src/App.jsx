@@ -1,7 +1,5 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Login from "./pages/Login/Login";
-import Register from "./pages/Register/Register";
-import ForgotPassword from "./pages/ForgotPassword/ForgotPassword";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import AuthFlow from "./pages/Auth/AuthFlow";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import NewProject from "./pages/Project/NewProject";
@@ -17,14 +15,21 @@ import CreateSprint from "./pages/Sprint/CreateSprint";
 import ViewSprint from "./pages/Sprint/ViewSprint";
 import SprintDetails from "./pages/Sprint/SprintDetails";
 
-function App() {
+const AUTH_PATHS = ["/", "/register", "/forgot-password"];
+
+function AppRoutes() {
+  const location = useLocation();
+
+  // Rendered from a single stable element so switching between the three
+  // auth paths never unmounts/remounts React — AuthFlow observes the
+  // pathname itself and animates between views internally.
+  if (AUTH_PATHS.includes(location.pathname)) {
+    return <AuthFlow />;
+  }
+
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/dashboard" element={
+    <Routes>
+      <Route path="/dashboard" element={
           <Sidebar>
             <Dashboard/>
           </Sidebar>
@@ -89,7 +94,14 @@ function App() {
             <SprintDetails/>
           </Sidebar>
         }/>
-      </Routes>
+    </Routes>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <AppRoutes />
     </BrowserRouter>
   );
 }

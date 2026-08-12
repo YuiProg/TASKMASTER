@@ -6,7 +6,7 @@ import Button from "../../components/TRCOMPONENTS/TRButton/Button";
 import { useTaskStore } from "../../context/TaskStore.js";
 import { useProjectStore } from "../../context/ProjectStore.js";
 import navigateTo from "../../lib/navigate";
-import "./NewTask.scss";
+import "../../styles/pages/new-task.scss";
 
 // Hardcoded fallbacks
 const DEFAULT_STATUS_OPTIONS = ["OPEN", "IN PROGRESS", "QA CHECK", "DEPLOYED", "CLOSED"];

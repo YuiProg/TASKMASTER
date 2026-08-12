@@ -1,0 +1,78 @@
+@use '../abstracts' as *;
+
+.dashboard {
+  &__stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: $space-8;
+  }
+
+  &__stat-card {
+    @include card-surface($shadow: $shadow-card-subtle);
+    @include flex-column($space-2);
+    padding: $space-8;
+  }
+
+  &__stat-label {
+    font-size: $fs-2xs;
+    font-weight: $fw-semibold;
+    letter-spacing: $letter-spacing-wide;
+    text-transform: uppercase;
+  }
+
+  &__stat-value {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: $fw-bold;
+    color: $slate-800;
+
+    &--accent {
+      color: $accent-alt;
+    }
+  }
+
+  &__table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: $space-8;
+    margin-bottom: $space-9;
+  }
+
+  &__table-hint {
+    margin: 0;
+    font-size: 0.8rem;
+    color: $slate-400;
+  }
+
+  &__new-project-btn {
+    background: $accent;
+    font-weight: $fw-semibold;
+    flex-shrink: 0;
+  }
+
+  &__new-task-btn {
+    background: $accent;
+    font-weight: $fw-semibold;
+    flex-shrink: 0;
+  }
+}
+
+@include respond-to(mobile-nav) {
+  .dashboard {
+    &__stats-row {
+      grid-template-columns: 1fr 1fr;
+      gap: $space-5;
+    }
+
+    &__table-header {
+      flex-wrap: wrap;
+    }
+  }
+}
+
+@include respond-to(mobile) {
+  .dashboard__stats-row {
+    grid-template-columns: 1fr;
+  }
+}
