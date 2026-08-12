@@ -7,7 +7,7 @@ import { Label, InputField } from '../../components/TRCOMPONENTS/TRInputField/In
 import { Table } from '../../components/TRCOMPONENTS/TRTable/TrTable';
 import Spinner from '../../components/Spinner/Spinner';
 import Button from '../../components/TRCOMPONENTS/TRButton/Button';
-import { Plus, Zap, Eye } from 'lucide-react';
+import { Plus, Zap, Eye, MapPin } from 'lucide-react';
 import navigateTo from '../../lib/navigate';
 
 import '../../styles/pages/view-project.scss';
@@ -63,19 +63,42 @@ class ViewProject extends React.Component {
 
     projectMembers = () => {
         const members = this.state.project.members || [];
-        const data = members.map(d => ({
-            Username: d.username,
-            Email: d.email,
-            ["Branch Location"]: d.branchLocation?.branchLocation || 'N/A'
-        }));
-        return <Table data={data} hasAction noEdit/>;
+
+        if (members.length === 0) {
+            return <p className="view-project__no-members">No members assigned to this project yet.</p>;
+        }
+
+        return (
+            <div className="view-project__members-grid">
+                {members.map((member, index) => {
+                    const initials = member.username
+                        ? member.username.substring(0, 2).toUpperCase()
+                        : 'U';
+
+                    return (
+                        <div key={member.id || index} className="view-project__member-card">
+                            <div className="view-project__member-avatar">
+                                {initials}
+                            </div>
+                            <div className="view-project__member-info">
+                                <span className="view-project__member-name">{member.username}</span>
+                                <span className="view-project__member-email">{member.email}</span>
+                                <span className="view-project__member-branch">
+                                    <MapPin size={12} className="view-project__member-branch-icon" />
+                                    {member.branchLocation?.branchLocation || 'N/A'}
+                                </span>
+                            </div>
+                        </div>
+                    );
+                })}
+            </div>
+        );
     }
 
     handleAddMember = async () => {
         const rawInput = this.state.newMemberEmail.trim();
         if (!rawInput) return;
 
-        // Extract single or multiple comma/space separated emails
         const emailsList = rawInput
             .split(/[\s,]+/)
             .map(e => e.trim())
@@ -87,12 +110,10 @@ class ViewProject extends React.Component {
 
         const { addProjectMembers } = useProjectStore.getState();
         
-        // Sends request body: { "emails": ["email1@gmail.com", "email2@gmail.com"] }
         const success = await addProjectMembers(this.state.project.id, emailsList);
 
         if (success) {
             this.setState({ newMemberEmail: '', isAddingMember: false });
-            // Re-fetch project data to reflect updated backend state
             await this.initProjectData();
         } else {
             const { error } = useProjectStore.getState();
@@ -104,7 +125,6 @@ class ViewProject extends React.Component {
     };
 
     handleInputChange = (e) => {
-        // Handles both direct value strings and Synthetic Event objects
         const value = e?.target ? e.target.value : e;
         this.setState({ newMemberEmail: value, addMemberError: null });
     };
