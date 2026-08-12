@@ -42,4 +42,8 @@ public class User {
     @ManyToMany(mappedBy = "members")
     @JsonIgnore
     private List<Project> projects = new ArrayList<>();
+
+    private String profilePicture;
+
+    private String profilePictureId;
 }

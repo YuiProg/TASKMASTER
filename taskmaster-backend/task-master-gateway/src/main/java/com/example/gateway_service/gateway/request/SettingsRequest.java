@@ -1,4 +1,4 @@
-package com.example.backend.request;
+package com.example.gateway_service.gateway.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

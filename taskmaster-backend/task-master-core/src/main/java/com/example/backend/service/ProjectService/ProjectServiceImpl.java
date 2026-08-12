@@ -8,6 +8,7 @@ import com.example.backend.dto.ApiResponseModel;
 import com.example.backend.model.Project;
 import com.example.backend.model.User;
 import com.example.backend.repository.ProjectRepository;
+import com.example.backend.repository.SettingsRepository;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.request.ProjectRequest;
 import jakarta.transaction.Transactional;
@@ -31,6 +32,7 @@ public class ProjectServiceImpl implements ProjectServiceInterface{
     private final AuthenticatedUser authenticatedUser;
     private final ProjectRepository projectRepository;
     private final ProjectCacheService projectCacheService;
+    private final SettingsRepository settingsRepository;
 
     @Override
     @Transactional
@@ -63,7 +65,7 @@ public class ProjectServiceImpl implements ProjectServiceInterface{
             }
             project.setPriorities(priorities);
         }
-
+        //wala pang send email sa members dito
         List<User> members = new ArrayList<>();
         project.setMembers(members);
         if (!projectRequest.getEmails().isEmpty()) {
