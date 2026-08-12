@@ -14,6 +14,7 @@ import Archive from "./pages/Project/Archive";
 import CreateSprint from "./pages/Sprint/CreateSprint";
 import ViewSprint from "./pages/Sprint/ViewSprint";
 import SprintDetails from "./pages/Sprint/SprintDetails";
+import Settings from "./pages/Settings/Settings";
 
 const AUTH_PATHS = ["/", "/register", "/forgot-password"];
 
@@ -92,6 +93,11 @@ function AppRoutes() {
         <Route path="/sprint/view/:id" element={
           <Sidebar>
             <SprintDetails/>
+          </Sidebar>
+        }/>
+        <Route path="/settings" element={
+          <Sidebar>
+            <Settings/>
           </Sidebar>
         }/>
     </Routes>
