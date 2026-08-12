@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 @FeignClient(name = "backend-settings-client", url = "${services.backend.url}", configuration = FeignCookieConfig.class)
 public interface SettingsClient {
 
-    @GetMapping("/getSettings")
+    @GetMapping("/settings/getSettings")
     ResponseEntity<ApiResponseModel<SettingsDTO>> getSettings();
 
-    @PutMapping("/setSettings")
+    @PutMapping("/settings/setSettings")
     ResponseEntity<ApiResponseModel<SettingsDTO>> setSettings(@RequestBody SettingsDTO settingsDTO);
 }
