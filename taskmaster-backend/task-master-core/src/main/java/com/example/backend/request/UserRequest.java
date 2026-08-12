@@ -21,4 +21,5 @@ public class UserRequest {
     public Integer del;
     public String selectedBranch;
     public Boolean isReset;
+    public String image;
 }

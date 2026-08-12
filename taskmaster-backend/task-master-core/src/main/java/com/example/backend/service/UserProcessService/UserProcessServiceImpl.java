@@ -1,12 +1,17 @@
 package com.example.backend.service.UserProcessService;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import com.example.backend.config.AuthenticatedUser;
 import com.example.backend.config.JwtUtil;
 import com.example.backend.constants.StringCodes;
 import com.example.backend.dto.ApiResponseModel;
 import com.example.backend.model.Branch;
+import com.example.backend.model.Settings;
 import com.example.backend.model.Task;
 import com.example.backend.repository.BranchRepository;
+import com.example.backend.repository.SettingsRepository;
+import com.example.backend.request.SettingsRequest;
 import com.example.backend.service.EmailService.EmailService;
 import com.example.backend.service.TaskService.TaskCacheService;
 import jakarta.persistence.EntityManager;
@@ -27,7 +32,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.backend.repository.UserRepository;
 import com.example.backend.request.UserRequest;
+import tools.jackson.databind.ObjectMapper;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -47,6 +54,8 @@ public class UserProcessServiceImpl implements UserProcessService{
     private final UserCacheService userCacheService;
     private final EmailService emailService;
     private final TaskCacheService taskCacheService;
+    private final SettingsRepository settingsRepository;
+    private final Cloudinary cloudinary;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -78,6 +87,11 @@ public class UserProcessServiceImpl implements UserProcessService{
             user.setBranchLocation(branch);
         }
         User savedUser = userRepository.save(user);
+        userRepository.flush();
+
+        Settings settings = new Settings();
+        settings.setAppliedTo(savedUser);
+        settingsRepository.save(settings);
         try {
             emailService.sendTemplatedEmail(
                     savedUser.getEmail(),
@@ -177,15 +191,25 @@ public class UserProcessServiceImpl implements UserProcessService{
             query.setParameter("id", user.getId());
 
             User queryResult = (User) query.getSingleResult();
+            Settings settings = settingsRepository.findUserSettings(user.getId());
 
-            emailService.sendTemplatedEmail(
-                    user.getEmail(),
-                    "LOG_IN_CONFIRMATION",
-                    Map.of(
-                            "username", user.getUsername(),
-                            "tasksUrl", "https://taskmasteropnexus.xyz/tasks/my-tasks"
-                    )
-            );
+            if (settings == null) {
+                log.info("SETTINGS NOT FOUND APPLYING SETTINGS");
+                Settings newSettings = new Settings();
+                newSettings.setAppliedTo(queryResult);
+                settings = settingsRepository.save(newSettings);
+            }
+
+            if (settings != null && settings.getSendEmailUponLogin().equals(StringCodes.TRUE.getFlag())) {
+                emailService.sendTemplatedEmail(
+                        user.getEmail(),
+                        "LOG_IN_CONFIRMATION",
+                        Map.of(
+                                "username", user.getUsername(),
+                                "tasksUrl", "https://taskmasteropnexus.xyz/tasks/my-tasks"
+                        )
+                );
+            }
 
             userCacheService.evictResetCode(queryResult.getEmail());
 
@@ -255,6 +279,18 @@ public class UserProcessServiceImpl implements UserProcessService{
                             .body(ApiResponseModel.error("USERNAME ALREADY IN USE", StringCodes.ERROR.getPath()));
                 }
                 user.setUsername(userRequest.getUsername());
+                changed = true;
+            }
+
+            if (userRequest.getImage() != null && !userRequest.getImage().trim().isEmpty()) {
+                if (user.getProfilePicture() != null && !user.getProfilePicture().trim().isEmpty()) {
+                    oldUserSnapshot.setProfilePicture(user.getProfilePicture());
+                    oldUserSnapshot.setProfilePictureId(user.getProfilePictureId());
+                    cloudinary.uploader().destroy(user.getProfilePicture(), ObjectUtils.emptyMap());
+                }
+                Map<String, Objects> response = cloudinary.uploader().upload(userRequest.getImage(), ObjectUtils.emptyMap());
+                user.setProfilePicture(response.get("secure_url").toString());
+                user.setProfilePictureId(response.get("public_id").toString());
                 changed = true;
             }
 
@@ -411,16 +447,26 @@ public class UserProcessServiceImpl implements UserProcessService{
         for (User user : users) {
             List<Task> userTasks = taskCacheService.getAllOpenTaskCache(user.getId());
             Integer userTaskCount = userTasks.size();
-            log.info("SENDING EMAIL TO: {}", user.getEmail());
-            emailService.sendTemplatedEmail(
-                    user.getEmail(),
-                    "PENDING_TASKS_EMAIL",
-                    Map.of(
-                            "memberName", user.getUsername(),
-                            "taskCount", userTaskCount.toString()
-                    )
-            );
 
+            Settings userSettings = settingsRepository.findUserSettings(user.getId());
+
+            if (userSettings == null) {
+                Settings newSettings = new Settings();
+                newSettings.setAppliedTo(user);
+                userSettings = settingsRepository.save(newSettings);
+            }
+
+            log.info("SENDING EMAIL TO: {}", user.getEmail());
+            if (userSettings != null && userSettings.getSendDailyEmailTaskUpdates().equals(StringCodes.TRUE.getFlag())) {
+                emailService.sendTemplatedEmail(
+                        user.getEmail(),
+                        "PENDING_TASKS_EMAIL",
+                        Map.of(
+                                "memberName", user.getUsername(),
+                                "taskCount", userTaskCount.toString()
+                        )
+                );
+            }
         }
 
         return ResponseEntity.status(HttpStatus.OK).body(

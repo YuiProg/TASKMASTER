@@ -22,7 +22,15 @@ public class Settings {
     @JoinColumn(nullable = false, name = "applied_to")
     private User appliedTo;
 
-    private Boolean sendEmail = true;
+    private Boolean sendEmailUponProjectCreation = true;
+
+    private Boolean sendEmailUponTaskCreation = true;
+
+    private Boolean sendEmailUponLogin = true;
+
+    private Boolean sendEmailUponTaskUpdate = true;
+
+    private Boolean sendDailyEmailTaskUpdates = true;
 
     private Boolean locked = false;
 }
