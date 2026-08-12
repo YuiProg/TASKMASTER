@@ -37,7 +37,89 @@
   &__add-member-error {
     margin: -10px 0 $space-8 0;
     font-size: 0.78rem;
-    color: $error-red;
+    color: #ef4444;
+  }
+
+  /* --- Modern Members Grid UI --- */
+  &__no-members {
+    color: #6b7280;
+    font-size: 0.875rem;
+    font-style: italic;
+    margin-top: $space-4;
+  }
+
+  &__members-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: $space-4;
+    margin-top: $space-4;
+  }
+
+  &__member-card {
+    display: flex;
+    align-items: center;
+    gap: $space-4;
+    padding: $space-4 $space-5;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 8px;
+    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+
+    &:hover {
+      border-color: $blue-600;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+  }
+
+  &__member-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #22c55e;
+    color: #ffffff;
+    font-weight: $fw-semibold;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    letter-spacing: 0.5px;
+  }
+
+  &__member-info {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  &__member-name {
+    font-weight: $fw-semibold;
+    font-size: 0.9rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__member-email {
+    font-size: 0.78rem;
+    color: #9ca3af;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  &__member-branch {
+    display: flex;
+    align-items: center;
+    gap: $space-1;
+    font-size: 0.72rem;
+    color: #6b7280;
+    margin-top: $space-1;
+  }
+
+  &__member-branch-icon {
+    flex-shrink: 0;
   }
 }
 
@@ -62,6 +144,10 @@
     &__add-member-row {
       flex-direction: column;
       align-items: stretch;
+    }
+
+    &__members-grid {
+      grid-template-columns: 1fr;
     }
   }
 }
