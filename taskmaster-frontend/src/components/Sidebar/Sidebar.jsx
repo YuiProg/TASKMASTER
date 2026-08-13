@@ -6,8 +6,7 @@ import './Sidebar.scss';
 import {
     LayoutDashboard, Folder, CheckSquare,
     LogOut, Menu, X, ChevronDown, Settings,
-
-    Rotate3D
+    Rotate3D, CheckCircle2
 } from 'lucide-react';
 
 const NAV_ORDER = [
@@ -20,6 +19,8 @@ const NAV_ORDER = [
     '/tasks/open-tasks',
     '/tasks/created-tasks',
     '/tasks/backlog',
+    '/todos',
+    '/todos/create',
     '/sprint',
     '/team',
     '/settings',
@@ -83,11 +84,13 @@ class Sidebar extends React.Component {
         const savedCollapsed = storage.get('sidebar_collapsed');
         const savedProjectsExpanded = storage.get('sidebar_projectsExpanded');
         const savedTasksExpanded = storage.get('sidebar_tasksExpanded');
+        const savedTodosExpanded = storage.get('sidebar_todosExpanded');
 
         this.state = {
             collapsed: savedCollapsed !== null ? savedCollapsed : false,
             projectsExpanded: savedProjectsExpanded !== null ? savedProjectsExpanded : false,
             tasksExpanded: savedTasksExpanded !== null ? savedTasksExpanded : false,
+            todosExpanded: savedTodosExpanded !== null ? savedTodosExpanded : false,
             showChangePasswordModal: false,
             // Off-canvas drawer state for ≤749px — always starts closed,
             // regardless of the desktop collapsed/expanded state above.
@@ -118,12 +121,16 @@ class Sidebar extends React.Component {
 
         const hasSavedProjects = storage.has('sidebar_projectsExpanded');
         const hasSavedTasks = storage.has('sidebar_tasksExpanded');
+        const hasSavedTodos = storage.has('sidebar_todosExpanded');
 
         if (!hasSavedProjects && ["/projects", "/projects/new", "/projects/archived"].includes(pathname)) {
             this.setState({ projectsExpanded: true });
         }
         if (!hasSavedTasks && ["/tasks/my-tasks", "/tasks/backlog"].includes(pathname)) {
             this.setState({ tasksExpanded: true });
+        }
+        if (!hasSavedTodos && ["/todos/view", "/todos/create"].includes(pathname)) {
+            this.setState({ todosExpanded: true });
         }
 
         if (this.state.contentTransition?.phase === 'entering') {
@@ -313,7 +320,7 @@ class Sidebar extends React.Component {
     }
 
     render() {
-        const { mobileNavOpen, projectsExpanded, tasksExpanded, user } = this.state;
+        const { mobileNavOpen, projectsExpanded, tasksExpanded, todosExpanded, user } = this.state;
         const isCollapsed = this.isCollapsed();
 
         const pathname = window.location.pathname;
@@ -327,6 +334,7 @@ class Sidebar extends React.Component {
 
         const isAnyProjectsActive = ["/projects", "/projects/new", "/projects/archived", '/projects/my-projects'].includes(pathname);
         const isAnyTasksActive = ["/tasks/my-tasks", "/tasks/backlog", '/tasks/open-tasks'].includes(pathname);
+        const isAnyTodosActive = ["/todos", "/todos/create"].includes(pathname);
 
         return (
             <div className="sidebar">
@@ -390,6 +398,17 @@ class Sidebar extends React.Component {
                                         { path: '/tasks/open-tasks', title: 'Open Tasks' },
                                         // { path: '/tasks/created-tasks', title: 'Filed Tasks' },
                                         // { path: '/tasks/backlog', title: 'Backlog'}
+                                    ],
+                                })}
+                                {this.renderAccordion({
+                                    key: 'todos',
+                                    expanded: todosExpanded,
+                                    active: isAnyTodosActive,
+                                    icon: <CheckCircle2 size={20} />,
+                                    label: 'Todos (Beta)',
+                                    items: [
+                                        { path: '/todos', title: 'View Todos' },
+                                        { path: '/todos/create', title: 'Create Todos' },
                                     ],
                                 })}
                                 {this.renderSimpleItem({ path: '/sprint', icon: <Rotate3D size={20} />, label: 'Sprint', pathname })}
