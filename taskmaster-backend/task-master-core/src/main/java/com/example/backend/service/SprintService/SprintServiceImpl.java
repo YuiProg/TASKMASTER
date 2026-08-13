@@ -190,4 +190,15 @@ public class SprintServiceImpl implements SprintServiceInterface {
         }
         return ResponseEntity.ok(ApiResponseModel.success("SPRINT FOUND", "SUCCESS", sprint));
     }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<List<Sprint>>> scheduledArchiveSprint() {
+        List<Sprint> finishedSprints = sprintRepository.getFinishedSprints();
+        for (Sprint sprints : finishedSprints) {
+            sprints.setDel(StringCodes.TRUE.getCode());
+            sprintRepository.save(sprints);
+        }
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponseModel.success("SPRINTS FOUND", "SUCCESS", finishedSprints));
+    }
 }

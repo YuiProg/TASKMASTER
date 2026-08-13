@@ -1,5 +1,6 @@
 package com.example.scheduler_service.scheduler;
 
+import com.example.scheduler_service.scheduler.client.SprintClient;
 import com.example.scheduler_service.scheduler.client.TaskClient;
 import com.example.scheduler_service.scheduler.client.UserClient;
 import org.springframework.boot.SpringApplication;
@@ -11,7 +12,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 @EnableFeignClients(clients = {
 		TaskClient.class,
-		UserClient.class
+		UserClient.class,
+		SprintClient.class
 })
 public class SchedulerApplication {
 
