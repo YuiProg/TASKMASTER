@@ -1,0 +1,228 @@
+// Page Wrapper
+.todo-page {
+    padding: 1.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+// Main Controls / Header Toolbar
+.todo-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+
+    &__left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        flex: 1;
+        min-width: 280px;
+
+        @media (max-width: 640px) {
+            flex-direction: column;
+            align-items: stretch;
+            width: 100%;
+        }
+    }
+
+    &__search {
+        flex: 1;
+        max-width: 360px;
+
+        @media (max-width: 640px) {
+            max-width: 100%;
+        }
+    }
+}
+
+// Filter Tabs Container
+.todo-filter-group {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: #18181b;
+    padding: 0.25rem;
+    border-radius: 8px;
+    border: 1px solid #27272a;
+
+    svg {
+        margin: 0 0.5rem;
+        color: #71717a;
+    }
+}
+
+.todo-filter-btn {
+    background: transparent;
+    border: none;
+    padding: 0.45rem 0.85rem;
+    font-size: 0.825rem;
+    font-weight: 500;
+    color: #a1a1aa;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        color: #f4f4f5;
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    &.active {
+        background: #27272a;
+        color: #ffffff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    }
+}
+
+// List Items Container
+.todo-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+// Individual Todo Card
+.todo-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    background: #18181b;
+    border: 1px solid #27272a;
+    border-radius: 10px;
+    padding: 1.1rem 1.25rem;
+    transition: all 0.2s ease;
+
+    &:hover {
+        border-color: #3f3f46;
+        background: #1c1c20;
+    }
+
+    &--completed {
+        background: #121215;
+        opacity: 0.65;
+
+        .todo-item__title {
+            text-decoration: line-through;
+            color: #71717a;
+        }
+    }
+
+    &__checkbox {
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        border: 2px solid #3f3f46;
+        background: transparent;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-top: 0.1rem;
+        padding: 0;
+        transition: all 0.2s ease;
+
+        &:hover {
+            border-color: #10b981;
+        }
+
+        &.checked {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+        }
+    }
+
+    &__content {
+        flex: 1;
+    }
+
+    &__top {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        flex-wrap: wrap;
+    }
+
+    &__title {
+        font-size: 0.975rem;
+        font-weight: 500;
+        color: #f4f4f5;
+        margin: 0;
+    }
+
+    &__description {
+        font-size: 0.875rem;
+        color: #a1a1aa;
+        margin: 0.4rem 0 0.2rem 0;
+        line-height: 1.4;
+    }
+
+    &__meta {
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+        font-size: 0.775rem;
+        color: #71717a;
+        margin-top: 0.6rem;
+    }
+}
+
+// Role / Tag Badges
+.todo-badge {
+    font-size: 0.675rem;
+    padding: 0.15rem 0.55rem;
+    border-radius: 6px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+
+    &--category {
+        background: rgba(255, 255, 255, 0.08);
+        color: #d4d4d8;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+}
+
+// Action Buttons
+.todo-icon-btn {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.4rem;
+    border-radius: 6px;
+    color: #71717a;
+    transition: all 0.2s ease;
+
+    &:hover {
+        color: #ef4444;
+        background: rgba(239, 68, 68, 0.1);
+    }
+}
+
+// Empty State
+.todo-empty {
+    text-align: center;
+    padding: 4rem 1.5rem;
+    background: #18181b;
+    border: 1px dashed #27272a;
+    border-radius: 12px;
+    color: #71717a;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    svg {
+        color: #3f3f46;
+        margin-bottom: 0.75rem;
+    }
+
+    p {
+        margin: 0;
+        font-size: 0.9rem;
+        color: #a1a1aa;
+    }
+}
