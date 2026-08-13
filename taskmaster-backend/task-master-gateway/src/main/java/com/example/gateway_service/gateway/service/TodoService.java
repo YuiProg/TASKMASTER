@@ -25,7 +25,7 @@ public class TodoService implements TodoClient {
         try {
             log.info("createTodo REQUEST");
             ResponseEntity<ApiResponseModel<TodoDTO>> response = todoClient.createTodo(todoRequest);
-            log.info("createTodo RESPONSE status: {} data: {}", response.getStatusCode(), response.getBody().getData());
+            log.info("createTodo RESPONSE status: {} data: {}", response.getStatusCode(), response.getBody());
             ResponseEntity.BodyBuilder bodyBuilder = ResponseEntity.status(response.getStatusCode());
             return bodyBuilder.body(response.getBody());
         } catch (FeignException e) {
@@ -48,11 +48,58 @@ public class TodoService implements TodoClient {
         try {
             log.info("getTodos REQUEST");
             ResponseEntity<ApiResponseModel<List<TodoDTO>>> response = todoClient.getTodos();
-            log.info("getTodos RESPONSE status: {} data: {}", response.getStatusCode(), response.getBody().getData());
+            log.info("getTodos RESPONSE status: {} data: {}", response.getStatusCode(), response.getBody());
             ResponseEntity.BodyBuilder bodyBuilder = ResponseEntity.status(response.getStatusCode());
             return bodyBuilder.body(response.getBody());
         } catch (FeignException e) {
             log.error("RESPONSE getTodos (error) -> status: {}, cause: {}",
+                    e.status(), e.getCause() != null ? e.getCause().getMessage() : e.getMessage(), e);
+
+            HttpStatus status = (e.status() > 0)
+                    ? HttpStatus.valueOf(e.status())
+                    : HttpStatus.SERVICE_UNAVAILABLE;
+
+            return ResponseEntity.status(status)
+                    .body(ApiResponseModel.error(
+                            e.status() > 0 ? e.contentUTF8() : "Todo service unavailable, please try again",
+                            "ERROR"));
+        }
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<TodoDTO>> getTodoById(String id) {
+        try {
+            log.info("getTodoById REQUEST id: {}", id);
+            ResponseEntity<ApiResponseModel<TodoDTO>> response = todoClient.getTodoById(id);
+            log.info("getTodoById RESPONSE status: {} data: {}", response.getStatusCode(), response.getBody());
+            ResponseEntity.BodyBuilder bodyBuilder = ResponseEntity.status(response.getStatusCode());
+
+            return bodyBuilder.body(response.getBody());
+        } catch (FeignException e) {
+            log.error("RESPONSE getTodoById (error) -> status: {}, cause: {}",
+                    e.status(), e.getCause() != null ? e.getCause().getMessage() : e.getMessage(), e);
+
+            HttpStatus status = (e.status() > 0)
+                    ? HttpStatus.valueOf(e.status())
+                    : HttpStatus.SERVICE_UNAVAILABLE;
+
+            return ResponseEntity.status(status)
+                    .body(ApiResponseModel.error(
+                            e.status() > 0 ? e.contentUTF8() : "Todo service unavailable, please try again",
+                            "ERROR"));
+        }
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<TodoDTO>> updateTodo(TodoRequest todoRequest, String id) {
+        try {
+            log.info("updateTodo REQUEST id: {}", id);
+            ResponseEntity<ApiResponseModel<TodoDTO>> response = todoClient.updateTodo(todoRequest, id);
+            log.info("updateTodo RESPONSE status: {} data: {}", response.getStatusCode(), response.getBody());
+            ResponseEntity.BodyBuilder bodyBuilder = ResponseEntity.status(response.getStatusCode());
+            return bodyBuilder.body(response.getBody());
+        } catch (FeignException e) {
+            log.error("RESPONSE updateTodo (error) -> status: {}, cause: {}",
                     e.status(), e.getCause() != null ? e.getCause().getMessage() : e.getMessage(), e);
 
             HttpStatus status = (e.status() > 0)

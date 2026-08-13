@@ -17,4 +17,5 @@ public class TodoRequest {
     public String userId;
     public Integer finished;
     public Integer del;
+    public Boolean completed;
 }

@@ -6,9 +6,7 @@ import com.example.gateway_service.gateway.dto.TodoDTO;
 import com.example.gateway_service.gateway.request.TodoRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,5 +19,11 @@ public interface TodoClient {
 
     @GetMapping("/getTodos")
     ResponseEntity<ApiResponseModel<List<TodoDTO>>> getTodos();
+
+    @GetMapping("/getTodoById/{id}")
+    ResponseEntity<ApiResponseModel<TodoDTO>> getTodoById (@PathVariable String id);
+
+    @PutMapping("/updateTodo/{id}")
+    ResponseEntity<ApiResponseModel<TodoDTO>> updateTodo (@RequestBody TodoRequest todoRequest, @PathVariable String id);
 
 }

@@ -29,4 +29,16 @@ public class TodoController implements TodoClient {
     public ResponseEntity<ApiResponseModel<List<TodoDTO>>> getTodos() {
         return todoService.getTodos();
     }
+
+    @Override
+    @GetMapping("/getTodoById/{id}")
+    public ResponseEntity<ApiResponseModel<TodoDTO>> getTodoById(@PathVariable String id) {
+        return todoService.getTodoById(id);
+    }
+
+    @Override
+    @PutMapping("/updateTodo/{id}")
+    public ResponseEntity<ApiResponseModel<TodoDTO>> updateTodo(@RequestBody TodoRequest todoRequest,@PathVariable String id) {
+        return todoService.updateTodo(todoRequest, id);
+    }
 }

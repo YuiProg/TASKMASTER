@@ -1,6 +1,7 @@
 package com.example.backend.service.TodoService;
 
 import com.example.backend.config.AuthenticatedUser;
+import com.example.backend.constants.StringCodes;
 import com.example.backend.dto.ApiResponseModel;
 import com.example.backend.model.Todo;
 import com.example.backend.model.User;
@@ -31,7 +32,7 @@ public class TodoService implements TodoServiceInterface {
         todo.setCreatedAt(new Date().getTime());
         todo.setCreatedBy(user);
         todo.setTodoName(todoRequest.getTodoName());
-
+        todo.setCreatedAt(new Date().getTime());
         if (todoRequest.getDescription() != null && !todoRequest.getDescription().trim().isEmpty()) {
             todo.setDescription(todoRequest.getDescription());
         }
@@ -61,22 +62,30 @@ public class TodoService implements TodoServiceInterface {
         oldTodo.setTodoName(todo.getTodoName());
         oldTodo.setDeadline(todo.getDeadline());
 
-        if (todoRequest.getDescription() != null && !todoRequest.getDescription().trim().isEmpty()) {
-            todo.setDescription(todoRequest.getDescription());
-        }
-
         if (todoRequest.getTodoName() != null && !todoRequest.getTodoName().trim().isEmpty()) {
             todo.setTodoName(todoRequest.getTodoName());
         }
 
         if (todoRequest.getDescription() != null && !todoRequest.getDescription().trim().isEmpty()) {
+            todo.setDescription(todoRequest.getDescription());
+        }
+
+        if (todoRequest.getDeadline() != null) {
             todo.setDeadline(todoRequest.getDeadline());
         }
 
-        Todo updatedTodo = todoRepository.save(oldTodo);
+        if (todoRequest.getCompleted() != null) {
+            if (todoRequest.getCompleted().equals(StringCodes.TRUE.getFlag())) {
+                todo.setFinished(StringCodes.TRUE.getCode());
+            } else {
+                todo.setFinished(StringCodes.FALSE.getCode());
+            }
+        }
+
+        Todo updatedTodo = todoRepository.save(todo);
 
         return ResponseEntity.status(HttpStatus.OK)
-                .body(ApiResponseModel.success("TODO UPDATED", "SUCCESS", updatedTodo));
+                .body(ApiResponseModel.update("TODO UPDATED", "SUCCESS", updatedTodo, oldTodo));
     }
 
     @Override
@@ -85,5 +94,12 @@ public class TodoService implements TodoServiceInterface {
         List<Todo> todos = todoRepository.getUserTodos(user.getId());
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponseModel.success("TODOS FOUND", "SUCCESS", todos));
+    }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<Todo>> getTodoById(String id) {
+        Todo todo = todoRepository.getTodoById(id);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponseModel.success("TODO FOUND", "SUCCESS", todo));
     }
 }

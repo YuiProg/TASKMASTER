@@ -38,4 +38,10 @@ public class TodoController implements TodoServiceInterface {
     public ResponseEntity<ApiResponseModel<List<Todo>>> getAllTodos() {
         return todoService.getAllTodos();
     }
+
+    @Override
+    @GetMapping("/getTodoById/{id}")
+    public ResponseEntity<ApiResponseModel<Todo>> getTodoById(@PathVariable String id) {
+        return todoService.getTodoById(id);
+    }
 }

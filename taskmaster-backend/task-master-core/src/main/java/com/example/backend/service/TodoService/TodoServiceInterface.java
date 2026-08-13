@@ -11,4 +11,5 @@ public interface TodoServiceInterface {
     ResponseEntity<ApiResponseModel<Todo>> createTodo (TodoRequest todoRequest);
     ResponseEntity<ApiResponseModel<Todo>> updateTodo(TodoRequest todoRequest, String id);
     ResponseEntity<ApiResponseModel<List<Todo>>> getAllTodos();
+    ResponseEntity<ApiResponseModel<Todo>> getTodoById(String id);
 }

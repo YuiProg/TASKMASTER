@@ -12,4 +12,7 @@ public interface TodoRepository extends JpaRepository<Todo, String> {
 
     @Query("SELECT t FROM Todo t WHERE t.createdBy.id = :userId AND t.del = 0 AND t.finished = 0")
     List<Todo> getUserTodos(String userId);
+
+    @Query("SELECT t FROM Todo t WHERE t.id = :id AND t.del = 0 AND t.finished = 0")
+    Todo getTodoById(String id);
 }
