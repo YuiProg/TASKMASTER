@@ -65,7 +65,7 @@
     overflow: hidden;
     transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 
-    /* Left Priority Accent Line (Green Default, Warm Warn Colors for Urgent) */
+    /* Left Priority Accent Line (Green Default, Red Danger Colors for Critical/High/Urgent) */
     &::before {
       content: '';
       position: absolute;
@@ -77,6 +77,7 @@
       transition: width 0.2s ease;
     }
 
+    &.border-priority--critical::before,
     &.border-priority--high::before,
     &.border-priority--urgent::before {
       background: #ef4444;
@@ -191,6 +192,7 @@
     text-transform: uppercase;
     color: #d1d5db;
 
+    .icon-critical,
     .icon-urgent {
       color: #ef4444;
     }

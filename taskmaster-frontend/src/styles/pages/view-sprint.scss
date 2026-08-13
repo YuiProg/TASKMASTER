@@ -1,293 +1,376 @@
 @use '../abstracts' as *;
 
-.sprints-loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 240px;
-  width: 100%;
-}
+// Color Palette Matched from Design Reference
+$card-bg: #1e1e1e;
+$card-bg-hover: #252525;
+$card-border: rgba(255, 255, 255, 0.08);
 
-.sprints-empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 48px 16px;
-  text-align: center;
+$accent-green: #10b981;
+$accent-green-bright: #22c55e;
+$accent-red: #ef4444;
 
-  h3 {
-    margin: 0 0 8px 0;
-    font-size: 1.125rem;
-    color: $slate-800;
+$text-primary: #ffffff;
+$text-secondary: #9ca3af;
+$text-muted: #6b7280;
+
+.view-sprint {
+  &__loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: $space-9 0;
+    min-height: 280px;
   }
 
-  p {
-    margin: 0;
-    font-size: 0.875rem;
-    color: $slate-400;
-  }
-}
-
-.sprints-grid {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.sprint-card {
-  @include card-surface($radius: 8px);
-  transition: box-shadow 0.2s ease, border-color 0.2s ease;
-
-  &:hover {
-    box-shadow: $glass-shadow;
-    border-color: $glass-border-strong;
+  &__error {
+    color: $accent-red;
+    font-size: 1rem;
+    padding: $space-5;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    border-radius: $radius-md;
   }
 
-  .sprint-card-header {
-    padding: 16px 20px;
+  &__empty {
+    text-align: center;
+    padding: $space-9 $space-6;
+    background: $card-bg;
+    border: 1px dashed $card-border;
+    border-radius: $radius-lg;
+
+    h3 {
+      margin: 0 0 $space-2 0;
+      font-size: 1.25rem;
+      color: $text-primary;
+    }
+
+    p {
+      margin: 0;
+      font-size: 1rem;
+      color: $text-secondary;
+    }
+  }
+
+  /* --- Grid Matrix --- */
+  &__grid {
+    display: flex;
+    flex-direction: column;
+    gap: $space-5;
+  }
+
+  /* --- Sprint Card --- */
+  &__card {
+    position: relative;
+    background: $card-bg;
+    border: 1px solid $card-border;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+
+    /* Left Accent Status Border */
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 6px; // Slightly thicker indicator bar
+      height: 100%;
+      background: $accent-green-bright;
+      transition: width 0.2s ease;
+    }
+
+    &.is-finished::before {
+      background: $text-muted;
+    }
+
+    &:hover {
+      background: $card-bg-hover;
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+  }
+
+  /* --- Card Header --- */
+  &__card-header {
+    padding: $space-5 $space-6; // Increased padding
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
     align-items: center;
-    gap: 12px;
+    gap: $space-4;
     cursor: pointer;
-    border-bottom: 1px solid transparent;
+  }
 
-    .sprint-title-area {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
+  &__title-group {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    flex-wrap: wrap;
+  }
 
-      h3 {
-        margin: 0;
-        font-size: 1.125rem;
-        color: $slate-800;
-      }
+  &__card-title {
+    margin: 0;
+    font-size: 1.25rem; // Scaled up header font
+    font-weight: 700;
+    color: $text-primary;
+  }
 
-      .project-badge {
-        background: $blue-50;
-        color: $blue-400;
-        font-size: 0.75rem;
-        padding: 3px 8px;
-        border-radius: 4px;
-        font-weight: 600;
+  /* Project Pill Tag - Ribbon/Badge Style */
+  &__project-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem; // Scaled up
+    font-weight: 600;
+    color: $accent-green;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    padding: 4px 12px; // Roomier tag padding
+    border-radius: 6px;
+
+    &::before {
+      content: '📁';
+      font-size: 0.8rem;
+    }
+  }
+
+  &__meta-summary {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: $space-3;
+  }
+
+  &__task-count {
+    font-size: 0.85rem; // Scaled up
+    font-weight: 600;
+    color: $text-secondary;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid $card-border;
+    padding: 5px 12px;
+    border-radius: 6px;
+  }
+
+  &__status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem; // Scaled up
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 6px;
+
+    &--ongoing {
+      color: $accent-green;
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+
+      &::before {
+        content: '🏷️';
+        font-size: 0.8rem;
       }
     }
 
-    .sprint-meta-summary {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 12px;
+    &--finished {
+      color: $text-secondary;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid $card-border;
+    }
+  }
 
-      .task-count-badge {
-        font-size: 0.75rem;
-        font-weight: 600;
-        color: $slate-500;
-        background: $slate-100;
-        border: 1px solid $border-light;
-        padding: 3px 8px;
-        border-radius: 12px;
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+  }
+
+  &__btn {
+    font-size: 0.875rem; // Scaled up text
+    font-weight: 700;
+    padding: 8px 18px; // Chunkier button targets
+    border-radius: 6px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    transition: all 0.15s ease;
+
+    &--primary {
+      background: $accent-green-bright;
+      color: #000000;
+      border: none;
+
+      &:hover {
+        background: lighten($accent-green-bright, 5%);
       }
+    }
 
-      .status-pill {
-        font-size: 0.75rem;
-        font-weight: 700;
-        color: $green-600;
-        background: $green-50;
-        padding: 4px 10px;
-        border-radius: 12px;
-      }
+    &--ghost {
+      background: transparent;
+      border: 1px solid $card-border;
+      color: $text-secondary;
 
-      .toggle-btn {
-        background: transparent;
-        border: 1px solid $border-light;
-        border-radius: 4px;
-        padding: 6px 12px;
-        font-size: 0.8125rem;
-        cursor: pointer;
-        color: $slate-500;
-        transition: background-color 0.15s ease;
-
-        &:hover {
-          background: $glass-bg-3;
-        }
+      &:hover {
+        background: rgba(255, 255, 255, 0.05);
+        color: $text-primary;
       }
     }
   }
 
-  .sprint-card-body {
-    padding: 0 20px 20px 20px;
+  /* --- Card Body --- */
+  &__card-body {
+    padding: 0 $space-6 $space-5 $space-6;
+  }
 
-    .info-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 24px;
-      margin-top: 12px;
-      margin-bottom: 16px;
+  &__info-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $space-8;
+    padding-top: $space-4;
+    margin-bottom: $space-4;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
 
-      div {
-        display: flex;
-        flex-direction: column;
+  &__info-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem; // Scaled up
+    color: $text-secondary;
 
-        label {
-          font-size: 0.75rem;
-          color: $slate-400;
-          margin-bottom: 2px;
-        }
-
-        span {
-          font-size: 0.875rem;
-          font-weight: 500;
-          color: $slate-700;
-        }
-      }
+    label {
+      font-size: 0.8rem; // Scaled up label
+      font-weight: 600;
+      color: $text-muted;
+      text-transform: uppercase;
     }
 
-    .members-section {
-      label {
-        display: block;
-        font-size: 0.75rem;
-        color: $slate-400;
-        margin-bottom: 6px;
-      }
-
-      .member-tags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-
-        .member-tag {
-          background: $slate-100;
-          color: $slate-500;
-          font-size: 0.8125rem;
-          padding: 2px 8px;
-          border-radius: 4px;
-
-          small {
-            color: $blue-500;
-            font-weight: 600;
-          }
-        }
-      }
+    span {
+      font-weight: 500;
+      color: $text-secondary;
     }
+  }
 
-    .tasks-section {
-      margin-top: 20px;
-      padding-top: 16px;
-      border-top: 1px dashed $border-light;
+  &__members-section {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
 
-      h4 {
-        margin: 0 0 12px 0;
-        font-size: 0.9375rem;
-        color: $slate-700;
+    label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: $text-muted;
+      text-transform: uppercase;
+    }
+  }
 
-        small {
-          font-size: 0.8125rem;
-          color: $slate-400;
-          font-weight: normal;
-        }
-      }
+  &__member-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
 
-      .no-tasks {
-        font-size: 0.875rem;
-        color: $slate-400;
-        font-style: italic;
-        margin: 0;
-      }
+  &__member-tag {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid $card-border;
+    color: $text-secondary;
+    font-size: 0.85rem; // Scaled up member tags
+    padding: 3px 10px;
+    border-radius: 6px;
+  }
 
-      .task-list {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
+  /* --- Expanded Tasks Section --- */
+  &__tasks-section {
+    margin-top: $space-5;
+    padding-top: $space-4;
+    border-top: 1px dashed rgba(255, 255, 255, 0.1);
+  }
 
-        .task-item {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: space-between;
-          align-items: center;
-          gap: 8px;
-          background: $glass-bg-3;
-          padding: 10px 14px;
-          border-radius: 6px;
-          border: 1px solid transparent;
-          transition: all 0.2s ease-in-out;
+  &__tasks-heading {
+    margin: 0 0 $space-3 0;
+    font-size: 0.95rem; // Scaled up
+    font-weight: 600;
+    color: $text-primary;
 
-          .task-info {
-            display: flex;
-            flex-direction: column;
+    span {
+      font-size: 0.85rem;
+      color: $text-muted;
+      font-weight: normal;
+    }
+  }
 
-            .task-name {
-              font-size: 0.875rem;
-              font-weight: 600;
-              color: $slate-800;
-              transition: color 0.15s ease;
-            }
+  &__no-tasks {
+    font-size: 0.875rem;
+    color: $text-muted;
+    margin: 0;
+  }
 
-            .task-assignee {
-              font-size: 0.75rem;
-              color: $slate-400;
-            }
-          }
+  &__task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
 
-          .task-badges {
-            display: flex;
-            gap: 8px;
+  &__task-item {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: $space-3;
+    background: rgba(0, 0, 0, 0.2);
+    padding: $space-3 $space-4; // Roomier task items
+    border-radius: 6px;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    cursor: pointer;
+    transition: background 0.15s ease;
 
-            .priority-tag,
-            .status-tag {
-              font-size: 0.6875rem;
-              font-weight: 700;
-              padding: 2px 6px;
-              border-radius: 4px;
-              text-transform: uppercase;
-            }
+    &:hover {
+      background: rgba(255, 255, 255, 0.04);
 
-            .priority-critical {
-              background: $red-50;
-              color: $red-600;
-            }
-
-            .status-open {
-              background: $green-50;
-              color: $green-600;
-            }
-
-            .status-closed {
-              background: $slate-100;
-              color: $slate-400;
-            }
-          }
-
-          &.task-item--clickable {
-            cursor: pointer;
-
-            &:hover {
-              background-color: $input-bg-hover;
-              border-color: $glass-border-strong;
-              transform: translateY(-1px);
-              box-shadow: $glass-shadow-sm;
-
-              .task-name {
-                color: $blue-500;
-              }
-            }
-
-            &:active {
-              transform: translateY(0);
-              box-shadow: none;
-            }
-          }
-        }
+      .view-sprint__task-name {
+        color: $text-primary;
       }
     }
   }
 
-  &.expanded {
-    .sprint-card-header {
-      border-bottom-color: $border-lighter;
+  &__task-info {
+    display: flex;
+    align-items: center;
+    gap: $space-4;
+  }
+
+  &__task-name {
+    font-size: 0.95rem; // Scaled up
+    font-weight: 600;
+    color: $text-primary;
+  }
+
+  &__task-assignee {
+    font-size: 0.85rem; // Scaled up
+    color: $text-secondary;
+  }
+
+  &__task-badges {
+    display: flex;
+    gap: $space-2;
+  }
+
+  &__badge {
+    font-size: 0.75rem; // Scaled up badge text
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    text-transform: UPPERCASE;
+    color: $text-secondary;
+    background: rgba(255, 255, 255, 0.05);
+
+    &.priority--critical,
+    &.priority--high,
+    &.priority--urgent {
+      color: $accent-red;
+    }
+
+    &.priority--low,
+    &.status--open {
+      color: $accent-green;
     }
   }
 }
