@@ -11,4 +11,5 @@ public interface SprintServiceInterface {
     ResponseEntity<ApiResponseModel<Sprint>> createSprint (SprintRequest sprintRequest);
     ResponseEntity<ApiResponseModel<List<Sprint>>> getSprints ();
     ResponseEntity<ApiResponseModel<Sprint>> getSprintById (String id);
+    ResponseEntity<ApiResponseModel<List<Sprint>>> scheduledArchiveSprint ();
 }
