@@ -2,6 +2,7 @@ import React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { PanelContainer, PanelPage } from '../../components/TRCOMPONENTS/TRPanelPage/TRPanelPage';
 import Button from '../../components/TRCOMPONENTS/TRButton/Button';
+import Spinner from '../../components/Spinner/Spinner.jsx';
 import { useAuthStore } from '../../context/AuthStore.js';
 import { useSettingsStore } from '../../context/SettingsStore.js';
 import { 
@@ -10,7 +11,6 @@ import {
   Bell, 
   Lock, 
   ShieldAlert, 
-  RefreshCw, 
   CheckCircle2, 
   Sparkles,
   ChevronRight
@@ -172,7 +172,7 @@ class Settings extends React.Component {
             <PanelContainer>
               {isLoading ? (
                 <div className="settings-loading">
-                  <RefreshCw className="settings-loading__spinner" size={24} />
+                  <Spinner size={32} strokeWidth={3} color="#22c55e" trackColor="rgba(255, 255, 255, 0.1)" />
                   <span>Loading preferences...</span>
                 </div>
               ) : (

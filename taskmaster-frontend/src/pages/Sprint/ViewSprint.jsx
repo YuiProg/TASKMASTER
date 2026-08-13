@@ -15,7 +15,7 @@ const ViewSprint = () => {
   }, [fetchSprints]);
 
   const toggleSprint = (e, id) => {
-    e.stopPropagation(); // Prevents triggering card navigation when toggling dropdown
+    e.stopPropagation();
     setExpandedSprintId((prev) => (prev === id ? null : id));
   };
 
@@ -26,7 +26,7 @@ const ViewSprint = () => {
   };
 
   const handleTaskClick = (e, taskId) => {
-    e.stopPropagation(); // Prevents parent card navigation
+    e.stopPropagation();
     if (taskId) {
       navigateTo(`/tasks/view/${taskId}`);
     }
@@ -52,18 +52,18 @@ const ViewSprint = () => {
 
       <PanelContainer>
         {isLoading ? (
-          <div className="sprints-loading-container">
+          <div className="view-sprint__loading">
             <Spinner />
           </div>
         ) : error ? (
-          <p className="error-message">{error}</p>
-        ) : sprints.length === 0 ? (
-          <div className="sprints-empty-state">
+          <p className="view-sprint__error">{error}</p>
+        ) : sprints?.length === 0 ? (
+          <div className="view-sprint__empty">
             <h3>No Sprints Found</h3>
             <p>You currently don't have any active sprints available.</p>
           </div>
         ) : (
-          <div className="sprints-grid">
+          <div className="view-sprint__grid">
             {sprints.map((sprint) => {
               const sprintId = sprint.id || sprint._id;
               const isExpanded = expandedSprintId === sprintId;
@@ -73,111 +73,160 @@ const ViewSprint = () => {
               const isFinished = sprint.finished === 1;
 
               return (
-                <div key={sprintId} className={`sprint-card ${isExpanded ? "expanded" : ""}`}>
-                  {/* Clicking header or title navigates to SprintDetails page */}
-                  <div 
-                    className="sprint-card-header" 
+                <div
+                  key={sprintId}
+                  className={`view-sprint__card ${
+                    isFinished ? "is-finished" : "is-ongoing"
+                  } ${isExpanded ? "is-expanded" : ""}`}
+                >
+                  {/* Header Area */}
+                  <div
+                    className="view-sprint__card-header"
                     onClick={() => handleSprintNavigation(sprintId)}
-                    style={{ cursor: "pointer" }}
                   >
-                    <div className="sprint-title-area">
-                      <h3>{sprint.sprintName}</h3>
-                      <span className="project-badge">{sprint.projectId?.projectName}</span>
+                    <div className="view-sprint__title-group">
+                      <h3 className="view-sprint__card-title">
+                        {sprint.sprintName}
+                      </h3>
+                      {sprint.projectId?.projectName && (
+                        <span className="view-sprint__project-tag">
+                          {sprint.projectId.projectName}
+                        </span>
+                      )}
                     </div>
 
-                    <div className="sprint-meta-summary">
-                      <span className="task-count-badge">
+                    <div className="view-sprint__meta-summary">
+                      <span className="view-sprint__task-count">
                         {taskCount} {taskCount === 1 ? "Task" : "Tasks"}
                       </span>
-                      
-                      {/* Sprint State Indicator */}
-                      <span className={`status-pill ${isFinished ? "status-pill--finished" : "status-pill--ongoing"}`}>
+
+                      <span
+                        className={`view-sprint__status-pill ${
+                          isFinished
+                            ? "view-sprint__status-pill--finished"
+                            : "view-sprint__status-pill--ongoing"
+                        }`}
+                      >
                         {isFinished ? "Finished" : "Ongoing"}
                       </span>
-                      
-                      {/* Navigates directly to the detail page */}
-                      <button 
-                        className="toggle-btn" 
-                        type="button" 
-                        onClick={() => handleSprintNavigation(sprintId)}
-                      >
-                        View Details
-                      </button>
 
-                      {/* Optional toggle for expanding task preview without page redirect */}
-                      <button 
-                        className="toggle-btn toggle-btn--subtle" 
-                        type="button" 
-                        onClick={(e) => toggleSprint(e, sprintId)}
-                      >
-                        {isExpanded ? "Collapse" : "Expand Tasks"}
-                      </button>
+                      <div className="view-sprint__actions">
+                        <button
+                          className="view-sprint__btn view-sprint__btn--primary"
+                          type="button"
+                          onClick={() => handleSprintNavigation(sprintId)}
+                        >
+                          View Details
+                        </button>
+
+                        <button
+                          className="view-sprint__btn view-sprint__btn--ghost"
+                          type="button"
+                          onClick={(e) => toggleSprint(e, sprintId)}
+                        >
+                          {isExpanded ? "Collapse" : "Expand Tasks"}
+                        </button>
+                      </div>
                     </div>
                   </div>
 
-                  <div className="sprint-card-body">
-                    <div className="info-row">
-                      <div>
-                        <label>Initiated By:</label>
-                        <span>@{sprint.initiatedBy?.username}</span>
+                  {/* Body Area */}
+                  <div className="view-sprint__card-body">
+                    <div className="view-sprint__info-row">
+                      <div className="view-sprint__info-item">
+                        <label>Initiated By</label>
+                        <span>@{sprint.initiatedBy?.username || "unknown"}</span>
                       </div>
-                      <div>
-                        <label>Created On:</label>
+                      <div className="view-sprint__info-item">
+                        <label>Created On</label>
                         <span>{formatDate(sprint.createdAt)}</span>
                       </div>
-                      <div>
-                        <label>Deadline:</label>
-                        <span>{sprint.deadline ? formatDate(sprint.deadline) : "No deadline"}</span>
+                      <div className="view-sprint__info-item">
+                        <label>Deadline</label>
+                        <span>
+                          {sprint.deadline
+                            ? formatDate(sprint.deadline)
+                            : "No deadline"}
+                        </span>
                       </div>
                     </div>
 
-                    <div className="members-section">
-                      <label>Sprint Members ({sprint.sprintMembers?.length || 0}):</label>
-                      <div className="member-tags">
-                        {sprint.sprintMembers?.map((member) => (
-                          <span key={member.id || member._id} className="member-tag">
-                            {member.username}
-                          </span>
-                        ))}
+                    {sprint.sprintMembers?.length > 0 && (
+                      <div className="view-sprint__members-section">
+                        <label>
+                          Sprint Members ({sprint.sprintMembers.length}):
+                        </label>
+                        <div className="view-sprint__member-tags">
+                          {sprint.sprintMembers.map((member) => (
+                            <span
+                              key={member.id || member._id}
+                              className="view-sprint__member-tag"
+                            >
+                              @{member.username}
+                            </span>
+                          ))}
+                        </div>
                       </div>
-                    </div>
+                    )}
 
+                    {/* Expandable Task Section */}
                     {isExpanded && (
-                      <div className="tasks-section">
-                        <h4>
+                      <div className="view-sprint__tasks-section">
+                        <h4 className="view-sprint__tasks-heading">
                           Sprint Tasks ({taskCount})
-                          {taskCount > 0 && <small> — {openTasks} Open</small>}
+                          {taskCount > 0 && <span> — {openTasks} Open</span>}
                         </h4>
+
                         {taskCount === 0 ? (
-                          <p className="no-tasks">No tasks assigned to this sprint.</p>
+                          <p className="view-sprint__no-tasks">
+                            No tasks assigned to this sprint.
+                          </p>
                         ) : (
-                          <div className="task-list">
-                            {sprint.sprintTasks?.map((task) => (
-                              <div
-                                key={task.id || task._id}
-                                className="task-item task-item--clickable"
-                                onClick={(e) => handleTaskClick(e, task.id || task._id)}
-                              >
-                                <div className="task-info">
-                                  <span className="task-name">{task.taskName}</span>
-                                  <span className="task-assignee">
-                                    Assigned: @{task.assignee?.username || "Unassigned"}
-                                  </span>
+                          <div className="view-sprint__task-list">
+                            {sprint.sprintTasks?.map((task) => {
+                              const taskId = task.id || task._id;
+                              const priorityClass = task.priority
+                                ? `priority--${task.priority.toLowerCase()}`
+                                : "";
+                              const statusClass = task.status
+                                ? `status--${task.status.toLowerCase()}`
+                                : "";
+
+                              return (
+                                <div
+                                  key={taskId}
+                                  className="view-sprint__task-item"
+                                  onClick={(e) => handleTaskClick(e, taskId)}
+                                >
+                                  <div className="view-sprint__task-info">
+                                    <span className="view-sprint__task-name">
+                                      {task.taskName}
+                                    </span>
+                                    <span className="view-sprint__task-assignee">
+                                      Assigned: @
+                                      {task.assignee?.username || "Unassigned"}
+                                    </span>
+                                  </div>
+
+                                  <div className="view-sprint__task-badges">
+                                    {task.priority && (
+                                      <span
+                                        className={`view-sprint__badge ${priorityClass}`}
+                                      >
+                                        {task.priority}
+                                      </span>
+                                    )}
+                                    {task.status && (
+                                      <span
+                                        className={`view-sprint__badge ${statusClass}`}
+                                      >
+                                        {task.status}
+                                      </span>
+                                    )}
+                                  </div>
                                 </div>
-                                <div className="task-badges">
-                                  <span
-                                    className={`priority-tag priority-${task.priority?.toLowerCase()}`}
-                                  >
-                                    {task.priority}
-                                  </span>
-                                  <span
-                                    className={`status-tag status-${task.status?.toLowerCase()}`}
-                                  >
-                                    {task.status}
-                                  </span>
-                                </div>
-                              </div>
-                            ))}
+                              );
+                            })}
                           </div>
                         )}
                       </div>

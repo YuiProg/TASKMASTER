@@ -1,6 +1,13 @@
 @use '../abstracts' as *;
 
 .view-task {
+  &__loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: $space-12;
+  }
+
   &__overview-header {
     margin-top: $space-5;
     margin-bottom: $space-4;
@@ -8,7 +15,7 @@
 
   &__title {
     margin: 0;
-    color: $slate-800;
+    color: #f8fafc;
     font-size: 1.1rem;
     font-weight: $fw-semibold;
   }
@@ -48,102 +55,102 @@
     }
   }
 
-  &__status-dropdown--blue .tr-dropdown__button {
-    background-color: $blue-50;
-    color: $blue-600;
-    border: 1px solid $blue-200;
+  /* Status and Priority Badges */
+  &__status-dropdown--blue,
+  &__priority-dropdown--blue {
+    .tr-dropdown__button {
+      background-color: rgba(59, 130, 246, 0.15);
+      color: #60a5fa;
+      border: 1px solid rgba(96, 165, 250, 0.3);
 
-    &:hover:not(.tr-dropdown__button--disabled) {
-      background-color: $blue-100;
+      &:hover:not(.tr-dropdown__button--disabled) {
+        background-color: rgba(59, 130, 246, 0.25);
+      }
+    }
+
+    .tr-dropdown__chevron {
+      color: #60a5fa;
     }
   }
 
-  &__status-dropdown--blue .tr-dropdown__chevron {
-    color: $blue-600;
-  }
+  &__status-dropdown--green {
+    .tr-dropdown__button {
+      background-color: rgba(34, 197, 94, 0.15);
+      color: #4ade80;
+      border: 1px solid rgba(74, 222, 128, 0.3);
 
-  &__status-dropdown--green .tr-dropdown__button {
-    background-color: $green-50;
-    color: $green-600;
-    border: 1px solid $green-200;
+      &:hover:not(.tr-dropdown__button--disabled) {
+        background-color: rgba(34, 197, 94, 0.25);
+      }
+    }
 
-    &:hover:not(.tr-dropdown__button--disabled) {
-      background-color: $green-100;
+    .tr-dropdown__chevron {
+      color: #4ade80;
     }
   }
 
-  &__status-dropdown--green .tr-dropdown__chevron {
-    color: $green-600;
-  }
+  &__priority-dropdown--red {
+    .tr-dropdown__button {
+      background-color: rgba(239, 68, 68, 0.15);
+      color: #f87171;
+      border: 1px solid rgba(248, 113, 113, 0.3);
 
-  &__priority-dropdown--red .tr-dropdown__button {
-    background-color: $red-50;
-    color: $red-600;
-    border: 1px solid $red-200;
+      &:hover:not(.tr-dropdown__button--disabled) {
+        background-color: rgba(239, 68, 68, 0.25);
+      }
+    }
 
-    &:hover:not(.tr-dropdown__button--disabled) {
-      background-color: $red-100;
+    .tr-dropdown__chevron {
+      color: #f87171;
     }
   }
 
-  &__priority-dropdown--red .tr-dropdown__chevron {
-    color: $red-600;
-  }
+  &__priority-dropdown--amber {
+    .tr-dropdown__button {
+      background-color: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+      border: 1px solid rgba(251, 191, 36, 0.3);
 
-  &__priority-dropdown--amber .tr-dropdown__button {
-    background-color: $amber-50;
-    color: $amber-600;
-    border: 1px solid $amber-200;
+      &:hover:not(.tr-dropdown__button--disabled) {
+        background-color: rgba(245, 158, 11, 0.25);
+      }
+    }
 
-    &:hover:not(.tr-dropdown__button--disabled) {
-      background-color: $amber-100;
+    .tr-dropdown__chevron {
+      color: #fbbf24;
     }
   }
 
-  &__priority-dropdown--amber .tr-dropdown__chevron {
-    color: $amber-600;
-  }
+  &__priority-dropdown--gray {
+    .tr-dropdown__button {
+      background-color: rgba(148, 163, 184, 0.15);
+      color: #cbd5e1;
+      border: 1px solid rgba(203, 213, 225, 0.3);
 
-  &__priority-dropdown--blue .tr-dropdown__button {
-    background-color: $blue-50;
-    color: $blue-600;
-    border: 1px solid $blue-200;
-
-    &:hover:not(.tr-dropdown__button--disabled) {
-      background-color: $blue-100;
+      &:hover:not(.tr-dropdown__button--disabled) {
+        background-color: rgba(148, 163, 184, 0.25);
+      }
     }
-  }
 
-  &__priority-dropdown--blue .tr-dropdown__chevron {
-    color: $blue-600;
-  }
-
-  &__priority-dropdown--gray .tr-dropdown__button {
-    background-color: $slate-50;
-    color: $slate-600;
-    border: 1px solid $slate-200;
-
-    &:hover:not(.tr-dropdown__button--disabled) {
-      background-color: $slate-100;
+    .tr-dropdown__chevron {
+      color: #cbd5e1;
     }
-  }
-
-  &__priority-dropdown--gray .tr-dropdown__chevron {
-    color: $slate-500;
   }
 
   &__description {
     margin: 0;
-    color: $slate-500;
+    color: #e2e8f0;
     font-size: 0.9rem;
     line-height: $line-height-relaxed;
   }
 
   &__details-grid {
     @include flex-column($space-5);
+    color: #f8fafc;
 
-    .tr-label{
+    .tr-label {
       margin: 0;
+      color: #f8fafc;
     }
   }
 
@@ -153,16 +160,18 @@
     gap: $space-4;
   }
 
-  &__assignee-key {
-    color: $slate-400;
+  &__assignee-key,
+  &__project-key {
+    color: #f8fafc;
+    font-weight: $fw-semibold;
     font-size: 0.85rem;
   }
 
   &__assignee-badge {
     font-size: 0.78rem;
     font-weight: $fw-bold;
-    color: $white;
-    background-color: $accent;
+    color: #ffffff;
+    background-color: #22c55e;
     padding: 3px $space-5;
     border-radius: $radius-pill;
   }
@@ -186,10 +195,8 @@
     display: flex;
     align-items: center;
     gap: $space-4;
-    background-color: $glass-bg-strong;
-    backdrop-filter: blur($glass-blur-md);
-    -webkit-backdrop-filter: blur($glass-blur-md);
-    border: 1px solid $border-light;
+    background-color: #1e293b;
+    border: 1px solid rgba(255, 255, 255, 0.1);
     padding: $space-4 $space-6;
     border-radius: $radius-lg;
     white-space: nowrap;
@@ -202,16 +209,18 @@
   }
 
   &__user-tooltip-avatar {
-    @include avatar(24px, $accent);
+    @include avatar(24px, #22c55e);
     font-size: 0.65rem;
     font-weight: $fw-bold;
+    color: #ffffff;
   }
 
   &__user-tooltip-email {
     font-size: 0.78rem;
-    color: $slate-600;
+    color: #cbd5e1;
   }
 
+  /* Member Chips - High Contrast Green */
   &__member-chips {
     display: flex;
     flex-wrap: wrap;
@@ -220,27 +229,59 @@
   }
 
   &__member-chip {
-    padding: 5px $space-6;
+    padding: 6px 12px;
     border-radius: $radius-pill;
-    background-color: rgba($accent, 0.08);
-    color: $accent;
     font-size: 0.78rem;
-    font-weight: $fw-medium;
+    font-weight: $fw-semibold;
+    background-color: rgba(34, 197, 94, 0.15);
+    color: #4ade80;
+    border: 1px solid rgba(74, 222, 128, 0.3);
+    transition: all $transition-fast ease;
+
+    &:hover {
+      background-color: rgba(34, 197, 94, 0.25);
+      color: #ffffff;
+    }
   }
 
+  /* Link - High Contrast Green */
   &__view-project-link {
+    display: inline-flex;
+    align-items: center;
+    gap: $space-2;
     margin-top: $space-8;
     background: transparent;
     border: none;
-    color: $accent;
-    font-size: 0.8rem;
+    color: #22c55e;
+    font-size: 0.85rem;
     font-weight: $fw-semibold;
     cursor: pointer;
     padding: 0;
+    transition: color $transition-fast ease;
 
     &:hover {
-      color: $accent-dark;
+      color: #4ade80;
       text-decoration: underline;
+    }
+  }
+}
+
+/* Activity Log / Pulse Icon Styling Fix */
+.task-reports,
+.task-report,
+.activity-log,
+.tr-panel-card {
+  svg,
+  img,
+  .activity-log__icon,
+  .task-report__icon {
+    color: #22c55e !important;
+    stroke: #22c55e !important;
+    fill: none;
+    opacity: 1 !important;
+
+    path {
+      stroke: #22c55e !important;
     }
   }
 }
@@ -260,12 +301,14 @@
 }
 
 @include respond-to(mobile-nav) {
-  .view-task__header-dropdowns {
-    flex-wrap: wrap;
-  }
+  .view-task {
+    &__header-dropdowns {
+      flex-wrap: wrap;
+    }
 
-  .view-task__status-dropdown,
-  .view-task__priority-dropdown {
-    width: auto;
+    &__status-dropdown,
+    &__priority-dropdown {
+      width: auto;
+    }
   }
 }
