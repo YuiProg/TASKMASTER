@@ -15,6 +15,9 @@ import CreateSprint from "./pages/Sprint/CreateSprint";
 import ViewSprint from "./pages/Sprint/ViewSprint";
 import SprintDetails from "./pages/Sprint/SprintDetails";
 import Settings from "./pages/Settings/Settings";
+import ViewTodos from "./pages/Todos/ViewTodos";
+import CreateTodo from "./pages/Todos/CreateTodo";
+import TodoDetail from "./pages/Todos/TodoDetail";
 
 const AUTH_PATHS = ["/", "/register", "/forgot-password"];
 
@@ -98,6 +101,21 @@ function AppRoutes() {
         <Route path="/settings" element={
           <Sidebar>
             <Settings/>
+          </Sidebar>
+        }/>
+        <Route path="/todos" element={
+          <Sidebar>
+            <ViewTodos/>
+          </Sidebar>
+        }/>
+        <Route path="/todos/create" element={
+          <Sidebar>
+            <CreateTodo/>
+          </Sidebar>
+        }/>
+        <Route path="/todos/view/:id" element={
+          <Sidebar>
+            <TodoDetail/>
           </Sidebar>
         }/>
     </Routes>

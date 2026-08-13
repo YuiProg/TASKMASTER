@@ -13,7 +13,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 		ProjectClient.class,
 		ReportClient.class,
 		SprintClient.class,
-		SettingsClient.class
+		SettingsClient.class,
+		TodoClient.class
 })
 public class GatewayApplication {
 	public static void main(String[] args) {
