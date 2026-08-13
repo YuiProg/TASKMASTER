@@ -21,4 +21,7 @@ public interface SprintRepository extends JpaRepository<Sprint, String> {
     @Transactional
     @Query("UPDATE Sprint s SET s.finished = 1 WHERE s.id = :id")
     void finishSprint(String id);
+
+    @Query("SELECT s FROM Sprint s WHERE s.finished = 1 AND s.del = 0")
+    List<Sprint> getFinishedSprints ();
 }

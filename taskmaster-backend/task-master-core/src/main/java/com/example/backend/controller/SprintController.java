@@ -37,4 +37,9 @@ public class SprintController implements SprintServiceInterface {
         return sprintServiceInterface.getSprintById(id);
     }
 
+    @Override
+    @PutMapping("/archiveSprints")
+    public ResponseEntity<ApiResponseModel<List<Sprint>>> scheduledArchiveSprint() {
+        return sprintServiceInterface.scheduledArchiveSprint();
+    }
 }
