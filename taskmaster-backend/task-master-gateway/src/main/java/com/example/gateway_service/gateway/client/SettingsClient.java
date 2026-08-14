@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-//@FeignClient(name = "backend-settings-client", url = "http://localhost:8080/api/v1/settings", configuration = FeignCookieConfig.class)
+//@FeignClient(name = "backend-settings-client", url = "http://localhost:8080/api/v1", configuration = FeignCookieConfig.class)
 @FeignClient(name = "backend-settings-client", url = "${services.backend.url}", configuration = FeignCookieConfig.class)
 public interface SettingsClient {
 
