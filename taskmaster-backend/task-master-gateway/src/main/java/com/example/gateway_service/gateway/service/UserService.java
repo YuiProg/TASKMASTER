@@ -242,4 +242,27 @@ public class UserService implements UserClient{
                             "ERROR"));
         }
     }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<UserDTO>> updateUser(UserRequest userRequest, String id) {
+        try {
+            log.info("updateUser REQUEST email: {}", userRequest.getEmail());
+            ResponseEntity<ApiResponseModel<UserDTO>> response = userClient.updateUser(userRequest, id);
+            log.info("updateUser RESPONSE status: {} data: {}", response.getStatusCode(), response.getBody());
+            ResponseEntity.BodyBuilder builder = ResponseEntity.status(response.getStatusCode());
+            return builder.body(response.getBody());
+        } catch (FeignException e) {
+            log.error("RESPONSE confirmResetPasswordCode (error) -> status: {}, cause: {}",
+                    e.status(), e.getCause() != null ? e.getCause().getMessage() : e.getMessage(), e);
+
+            HttpStatus status = (e.status() > 0)
+                    ? HttpStatus.valueOf(e.status())
+                    : HttpStatus.SERVICE_UNAVAILABLE;
+
+            return ResponseEntity.status(status)
+                    .body(ApiResponseModel.error(
+                            e.status() > 0 ? e.contentUTF8() : "Backend service unavailable, please try again",
+                            "ERROR"));
+        }
+    }
 }
