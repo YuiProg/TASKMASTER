@@ -156,6 +156,12 @@ function TaskComments({
       ) : (
         <div className="task-comments__list">
           {comments.map((c) => {
+            const userAvatar =
+              c.createdBy?.profilePicture ||
+              c.createdBy?.avatarUrl ||
+              c.createdBy?.image ||
+              null;
+
             const hasImage =
               c.imageUrl ||
               (typeof c.comment === "string" &&
@@ -168,7 +174,21 @@ function TaskComments({
             return (
               <div key={c.id} className="task-comments__item">
                 <div className="task-comments__avatar">
-                  {initialsOf(c.createdBy?.username)}
+                  {userAvatar ? (
+                    <img
+                      src={userAvatar}
+                      alt={c.createdBy?.username || "User avatar"}
+                      className="task-comments__avatar-img"
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        borderRadius: "50%",
+                        objectFit: "cover",
+                      }}
+                    />
+                  ) : (
+                    initialsOf(c.createdBy?.username)
+                  )}
                 </div>
                 <div className="task-comments__body">
                   <div className="task-comments__meta">

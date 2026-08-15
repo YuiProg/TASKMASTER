@@ -71,6 +71,12 @@ class ViewProject extends React.Component {
         return (
             <div className="view-project__members-grid">
                 {members.map((member, index) => {
+                    const avatarUrl =
+                        member.profilePicture ||
+                        member.avatarUrl ||
+                        member.image ||
+                        null;
+
                     const initials = member.username
                         ? member.username.substring(0, 2).toUpperCase()
                         : 'U';
@@ -78,7 +84,21 @@ class ViewProject extends React.Component {
                     return (
                         <div key={member.id || index} className="view-project__member-card">
                             <div className="view-project__member-avatar">
-                                {initials}
+                                {avatarUrl ? (
+                                    <img
+                                        src={avatarUrl}
+                                        alt={member.username || "Member Avatar"}
+                                        className="view-project__member-avatar-img"
+                                        style={{
+                                            width: '100%',
+                                            height: '100%',
+                                            borderRadius: '50%',
+                                            objectFit: 'cover',
+                                        }}
+                                    />
+                                ) : (
+                                    initials
+                                )}
                             </div>
                             <div className="view-project__member-info">
                                 <span className="view-project__member-name">{member.username}</span>

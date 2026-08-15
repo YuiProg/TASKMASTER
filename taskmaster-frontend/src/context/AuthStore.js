@@ -21,7 +21,7 @@ const extractErrorMessage = (rawError, fallbackMessage = 'Something went wrong. 
   return fallbackMessage;
 };
 
-export const useAuthStore = create((set) => ({
+export const useAuthStore = create((set, get) => ({
   user: null,
   isAuthenticated: false,
   isLoading: false,
@@ -106,6 +106,54 @@ export const useAuthStore = create((set) => ({
         error: parsedMessage,
       });
       return false;
+    }
+  },
+
+  // --- Profile Update ---
+  updateUser: async (base64Image) => {
+    const currentUser = get().user;
+    const userId = currentUser?._id || currentUser?.id;
+
+    if (!userId) {
+      set({ error: 'User ID is missing.' });
+      return false;
+    }
+
+    set({ isLoading: true, error: null });
+
+    try {
+      const res = await gateWayApi.put(`/updateUser/${userId}`, {
+        image: base64Image,
+      });
+
+      if (res.data.status === 'SUCCESS' || res.status === 200) {
+        const updatedUser = res.data.data || { ...currentUser, image: base64Image, avatarUrl: base64Image };
+
+        set({
+          user: updatedUser,
+          isLoading: false,
+          error: null,
+        });
+
+        return true;
+      }
+
+      set({
+        isLoading: false,
+        error: extractErrorMessage(res.data?.message, 'Failed to update user.'),
+      });
+      return false;
+    } catch (err) {
+      const rawError = err.response?.data?.message || err.response?.data;
+      const parsedMessage = extractErrorMessage(rawError, 'Failed to update profile picture.');
+
+      set({
+        isLoading: false,
+        error: parsedMessage,
+      });
+      return false;
+    } finally {
+      get().fetchCurrentUser();
     }
   },
 

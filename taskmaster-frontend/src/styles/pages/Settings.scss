@@ -59,6 +59,14 @@
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 12px rgba(34, 197, 94, 0.25);
+    overflow: hidden;
+  }
+
+  &__img {
+    width: 100%;
+    height: 100%;
+    border-radius: $radius-circle;
+    object-fit: cover;
   }
 
   &__info {
@@ -221,7 +229,7 @@
   }
 }
 
-/* Toggle Option Cards */
+/* Toggle Option Cards & Special Card Types */
 .settings-grid {
   display: flex;
   flex-direction: column;
@@ -246,6 +254,10 @@
   &--active {
     border-color: rgba(34, 197, 94, 0.3);
     background: rgba(34, 197, 94, 0.02);
+  }
+
+  &--profile-picture {
+    padding: $space-5;
   }
 
   &__icon-wrapper {
@@ -276,6 +288,129 @@
     font-size: $fs-xs;
     color: #8e8e93;
     margin-top: 2px;
+  }
+}
+
+/* Avatar Uploader Section */
+.settings-avatar-upload {
+  display: flex;
+  align-items: center;
+  gap: $space-5;
+  width: 100%;
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  &__preview {
+    position: relative;
+    width: 80px;
+    height: 80px;
+    border-radius: $radius-circle;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.12);
+    cursor: pointer;
+    flex-shrink: 0;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    &.disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    &:hover:not(.disabled) .settings-avatar-upload__overlay {
+      opacity: 1;
+    }
+  }
+
+  &__placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: $fs-lg;
+    font-weight: $fw-bold;
+    color: #ffffff;
+    background: linear-gradient(135deg, $green-500, #059669);
+  }
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.65);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    color: #ffffff;
+    font-size: $fs-xs;
+    font-weight: $fw-medium;
+    opacity: 0;
+    transition: opacity $transition-fast;
+  }
+
+  &__info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    flex: 1;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: $space-3;
+    margin-top: $space-2;
+  }
+}
+
+.settings-upload-btn,
+.settings-remove-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: $space-2;
+  font-size: $fs-xs;
+  font-weight: $fw-medium;
+  padding: $space-2 $space-3;
+  border-radius: $radius-lg;
+  border: none;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.settings-upload-btn {
+  background: rgba(255, 255, 255, 0.08);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+
+  &:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.14);
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+}
+
+.settings-remove-btn {
+  background: transparent;
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+
+  &:hover:not(:disabled) {
+    background: rgba(239, 68, 68, 0.12);
+    border-color: rgba(239, 68, 68, 0.5);
   }
 }
 
