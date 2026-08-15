@@ -63,7 +63,7 @@ const TodoDetail = () => {
             </Helmet>
 
             <PanelContainer>
-                <div className="todo-page">
+                <div className="todo-page todo-page--full">
                     {/* Navigation Bar */}
                     <div style={{ marginBottom: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <button
@@ -81,7 +81,7 @@ const TodoDetail = () => {
                                 className="todo-icon-btn"
                                 onClick={handleDelete}
                                 title="Delete Todo"
-                                style={{ color: '#ef4444' }}
+                                style={{ color: '#ef4444', background: 'transparent', border: 'none', cursor: 'pointer' }}
                             >
                                 <Trash2 size={18} />
                             </button>
@@ -100,11 +100,7 @@ const TodoDetail = () => {
                         </div>
                     ) : currentTodo ? (
                         <div style={{
-                            background: '#18181b',
-                            border: '1px solid #27272a',
-                            borderRadius: '12px',
-                            padding: '2rem',
-                            maxWidth: '700px',
+                            width: '100%',
                             display: 'flex',
                             flexDirection: 'column',
                             gap: '1.5rem'
@@ -147,7 +143,8 @@ const TodoDetail = () => {
                                 background: '#09090b', 
                                 border: '1px solid #27272a', 
                                 borderRadius: '8px', 
-                                padding: '1rem 1.25rem' 
+                                padding: '1rem 1.25rem',
+                                width: '100%'
                             }}>
                                 <label style={{ display: 'block', fontSize: '0.75rem', color: '#71717a', textTransform: 'uppercase', marginBottom: '0.5rem', fontWeight: 600 }}>
                                     Description
@@ -162,7 +159,8 @@ const TodoDetail = () => {
                                 gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
                                 gap: '1rem',
                                 borderTop: '1px solid #27272a',
-                                paddingTop: '1.25rem'
+                                paddingTop: '1.25rem',
+                                width: '100%'
                             }}>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem', color: '#a1a1aa', fontSize: '0.875rem' }}>
                                     <Clock size={16} color="#a1a1aa" />

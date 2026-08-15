@@ -328,6 +328,9 @@ class Sidebar extends React.Component {
         const displayName = user?.username || '';
         const displayEmail = user?.email || '';
 
+        // Prioritize profilePicture returned from Cloudinary / backend
+        const avatarUrl = user?.profilePicture || user?.avatarUrl || user?.image || null;
+
         const initials = user?.username
             ? user.username.slice(0, 2).toUpperCase()
             : '?';
@@ -396,8 +399,6 @@ class Sidebar extends React.Component {
                                     items: [
                                         { path: '/tasks/my-tasks', title: 'Assigned to Me' },
                                         { path: '/tasks/open-tasks', title: 'Open Tasks' },
-                                        // { path: '/tasks/created-tasks', title: 'Filed Tasks' },
-                                        // { path: '/tasks/backlog', title: 'Backlog'}
                                     ],
                                 })}
                                 {this.renderAccordion({
@@ -415,14 +416,6 @@ class Sidebar extends React.Component {
                             </ul>
                         </div>
 
-                        {/* ── TEAM ── */}
-                        {/* <div className="sidebar__section">
-                            <p className="sidebar__section-label">Team</p>
-                            <ul className="sidebar__list">
-                                {this.renderSimpleItem({ path: '/team', icon: <Users size={20} />, label: 'Members', pathname })}
-                            </ul>
-                        </div> */}
-
                         {/* ── SYSTEM ── */}
                         <div className="sidebar__section">
                             <p className="sidebar__section-label">System</p>
@@ -437,17 +430,22 @@ class Sidebar extends React.Component {
                         <div className="sidebar__user-row">
                             {user ? (
                                 <>
-                                    <div className="sidebar__avatar">{initials}</div>
+                                    <div className="sidebar__avatar">
+                                        {avatarUrl ? (
+                                            <img
+                                                src={avatarUrl}
+                                                alt={displayName || "User Avatar"}
+                                                className="sidebar__avatar-img"
+                                                style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
+                                            />
+                                        ) : (
+                                            initials
+                                        )}
+                                    </div>
                                     {!isCollapsed && (
                                         <div className="sidebar__user-info">
                                             <p className="sidebar__user-name">{displayName}</p>
                                             <p className="sidebar__user-role">{displayEmail}</p>
-                                            {/* <a
-                                                className="sidebar__change-password"
-                                                onClick={() => this.setState({ showChangePasswordModal: true })}
-                                            >
-                                                Change password
-                                            </a> */}
                                         </div>
                                     )}
                                 </>
