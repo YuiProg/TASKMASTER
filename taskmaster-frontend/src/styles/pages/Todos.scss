@@ -1,12 +1,38 @@
-// Page Wrapper
+// ==========================================
+// Theme Variables (Modern Dark Mode)
+// ==========================================
+$bg-dark: #0f0f12;
+$card-bg: #16161a;
+$card-hover: #1c1c22;
+$border-color: #27272a;
+$border-light: #3f3f46;
+
+$emerald-primary: #10b981;
+$emerald-glow: rgba(16, 185, 129, 0.15);
+$emerald-hover: #059669;
+
+$text-primary: #f4f4f5;
+$text-secondary: #9ca3af;
+$text-muted: #6b7280;
+
+// ==========================================
+// Page Wrapper & Layout
+// ==========================================
 .todo-page {
     padding: 1.5rem;
     max-width: 1100px;
     margin: 0 auto;
     width: 100%;
+
+    &--full {
+        max-width: 100%;
+        padding: 1rem 0;
+    }
 }
 
-// Main Controls / Header Toolbar
+// ==========================================
+// View Todos: Header & Toolbar
+// ==========================================
 .todo-toolbar {
     display: flex;
     align-items: center;
@@ -18,7 +44,7 @@
     &__left {
         display: flex;
         align-items: center;
-        gap: 1rem;
+        gap: 0.85rem;
         flex: 1;
         min-width: 280px;
 
@@ -31,7 +57,7 @@
 
     &__search {
         flex: 1;
-        max-width: 360px;
+        max-width: 340px;
 
         @media (max-width: 640px) {
             max-width: 100%;
@@ -44,185 +70,452 @@
     display: inline-flex;
     align-items: center;
     gap: 0.25rem;
-    background: #18181b;
+    background: #121215;
     padding: 0.25rem;
     border-radius: 8px;
-    border: 1px solid #27272a;
+    border: 1px solid $border-color;
 
-    svg {
-        margin: 0 0.5rem;
-        color: #71717a;
+    .todo-filter-icon {
+        margin: 0 0.4rem;
+        color: $text-muted;
     }
 }
 
 .todo-filter-btn {
     background: transparent;
     border: none;
-    padding: 0.45rem 0.85rem;
+    padding: 0.4rem 0.8rem;
     font-size: 0.825rem;
     font-weight: 500;
-    color: #a1a1aa;
+    color: $text-secondary;
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.2s ease;
 
     &:hover {
-        color: #f4f4f5;
-        background: rgba(255, 255, 255, 0.05);
+        color: $text-primary;
+        background: rgba(255, 255, 255, 0.04);
     }
 
     &.active {
-        background: #27272a;
+        background: $border-color;
         color: #ffffff;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
     }
 }
 
-// List Items Container
+// Top Action Button
+.todo-create-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: #ffffff;
+    color: #09090b;
+    font-weight: 600;
+    font-size: 0.875rem;
+    padding: 0.55rem 1.1rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+
+    &:hover {
+        background: #e4e4e7;
+        transform: translateY(-1px);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+}
+
+// ==========================================
+// View Todos: List & Cards
+// ==========================================
 .todo-list {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
 }
 
-// Individual Todo Card
 .todo-item {
     display: flex;
     align-items: flex-start;
     gap: 1rem;
-    background: #18181b;
-    border: 1px solid #27272a;
+    background: $card-bg;
+    border: 1px solid $border-color;
     border-radius: 10px;
-    padding: 1.1rem 1.25rem;
+    padding: 1rem 1.25rem;
     transition: all 0.2s ease;
 
     &:hover {
-        border-color: #3f3f46;
-        background: #1c1c20;
+        border-color: $border-light;
+        background: $card-hover;
+
+        .todo-delete-btn {
+            opacity: 1;
+        }
     }
 
     &--completed {
-        background: #121215;
+        background: #111114;
         opacity: 0.65;
 
         .todo-item__title {
             text-decoration: line-through;
-            color: #71717a;
+            color: $text-muted;
         }
     }
 
     &__checkbox {
-        width: 22px;
-        height: 22px;
-        border-radius: 50%;
-        border: 2px solid #3f3f46;
         background: transparent;
+        border: none;
         cursor: pointer;
+        padding: 0;
+        margin-top: 0.1rem;
         display: flex;
         align-items: center;
         justify-content: center;
-        margin-top: 0.1rem;
-        padding: 0;
-        transition: all 0.2s ease;
+        border-radius: 50%;
+        transition: transform 0.15s ease;
 
         &:hover {
-            border-color: #10b981;
+            transform: scale(1.08);
         }
 
-        &.checked {
-            border-color: #10b981;
-            background: rgba(16, 185, 129, 0.15);
-            color: #10b981;
+        .icon-uncheck {
+            color: $text-muted;
+            transition: color 0.2s ease;
+
+            &:hover {
+                color: $emerald-primary;
+            }
+        }
+
+        .icon-check {
+            color: $emerald-primary;
+            fill: rgba(16, 185, 129, 0.2);
         }
     }
 
     &__content {
         flex: 1;
+        cursor: pointer;
+        outline: none;
+
+        &:focus-visible {
+            outline: 2px solid $emerald-primary;
+            border-radius: 4px;
+        }
     }
 
-    &__top {
+    &__header {
         display: flex;
         align-items: center;
         gap: 0.6rem;
-        flex-wrap: wrap;
     }
 
     &__title {
-        font-size: 0.975rem;
+        font-size: 0.95rem;
         font-weight: 500;
-        color: #f4f4f5;
+        color: $text-primary;
         margin: 0;
+        letter-spacing: -0.01em;
     }
 
     &__description {
-        font-size: 0.875rem;
-        color: #a1a1aa;
-        margin: 0.4rem 0 0.2rem 0;
-        line-height: 1.4;
+        font-size: 0.85rem;
+        color: $text-secondary;
+        margin: 0.35rem 0 0.15rem 0;
+        line-height: 1.45;
     }
 
     &__meta {
         display: flex;
         align-items: center;
-        gap: 1.25rem;
+        gap: 1rem;
         font-size: 0.775rem;
-        color: #71717a;
-        margin-top: 0.6rem;
+        color: $text-muted;
+        margin-top: 0.5rem;
+
+        &-tag {
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+
+            svg {
+                color: $emerald-primary;
+            }
+        }
     }
 }
 
-// Role / Tag Badges
 .todo-badge {
-    font-size: 0.675rem;
-    padding: 0.15rem 0.55rem;
-    border-radius: 6px;
+    font-size: 0.65rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
     font-weight: 600;
-    letter-spacing: 0.02em;
-
-    &--category {
-        background: rgba(255, 255, 255, 0.08);
-        color: #d4d4d8;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-    }
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    background: rgba(255, 255, 255, 0.06);
+    color: #d4d4d8;
+    border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-// Action Buttons
-.todo-icon-btn {
+.todo-delete-btn {
     background: transparent;
     border: none;
     cursor: pointer;
     padding: 0.4rem;
     border-radius: 6px;
-    color: #71717a;
+    color: $emerald-primary;
+    opacity: 0.7;
     transition: all 0.2s ease;
 
     &:hover {
-        color: #ef4444;
-        background: rgba(239, 68, 68, 0.1);
+        opacity: 1;
+        background: $emerald-glow;
+        color: #34d399;
     }
 }
 
-// Empty State
 .todo-empty {
     text-align: center;
-    padding: 4rem 1.5rem;
-    background: #18181b;
-    border: 1px dashed #27272a;
+    padding: 3.5rem 1.5rem;
+    background: $card-bg;
+    border: 1px dashed $border-color;
     border-radius: 12px;
-    color: #71717a;
+    color: $text-muted;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
 
     svg {
-        color: #3f3f46;
-        margin-bottom: 0.75rem;
+        color: $text-muted;
+        margin-bottom: 0.5rem;
     }
 
     p {
         margin: 0;
-        font-size: 0.9rem;
-        color: #a1a1aa;
+        font-size: 0.875rem;
+        color: $text-secondary;
     }
+}
+
+.todo-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid $border-color;
+    color: $text-secondary;
+    font-size: 0.85rem;
+
+    @media (max-width: 640px) {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    &__controls {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    &__page-status {
+        padding: 0 0.5rem;
+        font-weight: 500;
+        color: $text-primary;
+    }
+}
+
+.todo-page-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: #121215;
+    border: 1px solid $border-color;
+    padding: 0.35rem 0.75rem;
+    border-radius: 6px;
+    color: $text-secondary;
+    font-size: 0.8rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover:not(:disabled) {
+        color: $text-primary;
+        border-color: $border-light;
+        background: $card-hover;
+    }
+
+    &:disabled {
+        opacity: 0.35;
+        cursor: not-allowed;
+    }
+}
+
+// ==========================================
+// Form Page Layout
+// ==========================================
+.todo-form-header {
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+}
+
+.todo-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: transparent;
+    border: 1px solid $border-color;
+    padding: 0.5rem 0.85rem;
+    border-radius: 8px;
+    color: $text-secondary;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: $card-bg;
+        border-color: $border-light;
+        color: $text-primary;
+    }
+}
+
+.todo-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    width: 100%;
+}
+
+.todo-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    flex: 1;
+}
+
+.todo-label {
+    font-size: 0.875rem;
+    color: $text-secondary;
+    font-weight: 500;
+
+    .required-star {
+        color: #ef4444;
+    }
+}
+
+// Inputs
+.todo-textarea {
+    width: 100%;
+    background: #111114;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    color: $text-primary;
+    font-size: 0.9rem;
+    font-family: inherit;
+    outline: none;
+    resize: vertical;
+    transition: border-color 0.2s ease;
+
+    &:focus {
+        border-color: $emerald-primary;
+    }
+
+    &::placeholder {
+        color: $text-muted;
+    }
+}
+
+.todo-date-input {
+    width: 100%;
+    background: #111114;
+    border: 1px solid $border-color;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    color: $text-primary;
+    font-size: 0.9rem;
+    outline: none;
+    color-scheme: dark;
+    transition: border-color 0.2s ease;
+
+    &:focus {
+        border-color: $emerald-primary;
+    }
+}
+
+// Actions Footer
+.todo-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid $border-color;
+}
+
+.todo-btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: #ffffff;
+    color: #09090b;
+    font-weight: 600;
+    font-size: 0.875rem;
+    padding: 0.65rem 1.35rem;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:hover:not(:disabled) {
+        background: #e4e4e7;
+        transform: translateY(-1px);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+}
+
+.todo-btn-secondary {
+    background: transparent;
+    border: 1px solid $border-color;
+    color: $text-secondary;
+    padding: 0.65rem 1.25rem;
+    border-radius: 8px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+        background: rgba(255, 255, 255, 0.04);
+        color: $text-primary;
+    }
+}
+
+// Error Banner
+.todo-error-banner {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    color: #f87171;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
 }
