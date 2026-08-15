@@ -10,4 +10,6 @@ public class UserDTO {
     private String role;
     private Integer del;
     private BranchDTO branchLocation;
+    private String profilePicture;
+    private String profilePictureId;
 }
