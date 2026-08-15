@@ -1,10 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { PanelPage, PanelContainer } from '../../components/TRCOMPONENTS/TRPanelPage/TRPanelPage';
-import Button from '../../components/TRCOMPONENTS/TRButton/Button';
+
 import { InputField } from '../../components/TRCOMPONENTS/TRInputField/InputFIeld';
 import { 
-    Plus, Filter, CheckCircle2, 
+    Plus, Filter, CheckCircle2, Circle,
     Clock, Trash2, AlertCircle, User,
     ChevronLeft, ChevronRight 
 } from 'lucide-react';
@@ -31,17 +31,16 @@ const ViewTodos = () => {
         fetchTodos();
     }, [fetchTodos]);
 
-    // Handlers that reset pagination directly to prevent linter cascading-render warnings
-    const handleSearchChange = (e) => {
+    const handleSearchChange = useCallback((e) => {
         const val = e?.target ? e.target.value : e;
         setSearchQuery(val || '');
         setCurrentPage(1);
-    };
+    }, []);
 
-    const handleFilterChange = (status) => {
+    const handleFilterChange = useCallback((status) => {
         setFilterStatus(status);
         setCurrentPage(1);
-    };
+    }, []);
 
     const formatDate = (timestamp) => {
         if (!timestamp) return null;
@@ -68,17 +67,12 @@ const ViewTodos = () => {
     });
 
     // Pagination Calculations
-    const totalPages = Math.ceil(filteredTodos.length / ITEMS_PER_PAGE) || 1;
+    const totalPages = Math.max(1, Math.ceil(filteredTodos.length / ITEMS_PER_PAGE));
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     const paginatedTodos = filteredTodos.slice(startIndex, startIndex + ITEMS_PER_PAGE);
 
-    const handlePrevPage = () => {
-        setCurrentPage(prev => Math.max(prev - 1, 1));
-    };
-
-    const handleNextPage = () => {
-        setCurrentPage(prev => Math.min(prev + 1, totalPages));
-    };
+    const handlePrevPage = () => setCurrentPage(prev => Math.max(prev - 1, 1));
+    const handleNextPage = () => setCurrentPage(prev => Math.min(prev + 1, totalPages));
 
     return (
         <PanelPage titlePage="Todos" subTitle="Manage your personal tasks and checklists">
@@ -100,8 +94,8 @@ const ViewTodos = () => {
                                 />
                             </div>
 
-                            <div className="todo-filter-group">
-                                <Filter size={15} />
+                            <div className="todo-filter-group" role="group" aria-label="Filter Todos">
+                                <Filter size={14} className="todo-filter-icon" />
                                 <button
                                     type="button"
                                     className={`todo-filter-btn ${filterStatus === 'all' ? 'active' : ''}`}
@@ -126,14 +120,17 @@ const ViewTodos = () => {
                             </div>
                         </div>
 
-                        <Button
-                            text={
-                                <span style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                                    <Plus size={16} /> New Todo
-                                </span>
-                            }
-                            onClick={() => navigateTo('/todos/create')}
-                        />
+                        {/* Fixed Button rendering without broken text prop */}
+                        <div className="todo-toolbar__action">
+                            <button 
+                                type="button" 
+                                className="todo-create-btn"
+                                onClick={() => navigateTo('/todos/create')}
+                            >
+                                <Plus size={16} />
+                                <span>New Todo</span>
+                            </button>
+                        </div>
                     </div>
 
                     {/* Todo List */}
@@ -156,7 +153,7 @@ const ViewTodos = () => {
                                         key={todo.id}
                                         className={`todo-item ${isCompleted ? 'todo-item--completed' : ''}`}
                                     >
-                                        {/* Toggle Checkbox Button */}
+                                        {/* Checkbox Icon Button */}
                                         <button
                                             type="button"
                                             className={`todo-item__checkbox ${isCompleted ? 'checked' : ''}`}
@@ -164,21 +161,31 @@ const ViewTodos = () => {
                                                 e.stopPropagation();
                                                 toggleTodoStatus(todo.id, todo.finished);
                                             }}
-                                            aria-label="Toggle todo status"
+                                            aria-label={`Mark "${todo.todoName}" as ${isCompleted ? 'incomplete' : 'complete'}`}
                                         >
-                                            {isCompleted && <CheckCircle2 size={16} />}
+                                            {isCompleted ? (
+                                                <CheckCircle2 size={20} className="icon-check" />
+                                            ) : (
+                                                <Circle size={20} className="icon-uncheck" />
+                                            )}
                                         </button>
 
-                                        {/* Content area navigating to view details */}
+                                        {/* Card Main Body */}
                                         <div 
                                             className="todo-item__content"
-                                            style={{ cursor: 'pointer' }}
                                             onClick={() => navigateTo(`/todos/view/${todo.id}`)}
+                                            role="button"
+                                            tabIndex={0}
+                                            onKeyDown={(e) => {
+                                                if (e.key === 'Enter' || e.key === ' ') {
+                                                    navigateTo(`/todos/view/${todo.id}`);
+                                                }
+                                            }}
                                         >
-                                            <div className="todo-item__top">
+                                            <div className="todo-item__header">
                                                 <h3 className="todo-item__title">{todo.todoName}</h3>
                                                 {todo.createdBy?.role && (
-                                                    <span className="todo-badge todo-badge--category">
+                                                    <span className="todo-badge">
                                                         {todo.createdBy.role}
                                                     </span>
                                                 )}
@@ -190,14 +197,14 @@ const ViewTodos = () => {
 
                                             <div className="todo-item__meta">
                                                 {todo.deadline && (
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                                                    <div className="todo-item__meta-tag">
                                                         <Clock size={13} />
                                                         <span>Due {formatDate(todo.deadline)}</span>
                                                     </div>
                                                 )}
 
                                                 {todo.createdBy?.username && (
-                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                                                    <div className="todo-item__meta-tag">
                                                         <User size={13} />
                                                         <span>{todo.createdBy.username}</span>
                                                     </div>
@@ -205,11 +212,11 @@ const ViewTodos = () => {
                                             </div>
                                         </div>
 
-                                        {/* Actions */}
+                                        {/* Action Trash Button */}
                                         <div className="todo-item__actions">
                                             <button
                                                 type="button"
-                                                className="todo-icon-btn"
+                                                className="todo-delete-btn"
                                                 onClick={(e) => {
                                                     e.stopPropagation();
                                                     deleteTodo(todo.id);
@@ -227,53 +234,30 @@ const ViewTodos = () => {
 
                     {/* Pagination Controls */}
                     {!isLoading && filteredTodos.length > 0 && (
-                        <div style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'space-between',
-                            marginTop: '1.5rem',
-                            paddingTop: '1rem',
-                            borderTop: '1px solid #27272a',
-                            color: '#a1a1aa',
-                            fontSize: '0.875rem'
-                        }}>
-                            <div>
+                        <div className="todo-pagination">
+                            <div className="todo-pagination__info">
                                 Showing <strong>{startIndex + 1}</strong> to <strong>{Math.min(startIndex + ITEMS_PER_PAGE, filteredTodos.length)}</strong> of <strong>{filteredTodos.length}</strong> todos
                             </div>
 
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                            <div className="todo-pagination__controls">
                                 <button
                                     type="button"
-                                    className="todo-filter-btn"
+                                    className="todo-page-btn"
                                     onClick={handlePrevPage}
                                     disabled={currentPage === 1}
-                                    style={{
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        gap: '0.25rem',
-                                        opacity: currentPage === 1 ? 0.4 : 1,
-                                        cursor: currentPage === 1 ? 'not-allowed' : 'pointer'
-                                    }}
                                 >
                                     <ChevronLeft size={16} /> Previous
                                 </button>
 
-                                <span style={{ padding: '0 0.5rem', fontWeight: 500 }}>
+                                <span className="todo-page-status">
                                     Page {currentPage} of {totalPages}
                                 </span>
 
                                 <button
                                     type="button"
-                                    className="todo-filter-btn"
+                                    className="todo-page-btn"
                                     onClick={handleNextPage}
                                     disabled={currentPage === totalPages}
-                                    style={{
-                                        display: 'inline-flex',
-                                        alignItems: 'center',
-                                        gap: '0.25rem',
-                                        opacity: currentPage === totalPages ? 0.4 : 1,
-                                        cursor: currentPage === totalPages ? 'not-allowed' : 'pointer'
-                                    }}
                                 >
                                     Next <ChevronRight size={16} />
                                 </button>
