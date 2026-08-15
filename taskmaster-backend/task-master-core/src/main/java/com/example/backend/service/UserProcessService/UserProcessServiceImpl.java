@@ -288,9 +288,10 @@ public class UserProcessServiceImpl implements UserProcessService{
                     oldUserSnapshot.setProfilePictureId(user.getProfilePictureId());
                     cloudinary.uploader().destroy(user.getProfilePicture(), ObjectUtils.emptyMap());
                 }
-                Map<String, Objects> response = cloudinary.uploader().upload(userRequest.getImage(), ObjectUtils.emptyMap());
-                user.setProfilePicture(response.get("secure_url").toString());
-                user.setProfilePictureId(response.get("public_id").toString());
+                String imageData = userRequest.getImage();
+                Map<String, Object> res = cloudinary.uploader().upload(imageData, ObjectUtils.emptyMap());
+                user.setProfilePicture(res.get("secure_url").toString());
+                user.setProfilePictureId(res.get("public_id").toString());
                 changed = true;
             }
 
@@ -299,8 +300,8 @@ public class UserProcessServiceImpl implements UserProcessService{
                         ApiResponseModel.update("No changes detected", StringCodes.SUCCESS.getPath(), oldUserSnapshot, oldUserSnapshot));
             }
 
+            userCacheService.evictUserCacheById(user.getId());
             User updatedUser = userRepository.save(user);
-
             return ResponseEntity.ok(
                     ApiResponseModel.update("USER UPDATED", StringCodes.SUCCESS.getPath(), updatedUser, oldUserSnapshot));
 

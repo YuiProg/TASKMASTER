@@ -7,10 +7,7 @@ import com.example.gateway_service.gateway.request.UserRequest;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 
 //@FeignClient(name = "backend-core-client", url = "http://localhost:8080/api/v1", configuration = FeignCookieConfig.class)
 @FeignClient(name = "backend-core-client", url = "${services.backend.url}", configuration = FeignCookieConfig.class)
@@ -35,4 +32,7 @@ public interface UserClient {
 
     @PostMapping("/confirmResetPasswordCode/{code}")
     ResponseEntity<ApiResponseModel<String>> confirmResetPasswordCode (@RequestBody UserRequest userRequest, @PathVariable String code);
+
+    @PutMapping("/updateUser/{id}")
+    ResponseEntity<ApiResponseModel<UserDTO>> updateUser(@RequestBody UserRequest userRequest, @PathVariable String id);
 }

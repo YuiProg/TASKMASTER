@@ -61,6 +61,11 @@ public class UserController implements UserClient{
         return userService.confirmResetPasswordCode(userRequest, code);
     }
 
+    @Override
+    public ResponseEntity<ApiResponseModel<UserDTO>> updateUser(UserRequest userRequest, String id) {
+        return userService.updateUser(userRequest, id);
+    }
+
     @GetMapping("/ping")
     public ResponseEntity<Map<String, String>> pingGateway () {
         return ResponseEntity.ok(Map.of(

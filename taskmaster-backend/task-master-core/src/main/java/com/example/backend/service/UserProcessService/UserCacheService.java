@@ -52,6 +52,10 @@ public class UserCacheService {
         }
     }
 
-    @CacheEvict(value = "userData")
+    @CacheEvict(value = "userData", allEntries = true)
     public void evictUserCache () {}
+
+    @CacheEvict(value = "userData", key = "#id")
+    public void evictUserCacheById(String id) {}
+
 }
