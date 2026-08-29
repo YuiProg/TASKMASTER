@@ -15,7 +15,7 @@
 
   &__title {
     margin: 0;
-    color: #f8fafc;
+    color: #ffffff;
     font-size: 1.1rem;
     font-weight: $fw-semibold;
   }
@@ -43,6 +43,8 @@
       padding: 0 $space-6;
       font-size: 12px;
       font-weight: $fw-semibold;
+      border-radius: $radius-lg;
+      transition: all $transition-fast;
     }
 
     .tr-dropdown__text {
@@ -55,13 +57,13 @@
     }
   }
 
-  /* Status and Priority Badges */
+  /* Status and Priority Badges - Matched to System Palette */
   &__status-dropdown--blue,
   &__priority-dropdown--blue {
     .tr-dropdown__button {
       background-color: rgba(59, 130, 246, 0.15);
       color: #60a5fa;
-      border: 1px solid rgba(96, 165, 250, 0.3);
+      border: 1px solid rgba(59, 130, 246, 0.3);
 
       &:hover:not(.tr-dropdown__button--disabled) {
         background-color: rgba(59, 130, 246, 0.25);
@@ -75,17 +77,17 @@
 
   &__status-dropdown--green {
     .tr-dropdown__button {
-      background-color: rgba(34, 197, 94, 0.15);
-      color: #4ade80;
-      border: 1px solid rgba(74, 222, 128, 0.3);
+      background-color: rgba(34, 197, 94, 0.12);
+      color: $green-500;
+      border: 1px solid rgba(34, 197, 94, 0.3);
 
       &:hover:not(.tr-dropdown__button--disabled) {
-        background-color: rgba(34, 197, 94, 0.25);
+        background-color: rgba(34, 197, 94, 0.22);
       }
     }
 
     .tr-dropdown__chevron {
-      color: #4ade80;
+      color: $green-500;
     }
   }
 
@@ -93,7 +95,7 @@
     .tr-dropdown__button {
       background-color: rgba(239, 68, 68, 0.15);
       color: #f87171;
-      border: 1px solid rgba(248, 113, 113, 0.3);
+      border: 1px solid rgba(239, 68, 68, 0.3);
 
       &:hover:not(.tr-dropdown__button--disabled) {
         background-color: rgba(239, 68, 68, 0.25);
@@ -109,7 +111,7 @@
     .tr-dropdown__button {
       background-color: rgba(245, 158, 11, 0.15);
       color: #fbbf24;
-      border: 1px solid rgba(251, 191, 36, 0.3);
+      border: 1px solid rgba(245, 158, 11, 0.3);
 
       &:hover:not(.tr-dropdown__button--disabled) {
         background-color: rgba(245, 158, 11, 0.25);
@@ -123,34 +125,35 @@
 
   &__priority-dropdown--gray {
     .tr-dropdown__button {
-      background-color: rgba(148, 163, 184, 0.15);
-      color: #cbd5e1;
-      border: 1px solid rgba(203, 213, 225, 0.3);
+      background-color: rgba(255, 255, 255, 0.06);
+      color: #a1a1aa;
+      border: 1px solid rgba(255, 255, 255, 0.12);
 
       &:hover:not(.tr-dropdown__button--disabled) {
-        background-color: rgba(148, 163, 184, 0.25);
+        background-color: rgba(255, 255, 255, 0.1);
+        color: #ffffff;
       }
     }
 
     .tr-dropdown__chevron {
-      color: #cbd5e1;
+      color: #a1a1aa;
     }
   }
 
   &__description {
     margin: 0;
-    color: #e2e8f0;
+    color: #a1a1aa;
     font-size: 0.9rem;
     line-height: $line-height-relaxed;
   }
 
   &__details-grid {
     @include flex-column($space-5);
-    color: #f8fafc;
+    color: #ffffff;
 
     .tr-label {
       margin: 0;
-      color: #f8fafc;
+      color: #ffffff;
     }
   }
 
@@ -162,7 +165,7 @@
 
   &__assignee-key,
   &__project-key {
-    color: #f8fafc;
+    color: #ffffff;
     font-weight: $fw-semibold;
     font-size: 0.85rem;
   }
@@ -171,9 +174,10 @@
     font-size: 0.78rem;
     font-weight: $fw-bold;
     color: #ffffff;
-    background-color: #22c55e;
+    background-color: $green-500;
     padding: 3px $space-5;
-    border-radius: $radius-pill;
+    border-radius: $radius-circle;
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.25);
   }
 
   &__user-hover {
@@ -195,8 +199,8 @@
     display: flex;
     align-items: center;
     gap: $space-4;
-    background-color: #1e293b;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-color: #131418;
+    border: 1px solid rgba(255, 255, 255, 0.08);
     padding: $space-4 $space-6;
     border-radius: $radius-lg;
     white-space: nowrap;
@@ -205,11 +209,11 @@
     pointer-events: none;
     transition: opacity $transition-fast ease, transform $transition-fast ease;
     z-index: $z-hover-card;
-    box-shadow: $shadow-hover-tooltip;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
   }
 
   &__user-tooltip-avatar {
-    @include avatar(24px, #22c55e);
+    @include avatar(24px, $green-500);
     font-size: 0.65rem;
     font-weight: $fw-bold;
     color: #ffffff;
@@ -217,10 +221,10 @@
 
   &__user-tooltip-email {
     font-size: 0.78rem;
-    color: #cbd5e1;
+    color: #8e8e93;
   }
 
-  /* Member Chips - High Contrast Green */
+  /* Member Chips - Matched Green Glow */
   &__member-chips {
     display: flex;
     flex-wrap: wrap;
@@ -230,21 +234,21 @@
 
   &__member-chip {
     padding: 6px 12px;
-    border-radius: $radius-pill;
+    border-radius: $radius-lg;
     font-size: 0.78rem;
     font-weight: $fw-semibold;
-    background-color: rgba(34, 197, 94, 0.15);
-    color: #4ade80;
-    border: 1px solid rgba(74, 222, 128, 0.3);
+    background-color: rgba(34, 197, 94, 0.12);
+    color: $green-500;
+    border: 1px solid rgba(34, 197, 94, 0.3);
     transition: all $transition-fast ease;
 
     &:hover {
-      background-color: rgba(34, 197, 94, 0.25);
+      background-color: rgba(34, 197, 94, 0.2);
       color: #ffffff;
     }
   }
 
-  /* Link - High Contrast Green */
+  /* Link - Matched Green */
   &__view-project-link {
     display: inline-flex;
     align-items: center;
@@ -252,7 +256,7 @@
     margin-top: $space-8;
     background: transparent;
     border: none;
-    color: #22c55e;
+    color: $green-500;
     font-size: 0.85rem;
     font-weight: $fw-semibold;
     cursor: pointer;
@@ -260,7 +264,7 @@
     transition: color $transition-fast ease;
 
     &:hover {
-      color: #4ade80;
+      color: $green-600;
       text-decoration: underline;
     }
   }
@@ -275,13 +279,13 @@
   img,
   .activity-log__icon,
   .task-report__icon {
-    color: #22c55e !important;
-    stroke: #22c55e !important;
+    color: $green-500 !important;
+    stroke: $green-500 !important;
     fill: none;
     opacity: 1 !important;
 
     path {
-      stroke: #22c55e !important;
+      stroke: $green-500 !important;
     }
   }
 }

@@ -1,277 +1,892 @@
 @use '../abstracts' as *;
 
-/* --- Variables (Strictly Green & Neutrals) --- */
-$green-500: #22c55e;
+
+/* =========================================================
+   VARIABLES
+   ========================================================= */
+
+$bg-dark: #0f1115;
+$bg-card: #16181d;
+$bg-card-hover: #191c21;
+
+$border-color: rgba(255, 255, 255, 0.08);
+$border-light: rgba(255, 255, 255, 0.055);
+
+$text-primary: #f3f4f6;
+$text-secondary: #9ca3af;
+$text-muted: #6b7280;
+
 $green-600: #16a34a;
+$green-500: #22c55e;
 $green-400: #4ade80;
-$green-bg-light: rgba(34, 197, 94, 0.08);
+$green-300: #86efac;
+
+$green-bg-light: rgba(34, 197, 94, 0.10);
 $green-bg-hover: rgba(34, 197, 94, 0.15);
-$green-border: rgba(34, 197, 94, 0.25);
+$green-border: rgba(34, 197, 94, 0.30);
+
+
+/* =========================================================
+   DASHBOARD STATS
+   ========================================================= */
 
 .dash-stats {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: $space-6;
+
+  /*
+   * Four cards across desktop.
+   */
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+
+  gap: $space-5;
+
+  width: 100%;
 }
 
+
+/* =========================================================
+   STAT CARD
+   ========================================================= */
+
 .dash-stat-card {
-  @include card-surface($shadow: $shadow-card-subtle);
   display: flex;
   align-items: center;
-  gap: $space-5;
-  padding: $space-6;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+
+  gap: $space-4;
+
+  min-width: 0;
+
+  padding: $space-5;
+
+  box-sizing: border-box;
+
+  background: $bg-card;
+
+  border: 1px solid $border-color;
+  border-radius: 16px;
+
+  cursor: default;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+
+
+  &__data {
+    min-width: 0;
+  }
+
+
+  &__label {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: $text-secondary;
+
+    font-size: 0.78rem;
+    font-weight: $fw-medium;
+
+    white-space: nowrap;
+  }
+
+
+  &__value {
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: 1.8rem;
+    font-weight: $fw-bold;
+
+    line-height: 1.1;
+  }
+
 
   &__icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 48px;
-    height: 48px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.05);
-    color: #9ca3af;
+
+    width: 42px;
+    height: 42px;
+
+    flex-shrink: 0;
+
+    border-radius: 11px;
+
+    background: $green-bg-light;
+
+    color: $green-400;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
   }
 
-  &__data {
-    display: flex;
-    flex-direction: column;
-  }
 
-  &__label {
-    font-size: 0.75rem;
-    font-weight: $fw-semibold;
-    color: #9ca3af;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  &__value {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: $fw-bold;
-    color: #ffffff;
-  }
-
-  /* Emphasize the green factor for highlighted stats */
   &--highlight {
-    .dash-stat-card__icon {
-      background: $green-bg-light;
-      color: $green-500;
-    }
-    .dash-stat-card__value {
-      color: $green-400;
-    }
+    border-color: $green-border;
+
+    background:
+      linear-gradient(
+        180deg,
+        rgba(34, 197, 94, 0.045) 0%,
+        $bg-card 100%
+      );
   }
+
 
   &--interactive {
     cursor: pointer;
-    transition: transform 0.2s ease, border-color 0.2s ease;
 
     &:hover {
       transform: translateY(-2px);
-      border-color: $green-border;
-      background: rgba(255, 255, 255, 0.02);
+
+      background: $bg-card-hover;
+
+      border-color: rgba(34, 197, 94, 0.45);
+    }
+
+    &:active {
+      transform: translateY(0);
     }
   }
 }
+
+
+/* =========================================================
+   SECTION HEADER
+   ========================================================= */
 
 .dash-section-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: $space-6;
+
+  gap: $space-5;
+
+  width: 100%;
+
+  margin-top: $space-3;
+  margin-bottom: $space-5;
 }
+
+
+/* =========================================================
+   SECTION HINT
+   ========================================================= */
 
 .dash-section-hint {
   margin: 0;
-  font-size: 0.85rem;
-  color: #9ca3af;
+
+  color: #d1d5db;
+
+  font-size: 0.9rem;
+  font-weight: $fw-medium;
+
+  line-height: 1.5;
 }
 
+
+/* =========================================================
+   SECTION ACTIONS
+   ========================================================= */
+
+.dash-section-actions {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  flex-shrink: 0;
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
 .dash-btn {
-  background: $green-600;
-  color: #ffffff;
-  font-weight: $fw-semibold;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 42px;
+
+  padding: 8px 18px;
+
+  box-sizing: border-box;
+
+  border: 1px solid $border-color;
+  border-radius: 8px;
+
+  background: rgba(255, 255, 255, 0.045);
+
+  color: #e5e7eb;
+
+  font-size: 0.82rem;
+  font-weight: $fw-medium;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.2s ease;
+
+
   &:hover {
-    background: $green-500;
+    background: rgba(255, 255, 255, 0.08);
+
+    border-color: rgba(255, 255, 255, 0.15);
+
+    color: #ffffff;
+  }
+
+
+  &:active {
+    transform: translateY(1px);
+  }
+
+
+  &--primary {
+    background: $green-600;
+
+    border-color: transparent;
+
+    color: #ffffff;
+
+
+    &:hover {
+      background: $green-500;
+
+      border-color: transparent;
+    }
   }
 }
 
-/* --- Horizontal List Cards --- */
+
+/* =========================================================
+   LIST
+   ========================================================= */
+
 .dash-list {
   display: flex;
   flex-direction: column;
-  gap: $space-4;
+
+  width: 100%;
+  min-width: 0;
+
+  box-sizing: border-box;
+
+  background: $bg-card;
+
+  border: 1px solid $border-color;
+  border-radius: 16px;
+
+  overflow: hidden;
 }
 
+
+/* =========================================================
+   LIST CARD
+   ========================================================= */
+
 .dash-list-card {
-  @include card-surface($shadow: none);
-  display: flex;
+  display: grid;
+
+  /*
+   * 4 columns:
+   *
+   * icon | content | flexible space | actions
+   *
+   * This is the important part.
+   */
+  grid-template-columns: 88px minmax(0, auto) 1fr auto;
+
   align-items: center;
+
   position: relative;
-  overflow: hidden;
-  padding: $space-4 $space-6;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 12px;
+
+  width: 100%;
+  min-width: 0;
+
+  min-height: 120px;
+
+  padding: 20px 26px;
+
+  box-sizing: border-box;
+
+  background: transparent;
+
+  border-bottom: 1px solid $border-light;
+
   cursor: pointer;
-  background: rgba(255, 255, 255, 0.02);
-  transition: all 0.2s ease;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+
+  &:hover {
+    background: $bg-card-hover;
+  }
+
+
+  &:hover .dash-list-card__arrow {
+    transform: translateX(4px);
+
+    color: $green-300;
+  }
+
+
+  /* -------------------------------------------------------
+     Accent Bar
+     ------------------------------------------------------- */
 
   &__accent-bar {
     position: absolute;
-    left: 0;
+
     top: 0;
+    left: 0;
     bottom: 0;
-    width: 4px;
+
+    width: 3px;
+
     background: transparent;
+
     transition: background 0.2s ease;
   }
 
-  &:hover {
-    background: rgba(255, 255, 255, 0.04);
-    border-color: rgba(255, 255, 255, 0.15);
-    
-    .dash-list-card__accent-bar {
-      background: $green-500;
-    }
 
-    .dash-list-card__arrow {
-      color: $green-500;
-      transform: translateX(4px);
+  &:hover &__accent-bar {
+    background: $green-500;
+  }
+
+
+  /* -------------------------------------------------------
+     Icon
+     ------------------------------------------------------- */
+
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 72px;
+    height: 72px;
+
+    box-sizing: border-box;
+
+    border: 1px solid rgba(255, 255, 255, 0.13);
+    border-radius: 11px;
+
+    background: rgba(255, 255, 255, 0.015);
+
+    color: $green-500;
+
+    transition:
+      background 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease;
+
+
+    svg {
+      width: 30px;
+      height: 30px;
     }
   }
+
+
+  &:hover &__icon {
+    background: $green-bg-light;
+
+    border-color: $green-border;
+
+    color: $green-400;
+  }
+
+
+  /* -------------------------------------------------------
+     Content
+     ------------------------------------------------------- */
 
   &__content {
-    flex: 1;
     display: flex;
     flex-direction: column;
-    gap: $space-2;
+    align-items: flex-start;
+    justify-content: center;
+
+    min-width: 0;
+
+    padding-left: 2px;
+
+    gap: 7px;
+
+    text-align: left;
   }
+
+
+  /* -------------------------------------------------------
+     Header
+     ------------------------------------------------------- */
 
   &__header {
     display: flex;
-    align-items: center;
-    gap: $space-4;
+    flex-direction: column;
+    align-items: flex-start;
+
+    gap: 7px;
+
+    min-width: 0;
   }
+
+
+  /* -------------------------------------------------------
+     Title
+     ------------------------------------------------------- */
 
   &__title {
     margin: 0;
+
+    max-width: 100%;
+
+    color: $text-primary;
+
     font-size: 1rem;
     font-weight: $fw-semibold;
-    color: #f3f4f6;
+
+    line-height: 1.3;
+
+    text-align: left;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
-  /* Status Tag - Now Green */
+
+  /* -------------------------------------------------------
+     Status
+     ------------------------------------------------------- */
+
   &__status {
-    font-size: 0.65rem;
-    font-weight: $fw-bold;
-    letter-spacing: 0.5px;
-    padding: 3px 8px;
-    border-radius: 4px;
-    text-transform: uppercase;
-    background: $green-bg-light;
-    color: $green-400;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 24px;
+
+    width: fit-content;
+
+    padding: 3px 10px;
+
+    box-sizing: border-box;
+
     border: 1px solid $green-border;
+
+    border-radius: 7px;
+
+    background: $green-bg-light;
+
+    color: $green-400;
+
+    font-size: 0.68rem;
+    font-weight: $fw-semibold;
+
+    line-height: 1;
+
+    text-transform: uppercase;
+
+    white-space: nowrap;
   }
+
+
+  /* -------------------------------------------------------
+     Metadata
+     ------------------------------------------------------- */
 
   &__meta {
     display: flex;
     align-items: center;
-    gap: $space-6;
     flex-wrap: wrap;
+
+    gap: 8px;
+
+    margin: 0;
+
+    color: $text-secondary;
+
+    font-size: 0.82rem;
+
+    line-height: 1.4;
   }
+
+
+  /* -------------------------------------------------------
+     Metadata Group
+     ------------------------------------------------------- */
 
   &__info-group {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 6px;
-    font-size: 0.8rem;
-    color: #9ca3af;
+
+    gap: 5px;
+
+    min-width: 0;
+
+    color: $text-secondary;
+
+    white-space: nowrap;
+
 
     svg {
-      color: #6b7280;
+      flex-shrink: 0;
+
+      color: $green-500;
     }
   }
+
+
+  /* -------------------------------------------------------
+     Metadata Divider
+     ------------------------------------------------------- */
+
+  &__meta-divider {
+    color: #4b5563;
+
+    user-select: none;
+  }
+
+
+  /* -------------------------------------------------------
+     Actions
+     ------------------------------------------------------- */
 
   &__actions {
     display: flex;
     align-items: center;
-    gap: $space-6;
-    margin-left: $space-4;
+    justify-content: flex-end;
+
+    gap: 14px;
+
+    margin-left: auto;
+
+    padding-left: 24px;
+
+    flex-shrink: 0;
   }
 
-  /* Assignee Pill */
+
+  /* -------------------------------------------------------
+     Assignee
+     ------------------------------------------------------- */
+
   &__assignee {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 4px 12px;
-    border-radius: 999px;
-    font-size: 0.75rem;
+
+    gap: 5px;
+
+    padding: 5px 9px;
+
+    border-radius: 7px;
+
+    font-size: 0.78rem;
     font-weight: $fw-medium;
 
-    &--active {
-      background: $green-500;
-      color: #ffffff;
-      
-      svg {
-        color: #ffffff;
-      }
+    white-space: nowrap;
+
+
+    svg {
+      flex-shrink: 0;
     }
+
+
+    &--active {
+      color: $green-400;
+
+      background: rgba(34, 197, 94, 0.05);
+    }
+
 
     &--unassigned {
-      background: transparent;
-      border: 1px dashed rgba(255, 255, 255, 0.2);
-      color: #9ca3af;
+      color: $text-muted;
+
+      background: rgba(255, 255, 255, 0.035);
     }
   }
 
+
+  /* -------------------------------------------------------
+     Arrow
+     ------------------------------------------------------- */
+
   &__arrow {
-    color: #6b7280;
-    transition: all 0.2s ease;
+    flex-shrink: 0;
+
+    color: $green-500;
+
+    transition:
+      transform 0.2s ease,
+      color 0.2s ease;
+  }
+
+
+  /* -------------------------------------------------------
+     Selected
+     ------------------------------------------------------- */
+
+  &--selected {
+    background: rgba(34, 197, 94, 0.06);
+
+    .dash-list-card__accent-bar {
+      background: $green-500;
+    }
+
+
+    .dash-list-card__title {
+      color: $green-300;
+    }
+
+
+    .dash-list-card__icon {
+      background: $green-bg-light;
+
+      border-color: $green-border;
+    }
   }
 }
+
+
+/* =========================================================
+   LOADING
+   ========================================================= */
 
 .dash-loading {
   display: flex;
+  align-items: center;
   justify-content: center;
+
+  width: 100%;
+
+  min-height: 140px;
+
+  box-sizing: border-box;
+
   padding: $space-8;
+
+  background: $bg-card;
+
+  border: 1px dashed $border-color;
+  border-radius: 16px;
+
+  color: $text-muted;
 }
+
+
+/* =========================================================
+   EMPTY
+   ========================================================= */
 
 .dash-empty {
-  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100%;
+
+  min-height: 140px;
+
+  box-sizing: border-box;
+
   padding: $space-8;
-  color: #9ca3af;
-  font-size: 0.9rem;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px dashed rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
+
+  background: $bg-card;
+
+  border: 1px dashed $border-color;
+  border-radius: 16px;
+
+  color: $text-muted;
+
+  font-size: 0.875rem;
+
+  text-align: center;
 }
 
-/* --- Responsive Adjustments --- */
+
+/* =========================================================
+   RESPONSIVE - TABLET
+   ========================================================= */
+
 @include respond-to(mobile-nav) {
+
   .dash-stats {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  
+
+
   .dash-list-card {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: $space-4;
-    
-    &__actions {
-      margin-left: 0;
-      width: 100%;
-      justify-content: space-between;
-      border-top: 1px solid rgba(255, 255, 255, 0.06);
-      padding-top: $space-3;
+    grid-template-columns: 70px minmax(0, auto) 1fr auto;
+
+    min-height: 105px;
+
+    padding: 18px 20px;
+
+
+    &__icon {
+      width: 60px;
+      height: 60px;
+
+
+      svg {
+        width: 26px;
+        height: 26px;
+      }
+    }
+
+
+    &__title {
+      font-size: 0.95rem;
+    }
+
+
+    &__meta {
+      font-size: 0.76rem;
+    }
+
+
+    &__assignee {
+      font-size: 0.72rem;
     }
   }
 }
 
+
+/* =========================================================
+   RESPONSIVE - MOBILE
+   ========================================================= */
+
 @include respond-to(mobile) {
+
   .dash-stats {
     grid-template-columns: 1fr;
+  }
+
+
+  .dash-section-header {
+    align-items: flex-start;
+
+    flex-direction: column;
+
+    gap: 12px;
+  }
+
+
+  .dash-section-actions {
+    width: 100%;
+
+    justify-content: flex-start;
+
+    flex-wrap: wrap;
+  }
+
+
+  .dash-list-card {
+    /*
+     * On mobile, remove the large icon column.
+     */
+    grid-template-columns: 52px minmax(0, 1fr) auto;
+
+    min-height: 92px;
+
+    padding: 14px 16px;
+
+    gap: 12px;
+
+
+    &__accent-bar {
+      width: 2px;
+    }
+
+
+    &__icon {
+      width: 48px;
+      height: 48px;
+
+      border-radius: 9px;
+
+
+      svg {
+        width: 23px;
+        height: 23px;
+      }
+    }
+
+
+    &__content {
+      padding-left: 0;
+
+      gap: 5px;
+    }
+
+
+    &__header {
+      gap: 5px;
+    }
+
+
+    &__title {
+      font-size: 0.88rem;
+    }
+
+
+    &__status {
+      min-height: 21px;
+
+      padding: 3px 7px;
+
+      font-size: 0.62rem;
+    }
+
+
+    &__meta {
+      gap: 5px;
+
+      font-size: 0.7rem;
+    }
+
+
+    &__meta-divider {
+      display: none;
+    }
+
+
+    &__actions {
+      gap: 5px;
+
+      padding-left: 8px;
+    }
+
+
+    &__assignee {
+      display: none;
+    }
+
+
+    &__arrow {
+      width: 17px;
+      height: 17px;
+    }
   }
 }

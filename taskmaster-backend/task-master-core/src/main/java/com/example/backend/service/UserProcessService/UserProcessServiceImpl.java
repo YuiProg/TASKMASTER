@@ -286,7 +286,7 @@ public class UserProcessServiceImpl implements UserProcessService{
                 if (user.getProfilePicture() != null && !user.getProfilePicture().trim().isEmpty()) {
                     oldUserSnapshot.setProfilePicture(user.getProfilePicture());
                     oldUserSnapshot.setProfilePictureId(user.getProfilePictureId());
-                    cloudinary.uploader().destroy(user.getProfilePicture(), ObjectUtils.emptyMap());
+                    cloudinary.uploader().destroy(user.getProfilePictureId(), ObjectUtils.emptyMap());
                 }
                 String imageData = userRequest.getImage();
                 Map<String, Object> res = cloudinary.uploader().upload(imageData, ObjectUtils.emptyMap());
