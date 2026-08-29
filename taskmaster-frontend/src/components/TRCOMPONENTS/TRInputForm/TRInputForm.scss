@@ -1,31 +1,40 @@
 @use '../../../styles/abstracts' as *;
 
+/* --- Local Variables (Dark Theme Alignment) --- */
+$dark-bg-card: #16181d;
+$dark-border: rgba(255, 255, 255, 0.08);
+$dark-border-hover: rgba(255, 255, 255, 0.15);
+
+$green-500: #22c55e;
+$green-600: #16a34a;
+
 .tr-inputform-panel {
   background-color: transparent;
   padding: $space-10;
   border-radius: $radius-2xl;
   width: 100%;
   box-sizing: border-box;
-  @include flex-column($space-10);
+  @include flex-column($space-6);
 
   &__headers {
     @include flex-column($space-2);
-    @include glass-surface($bg: $glass-bg-3, $blur: $glass-blur-sm);
+    background: $dark-bg-card;
+    border: 1px solid $dark-border;
     border-radius: $radius-xl;
-    padding: $space-8;
+    padding: $space-6 $space-8;
   }
 
   &__title {
-    font-size: 1.5rem;
+    font-size: 1.25rem;
     font-weight: $fw-bold;
-    color: $slate-800;
+    color: #ffffff;
     margin: 0;
     letter-spacing: $letter-spacing-tight;
   }
 
   &__subtitle {
-    font-size: 0.875rem;
-    color: $slate-500;
+    font-size: 0.85rem;
+    color: #9ca3af;
     margin: 0;
   }
 }
@@ -33,7 +42,8 @@
 .tr-inputform {
   @include flex(column, flex-start, flex-start, $space-8);
   width: 100%;
-  @include glass-surface($bg: $glass-bg-3, $blur: $glass-blur-sm);
+  background: $dark-bg-card;
+  border: 1px solid $dark-border;
   border-radius: $radius-xl;
   padding: $space-8;
   box-sizing: border-box;
@@ -41,35 +51,36 @@
 
   &__actions {
     display: flex;
-    gap: $space-5;
+    gap: $space-4;
     align-self: flex-end;
   }
 
   &__cancel-btn {
     background-color: transparent;
-    color: $slate-500;
-    border: 1px solid $border-light;
-    padding: $space-5 $space-10;
+    color: #9ca3af;
+    border: 1px solid $dark-border;
+    padding: $space-3 $space-6;
     border-radius: $radius-lg;
-    font-size: 0.875rem;
+    font-size: 0.85rem;
     font-weight: $fw-semibold;
     cursor: pointer;
-    transition: background $transition-base ease, color $transition-base ease;
+    transition: background $transition-base ease, color $transition-base ease, border-color $transition-base ease;
     white-space: nowrap;
 
     &:hover {
-      background-color: $border-lighter;
-      color: $slate-800;
+      background-color: rgba(255, 255, 255, 0.05);
+      border-color: $dark-border-hover;
+      color: #ffffff;
     }
   }
 
   &__submit-btn {
-    background-color: $blue-600;
-    color: $white;
+    background-color: $green-600;
+    color: #ffffff;
     border: none;
-    padding: $space-5 $space-10;
+    padding: $space-3 $space-6;
     border-radius: $radius-lg;
-    font-size: 0.875rem;
+    font-size: 0.85rem;
     font-weight: $fw-semibold;
     cursor: pointer;
     align-self: flex-end;
@@ -77,7 +88,7 @@
     white-space: nowrap;
 
     &:hover {
-      background-color: $blue-700;
+      background-color: $green-500;
     }
   }
 }
@@ -98,7 +109,7 @@
   &__title {
     font-size: 0.8rem;
     font-weight: $fw-medium;
-    color: $slate-500;
+    color: #9ca3af;
     margin: 0;
     line-height: $line-height-tight;
   }
@@ -112,19 +123,23 @@
 @include respond-to(tablet) {
   .tr-inputform-panel {
     padding: $space-8;
-    gap: $space-8;
+    gap: $space-6;
 
     &__title {
-      font-size: 1.25rem;
+      font-size: 1.15rem;
     }
   }
 
   .tr-inputform {
-    padding: $space-8;
+    padding: $space-6;
 
-    &__submit-btn {
+    &__actions {
       width: 100%;
-      align-self: stretch;
+    }
+
+    &__cancel-btn,
+    &__submit-btn {
+      flex: 1;
       text-align: center;
     }
   }
@@ -146,24 +161,29 @@
 
 @include respond-to(mobile) {
   .tr-inputform-panel {
-    padding: $space-6;
-    gap: $space-6;
+    padding: $space-4;
+    gap: $space-4;
 
     &__title {
-      font-size: 1.1rem;
+      font-size: 1.05rem;
     }
 
     &__subtitle {
-      font-size: 0.8rem;
+      font-size: 0.775rem;
     }
 
     &__headers {
-      padding: $space-6;
+      padding: $space-4 $space-6;
     }
   }
 
   .tr-inputform {
-    padding: $space-6;
+    padding: $space-4;
     gap: $space-6;
+
+    &__actions {
+      flex-direction: column-reverse;
+      gap: $space-3;
+    }
   }
 }

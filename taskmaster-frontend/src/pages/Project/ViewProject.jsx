@@ -229,14 +229,22 @@ class ViewProject extends React.Component {
                         {hasActiveSprint ? (
                             <Button 
                                 className="view-project__action-btn" 
-                                text={<span><Eye size={12}/> VIEW SPRINT</span>} 
+                                text={
+                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                                        <Eye size={14} color="#ffffff" /> VIEW SPRINT
+                                    </span>
+                                } 
                                 onClick={this.goToViewSprint}
                             />
                         ) : (
                             <Button 
                                 disabled={this.state.project?.archived === 1} 
                                 className="view-project__action-btn" 
-                                text={<span><Zap size={12}/> CREATE SPRINT</span>} 
+                                text={
+                                    <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                                        <Zap size={14} color="#ffffff" /> CREATE SPRINT
+                                    </span>
+                                } 
                                 onClick={this.goToCreateSprint}
                             />
                         )}
@@ -244,7 +252,11 @@ class ViewProject extends React.Component {
                         <Button 
                             disabled={this.state.project?.archived === 1} 
                             className="view-project__action-btn" 
-                            text={<span><Plus size={10}/> CREATE TASK</span>} 
+                            text={
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                                    <Plus size={14} color="#ffffff" /> CREATE TASK
+                                </span>
+                            } 
                             onClick={this.goToCreateTask}
                         />
                     </div>

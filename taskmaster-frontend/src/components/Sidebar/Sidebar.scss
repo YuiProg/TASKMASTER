@@ -1,5 +1,11 @@
 @use '../../styles/abstracts' as *;
 
+/* --- Local Variables (Refined Dark Dashboard Alignment) --- */
+$dark-bg-sidebar: #121418;
+$dark-border: rgba(255, 255, 255, 0.08);
+$dark-border-hover: rgba(255, 255, 255, 0.15);
+$green-500: #22c55e;
+
 @keyframes sidebar-subrow-loading {
   0% {
     transform: scaleX(0);
@@ -89,10 +95,8 @@ body {
     width: $sidebar-width;
     min-width: $sidebar-width;
     @include flex-column;
-    @include glass-surface($bg: $glass-bg-1, $blur: $glass-blur-lg, $border: $glass-border);
-    border-top: none;
-    border-bottom: none;
-    border-left: none;
+    background-color: $dark-bg-sidebar;
+    border-right: 1px solid $dark-border;
     height: 100vh;
     flex-shrink: 0;
     overflow: hidden;
@@ -115,7 +119,7 @@ body {
     padding: 0 $space-8;
     height: $topbar-height;
     min-height: $topbar-height;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid $dark-border;
     box-sizing: border-box;
     flex-shrink: 0;
 
@@ -142,7 +146,7 @@ body {
   &__logo-text {
     font-size: $fs-md;
     font-weight: $fw-semibold;
-    color: #f5f5f5;
+    color: #ffffff;
     letter-spacing: $letter-spacing-tighter;
   }
 
@@ -150,7 +154,7 @@ body {
     background: none;
     border: none;
     cursor: pointer;
-    color: #a8a8a8;
+    color: #9ca3af;
     padding: $space-3;
     border-radius: 7px;
     display: flex;
@@ -160,7 +164,7 @@ body {
 
     &:hover {
       color: #ffffff;
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.05);
     }
 
     &--close {
@@ -184,7 +188,7 @@ body {
     font-size: $fs-2xs;
     font-weight: $fw-bold;
     text-transform: uppercase;
-    color: #949494;
+    color: #6b7280;
     letter-spacing: $letter-spacing-wider;
     padding: 0 $space-8;
     margin: 0 0 $space-4 0;
@@ -218,7 +222,7 @@ body {
       padding: 11px $space-6;
       border-radius: $radius-lg;
       text-decoration: none;
-      color: #c2c2c2;
+      color: #9ca3af;
       font-size: $fs-md;
       white-space: nowrap;
       transition: background $transition-fast, color $transition-fast;
@@ -229,13 +233,13 @@ body {
     }
 
     &:hover > a {
-      background: rgba(255, 255, 255, 0.07);
-      color: #f5f5f5;
+      background: rgba(255, 255, 255, 0.04);
+      color: #ffffff;
     }
 
     &--active {
       > a {
-        background: rgba(255, 255, 255, 0.09);
+        background: rgba(255, 255, 255, 0.08);
         color: #ffffff !important;
         font-weight: $fw-semibold;
 
@@ -273,7 +277,7 @@ body {
     }
 
     &:hover .sidebar__chevron {
-      color: #f5f5f5;
+      color: #ffffff;
     }
   }
 
@@ -302,16 +306,16 @@ body {
     left: 56px;
     top: 50%;
     transform: translateY(-50%);
-    background: #ffffff;
-    color: #000000;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: #1f2937;
+    color: #ffffff;
+    border: 1px solid $dark-border-hover;
     font-size: $fs-sm;
     padding: $space-3 $space-6;
     border-radius: 7px;
     white-space: nowrap;
     pointer-events: none;
     z-index: $z-tooltip;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5);
   }
 
   &__dropdown-trigger {
@@ -327,7 +331,7 @@ body {
   }
 
   &__chevron {
-    color: #949494;
+    color: #6b7280;
     transition: transform $transition-med $ease-standard, color $transition-fast;
     flex-shrink: 0;
 
@@ -370,7 +374,7 @@ body {
     }
 
     &:hover a .sidebar__sub-title {
-      color: #f5f5f5;
+      color: #ffffff;
     }
 
     &:hover .sidebar__sub-dot {
@@ -379,7 +383,7 @@ body {
 
     &--active {
       a {
-        background: rgba(255, 255, 255, 0.09);
+        background: rgba(255, 255, 255, 0.08);
       }
 
       .sidebar__sub-title {
@@ -396,7 +400,7 @@ body {
 
   &__sub-title {
     font-size: $fs-sm;
-    color: #a8a8a8;
+    color: #9ca3af;
     transition: color $transition-fast;
   }
 
@@ -404,7 +408,7 @@ body {
     width: 5px;
     height: 5px;
     border-radius: $radius-circle;
-    background-color: #55555a;
+    background-color: #4b5563;
     transition: background-color $transition-fast, transform $transition-fast;
     flex-shrink: 0;
   }
@@ -413,7 +417,7 @@ body {
     width: 10px;
     height: 10px;
     border-radius: $radius-circle;
-    border: 2px solid rgba($white, 0.15);
+    border: 2px solid rgba(255, 255, 255, 0.15);
     border-top-color: $blue-400;
     flex-shrink: 0;
     animation: sidebar-subrow-spin 0.6s linear infinite;
@@ -440,7 +444,7 @@ body {
   }
 
   &__user-panel {
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid $dark-border;
     padding: $space-8 $space-5;
     flex-shrink: 0;
     @include flex-column($space-5);
@@ -451,10 +455,10 @@ body {
     align-items: center;
     gap: $space-5;
     padding: $space-4 $space-6;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid $dark-border;
     border-radius: $radius-lg;
-    color: #a8a8a8;
-    background: rgba(255, 255, 255, 0.05);
+    color: #9ca3af;
+    background: rgba(255, 255, 255, 0.02);
   }
 
   &__clock-icon {
@@ -467,7 +471,7 @@ body {
 
   &__clock-label {
     font-size: $fs-2xs;
-    color: #949494;
+    color: #6b7280;
     margin: 0;
   }
 
@@ -502,20 +506,20 @@ body {
   &__user-name {
     font-size: $fs-base;
     font-weight: $fw-medium;
-    color: #f5f5f5;
+    color: #ffffff;
     margin: 0;
     @include truncate;
   }
 
   &__user-role {
     font-size: $fs-xs;
-    color: #a8a8a8;
+    color: #9ca3af;
     margin: 0;
   }
 
   &__change-password {
     font-size: $fs-2xs;
-    color: #a8a8a8;
+    color: #9ca3af;
     text-decoration: none;
     cursor: pointer;
     margin-top: $space-1;
@@ -531,7 +535,7 @@ body {
     background: none;
     border: none;
     cursor: pointer;
-    color: #a8a8a8;
+    color: #9ca3af;
     padding: $space-3;
     border-radius: 7px;
     display: flex;
@@ -541,7 +545,7 @@ body {
 
     &:hover {
       color: #ffffff;
-      background: rgba(255, 255, 255, 0.09);
+      background: rgba(255, 255, 255, 0.05);
     }
   }
 
@@ -550,7 +554,7 @@ body {
     height: 100vh;
     overflow-y: auto;
     width: 100%;
-    background-color: $surface-app;
+    background-color: #0d0f12;
     @include hidden-scrollbar;
     position: relative;
 
@@ -584,7 +588,7 @@ body {
   }
 
   &__skeleton {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.06);
     border-radius: $radius-sm;
     animation: sb-skeleton-pulse 1.4s ease-in-out infinite;
   }
@@ -620,7 +624,7 @@ body {
       max-width: 320px;
       transform: translateX(-100%);
       z-index: 60;
-      box-shadow: $glass-shadow;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
 
       &--collapsed {
         width: min(300px, 84vw);
@@ -644,7 +648,7 @@ body {
       display: block;
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.55);
+      background: rgba(0, 0, 0, 0.7);
       z-index: 59;
       opacity: 0;
       pointer-events: none;

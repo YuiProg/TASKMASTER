@@ -14,14 +14,38 @@
     }
   }
 
+  /* --- Action Button (Updated to Dark Charcoal Theme) --- */
   &__new-btn {
-    background: #22c55e;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background: #27272a;
     color: #ffffff;
     font-weight: $fw-semibold;
+    font-size: 0.875rem;
+    padding: 0.55rem 1.1rem;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
     flex-shrink: 0;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+    svg, path {
+      color: #ffffff;
+      stroke: #ffffff;
+    }
 
     &:hover {
-      background: #16a34a;
+      background: #3f3f46;
+      border-color: rgba(255, 255, 255, 0.3);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
     }
   }
 
