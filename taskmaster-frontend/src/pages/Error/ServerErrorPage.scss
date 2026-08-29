@@ -1,0 +1,115 @@
+// ServerErrorPage.scss
+
+.server-error {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background-color: #0f0f12;
+
+  &__card {
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+    padding: 2rem 1.5rem;
+    background: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.04) 0%,
+      rgba(255, 255, 255, 0.01) 100%
+    );
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    backdrop-filter: blur(10px);
+  }
+
+  &__badge {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #ef4444;
+    background: rgba(239, 68, 68, 0.12);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 1.25rem;
+  }
+
+  &__title {
+    font-size: 1.6rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 0.75rem 0;
+  }
+
+  &__desc {
+    font-size: 0.9rem;
+    color: #9ca3af;
+    line-height: 1.6;
+    margin: 0 0 1.5rem 0;
+  }
+
+  &__details {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    text-align: left;
+  }
+
+  &__details-text {
+    margin: 0;
+    font-size: 0.825rem;
+    font-family: monospace;
+    color: #f87171;
+    word-break: break-word;
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  &__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 0.55rem 1.1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &--primary {
+      background: #27272a;
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+      &:hover {
+        background: #3f3f46;
+        border-color: rgba(255, 255, 255, 0.3);
+        transform: translateY(-1px);
+      }
+    }
+
+    &--ghost {
+      background: transparent;
+      color: #9ca3af;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+
+      &:hover {
+        background: rgba(255, 255, 255, 0.04);
+        color: #ffffff;
+      }
+    }
+  }
+}

@@ -18,6 +18,7 @@ import Settings from "./pages/Settings/Settings";
 import ViewTodos from "./pages/Todos/ViewTodos";
 import CreateTodo from "./pages/Todos/CreateTodo";
 import TodoDetail from "./pages/Todos/TodoDetail";
+import ServerErrorPage from "./pages/Error/ServerErrorPage";
 
 const AUTH_PATHS = ["/", "/register", "/forgot-password"];
 
@@ -118,6 +119,7 @@ function AppRoutes() {
             <TodoDetail/>
           </Sidebar>
         }/>
+        <Route path="/error" element={<ServerErrorPage/>}/>
     </Routes>
   );
 }
