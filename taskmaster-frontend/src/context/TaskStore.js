@@ -5,11 +5,10 @@ import gateWayApi from "../lib/gateway";
 import navigateTo from "../lib/navigate.js";
 import toast from "react-hot-toast";
 
-// Helper function to handle error redirects (5xx server errors + 403 forbidden)
+// Helper function to handle error redirects (Network failures, 403 Forbidden, or 5xx Server Errors)
 const handleServerError = (error) => {
-  const status = error?.response?.status;
+  const status = error?.status || error?.response?.status;
   
-  // Triggers redirect on network failures, 403 Forbidden, or 5xx Server Errors
   if (!status || status === 403 || status >= 500) {
     navigateTo('/error');
   }

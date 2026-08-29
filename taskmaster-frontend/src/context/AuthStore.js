@@ -56,7 +56,6 @@ export const useAuthStore = create((set, get) => ({
       });
       return false;
     } catch (err) {
-      handleServerError(err);
       const rawError = err.response?.data?.message || err.response?.data;
       const parsedMessage = extractErrorMessage(rawError, 'Something went wrong. Please try again.');
 
