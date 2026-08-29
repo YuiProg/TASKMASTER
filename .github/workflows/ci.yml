@@ -52,7 +52,43 @@ jobs:
 
           echo "VERSION_CHANGED=true" >> $GITHUB_ENV
 
-      - name: Run Trivy Vulnerability Scanner (Frontend)
+      # 1. Download official Trivy HTML template
+      - name: Setup Trivy HTML Template
+        if: env.VERSION_CHANGED == 'true'
+        run: |
+          wget https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl -O html.tpl
+
+      # 2. Run Trivy to export HTML report
+      - name: Run Trivy Scanner (Frontend - Generate HTML)
+        if: env.VERSION_CHANGED == 'true' || failure()
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: 'fs'
+          scan-ref: 'taskmaster-frontend'
+          format: 'template'
+          template: '@html.tpl'
+          output: 'trivy-report-frontend.html'
+          ignore-unfixed: true
+          severity: 'HIGH,CRITICAL'
+
+      # 3. Convert HTML report to PDF
+      - name: Convert HTML Report to PDF (Frontend)
+        if: env.VERSION_CHANGED == 'true' || failure()
+        run: |
+          sudo apt-get update && sudo apt-get install -y wkhtmltopdf
+          wkhtmltopdf --enable-local-file-access trivy-report-frontend.html trivy-report-frontend.pdf
+
+      # 4. Upload PDF artifact so you can download it from GitHub Actions UI
+      - name: Upload Trivy PDF Report (Frontend)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-report-frontend-pdf
+          path: trivy-report-frontend.pdf
+          if-no-files-found: ignore
+
+      # 5. Optional step: Output terminal logs & trigger build check failure if vulnerabilities exist
+      - name: Run Trivy Vulnerability Enforcement (Frontend)
         if: env.VERSION_CHANGED == 'true'
         uses: aquasecurity/trivy-action@v0.36.0
         with:
@@ -147,7 +183,40 @@ jobs:
             mvn -B clean verify -DskipTests
           fi
 
-      - name: Run Trivy Vulnerability Scanner (Backend)
+      # 1. Download official Trivy HTML template
+      - name: Setup Trivy HTML Template
+        run: |
+          wget https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/html.tpl -O html.tpl
+
+      # 2. Run Trivy to export HTML report for backend matrix
+      - name: Run Trivy Scanner (Backend - Generate HTML)
+        uses: aquasecurity/trivy-action@v0.36.0
+        with:
+          scan-type: 'fs'
+          scan-ref: '${{ matrix.path }}'
+          format: 'template'
+          template: '@html.tpl'
+          output: 'trivy-report-${{ matrix.name }}.html'
+          ignore-unfixed: true
+          severity: 'CRITICAL'
+
+      # 3. Convert HTML to PDF
+      - name: Convert HTML Report to PDF (Backend)
+        run: |
+          sudo apt-get update && sudo apt-get install -y wkhtmltopdf
+          wkhtmltopdf --enable-local-file-access trivy-report-${{ matrix.name }}.html trivy-report-${{ matrix.name }}.pdf
+
+      # 4. Upload PDF artifact per module
+      - name: Upload Trivy PDF Report (Backend)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: trivy-report-${{ matrix.name }}-pdf
+          path: trivy-report-${{ matrix.name }}.pdf
+          if-no-files-found: ignore
+
+      # 5. Output terminal logs & trigger build check failure if vulnerabilities exist
+      - name: Run Trivy Vulnerability Enforcement (Backend)
         uses: aquasecurity/trivy-action@v0.36.0
         with:
           scan-type: 'fs'
