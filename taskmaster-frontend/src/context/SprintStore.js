@@ -1,11 +1,11 @@
 import { create } from 'zustand';
 import gateWayApi from '../lib/gateway';
+import navigateTo from '../lib/navigate.js';
 
 const parseErrorMessage = (err, fallbackMessage) => {
   const rawMessage = err.response?.data?.message || err.message;
 
   if (!rawMessage) return fallbackMessage;
-
 
   if (typeof rawMessage === 'string' && rawMessage.trim().startsWith('{')) {
     try {
@@ -21,6 +21,14 @@ const parseErrorMessage = (err, fallbackMessage) => {
   return typeof rawMessage === 'string' ? rawMessage : fallbackMessage;
 };
 
+// Helper to redirect on server crashes (5xx or missing response)
+const handleServerError = (err) => {
+  const status = err.response?.status;
+  if (!status || status >= 500) {
+    navigateTo('/error');
+  }
+};
+
 export const useSprintStore = create((set) => ({
   sprints: [],
   isLoading: false,
@@ -34,6 +42,7 @@ export const useSprintStore = create((set) => ({
       const list = Array.isArray(res.data?.data) ? res.data.data : [];
       set({ sprints: list, isLoading: false });
     } catch (err) {
+      handleServerError(err);
       const errorMessage = parseErrorMessage(err, 'Could not load sprints.');
       set({
         isLoading: false,
@@ -72,6 +81,7 @@ export const useSprintStore = create((set) => ({
 
       return { success: true, data: sprintData };
     } catch (err) {
+      handleServerError(err);
       const errorMessage = parseErrorMessage(err, 'Could not load sprint details.');
       set({
         isLoading: false,
@@ -108,6 +118,7 @@ export const useSprintStore = create((set) => ({
 
       return { success: true, data: newSprint };
     } catch (err) {
+      handleServerError(err);
       const errorMessage = parseErrorMessage(err, 'Failed to create sprint.');
 
       set({

@@ -2,7 +2,18 @@ import { create } from "zustand";
 import { useReportStore } from "./ReportStore.js";
 import { useAuthStore } from "./AuthStore.js";
 import gateWayApi from "../lib/gateway";
+import navigateTo from "../lib/navigate.js";
 import toast from "react-hot-toast";
+
+// Helper function to handle error redirects (5xx server errors + 403 forbidden)
+const handleServerError = (error) => {
+  const status = error?.response?.status;
+  
+  // Triggers redirect on network failures, 403 Forbidden, or 5xx Server Errors
+  if (!status || status === 403 || status >= 500) {
+    navigateTo('/error');
+  }
+};
 
 export const useTaskStore = create((set, get) => ({
   tasks: [],
@@ -10,7 +21,7 @@ export const useTaskStore = create((set, get) => ({
   myTasks: [],
   isLoadingMyTasks: false,
   isCreating: false,
-  updatingTaskId: null, // Track currently updating task ID
+  updatingTaskId: null,
   error: null,
   openTasks: [],
   archiveTasks: [],
@@ -21,6 +32,7 @@ export const useTaskStore = create((set, get) => ({
       const response = await gateWayApi.get("/getOpenTasks");
       set({ tasks: response.data?.data || [], isLoading: false });
     } catch (error) {
+      handleServerError(error);
       console.error("Failed to fetch tasks:", error);
       set({ tasks: [], isLoading: false });
     }
@@ -32,6 +44,7 @@ export const useTaskStore = create((set, get) => ({
       const response = await gateWayApi.get("/getAuthenticatedUserTask");
       set({ myTasks: response.data?.data || [], isLoadingMyTasks: false });
     } catch (error) {
+      handleServerError(error);
       console.error("Failed to fetch my tasks:", error);
       set({ myTasks: [], isLoadingMyTasks: false });
     }
@@ -42,6 +55,7 @@ export const useTaskStore = create((set, get) => ({
       const response = await gateWayApi.get(`/getTaskById/${id}`);
       return response.data;
     } catch (error) {
+      handleServerError(error);
       console.log(error.message);
     }
   },
@@ -66,11 +80,9 @@ export const useTaskStore = create((set, get) => ({
       const response = await gateWayApi.put(`/updateTask/${id}`, { status });
       const resData = response.data;
 
-      // Check if backend returned status: "ERROR" (even with HTTP 200)
       if (String(resData?.status).toUpperCase() === "ERROR") {
         let errorMsg = "Failed to update status";
 
-        // Unpack nested stringified JSON in resData.message
         if (resData.message) {
           try {
             const parsed = JSON.parse(resData.message);
@@ -84,13 +96,13 @@ export const useTaskStore = create((set, get) => ({
         return { success: false, message: errorMsg };
       }
 
-      // Successful update
       await get().addLocalReport(`UPDATED STATUS TO: ${status}`);
       return {
         success: true,
         data: resData?.data,
       };
     } catch (error) {
+      handleServerError(error);
       console.error("Update task status failed:", error);
 
       let errorMsg = "Something went wrong. Please try again.";
@@ -151,6 +163,7 @@ export const useTaskStore = create((set, get) => ({
       });
       return null;
     } catch (error) {
+      handleServerError(error);
       console.log(error.message);
       set({
         isCreating: false,
@@ -168,9 +181,10 @@ export const useTaskStore = create((set, get) => ({
       const response = await gateWayApi.get("/getOpenTasks");
       set({ openTasks: response.data?.data || [], isLoadingMyTasks: false });
     } catch (error) {
+      handleServerError(error);
       console.log(error.message);
       set({
-        isCreating: false,
+        isLoadingMyTasks: false,
         error:
           error.response?.data?.message ||
           "Something went wrong. Please try again.",
@@ -185,9 +199,10 @@ export const useTaskStore = create((set, get) => ({
       const response = await gateWayApi.get("/getArchiveTasks");
       set({ archiveTasks: response.data?.data || [], isLoadingMyTasks: false });
     } catch (error) {
+      handleServerError(error);
       console.log(error.message);
       set({
-        isCreating: false,
+        isLoadingMyTasks: false,
         error:
           error.response?.data?.message ||
           "Something went wrong. Please try again.",
@@ -219,18 +234,23 @@ export const useTaskStore = create((set, get) => ({
 
       return response.data.data;
     } catch (error) {
-      const response = JSON.parse(error.response.data.message);
+      handleServerError(error);
 
-      toast.error(response.message, {
-        position: "bottom-right",
-        duration: 4000,
-      });
-      // set({
-      //   isCreating: false,
-      //   error:
-      //     error.response?.data?.message ||
-      //     "Something went wrong. Please try again.",
-      // });
+      if (error.response?.data?.message) {
+        try {
+          const parsedRes = JSON.parse(error.response.data.message);
+          toast.error(parsedRes.message || "Update failed.", {
+            position: "bottom-right",
+            duration: 4000,
+          });
+        } catch {
+          toast.error(error.response.data.message, {
+            position: "bottom-right",
+            duration: 4000,
+          });
+        }
+      }
+
       return null;
     }
   },
