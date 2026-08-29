@@ -1,7 +1,35 @@
 @use '../../styles/abstracts' as *;
 
 /* ==========================================================================
-   Settings Page Full Layout & Component Styles
+   Design Tokens & Variables (Fallback Defaults)
+   ========================================================================== */
+$green-500: #22c55e !default;
+$green-600: #16a34a !default;
+$space-1: 0.25rem !default;
+$space-2: 0.5rem !default;
+$space-3: 0.75rem !default;
+$space-4: 1rem !default;
+$space-5: 1.25rem !default;
+$space-6: 1.5rem !default;
+$radius-lg: 0.5rem !default;
+$radius-xl: 0.75rem !default;
+$radius-2xl: 1rem !default;
+$radius-circle: 50% !default;
+$fs-xs: 0.75rem !default;
+$fs-sm: 0.875rem !default;
+$fs-base: 1rem !default;
+$fs-lg: 1.125rem !default;
+$fw-medium: 500 !default;
+$fw-semibold: 600 !default;
+$fw-bold: 700 !default;
+$transition-fast: 0.15s ease-in-out !default;
+
+/* Shared Panel Surface Styling */
+$panel-bg: #131418;
+$panel-border: 1px solid rgba(255, 255, 255, 0.08);
+
+/* ==========================================================================
+   Settings Page Layout & Matched Panels
    ========================================================================== */
 
 .settings-layout {
@@ -10,8 +38,6 @@
   align-items: stretch;
   gap: $space-6;
   width: 100%;
-  
-  /* Stretches container to the bottom of the viewport */
   height: calc(100vh - 140px);
   min-height: 580px;
   margin-top: $space-4;
@@ -22,10 +48,11 @@
   }
 }
 
-/* Sidebar Container */
+/* Left Sidebar Container - Matched Surface */
 .settings-sidebar {
-  @include glass-surface($bg: rgba(18, 18, 20, 0.65), $blur: $glass-blur-md, $border: $glass-border);
-  border-radius: $radius-xl;
+  background-color: $panel-bg;
+  border: $panel-border;
+  border-radius: $radius-2xl;
   padding: $space-5;
   display: flex;
   flex-direction: column;
@@ -164,26 +191,27 @@
   border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-/* Main Panel Container */
+/* Right Content Panel - Matched Surface */
 .settings-content {
   width: 100%;
   height: 100%;
 
   > div,
-  .tr-panel-container {
+  .tr-panel-container,
+  .settings-panel {
+    background-color: $panel-bg;
+    border: $panel-border;
+    border-radius: $radius-2xl;
+    padding: $space-6;
     height: 100%;
     box-sizing: border-box;
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
   }
 }
 
 .settings-panel {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-
   &__body {
     display: flex;
     flex-direction: column;
@@ -229,7 +257,7 @@
   }
 }
 
-/* Toggle Option Cards & Special Card Types */
+/* Toggle Option Cards */
 .settings-grid {
   display: flex;
   flex-direction: column;
@@ -469,7 +497,7 @@
   }
 }
 
-/* Danger Zone Card & Red Button Overrides */
+/* Danger Zone Card */
 .danger-zone {
   display: flex;
   align-items: center;

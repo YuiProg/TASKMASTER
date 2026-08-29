@@ -1,8 +1,8 @@
 @use '../abstracts' as *;
 
 // Color Palette Matched from Design Reference
-$card-bg: #1e1e1e;
-$card-bg-hover: #252525;
+$card-bg: #0f0f12; // Matched to page background
+$card-bg-hover: #16161a;
 $card-border: rgba(255, 255, 255, 0.08);
 
 $accent-green: #10b981;
@@ -73,7 +73,7 @@ $text-muted: #6b7280;
       position: absolute;
       top: 0;
       left: 0;
-      width: 6px; // Slightly thicker indicator bar
+      width: 6px;
       height: 100%;
       background: $accent-green-bright;
       transition: width 0.2s ease;
@@ -91,7 +91,7 @@ $text-muted: #6b7280;
 
   /* --- Card Header --- */
   &__card-header {
-    padding: $space-5 $space-6; // Increased padding
+    padding: $space-5 $space-6;
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -109,7 +109,7 @@ $text-muted: #6b7280;
 
   &__card-title {
     margin: 0;
-    font-size: 1.25rem; // Scaled up header font
+    font-size: 1.25rem;
     font-weight: 700;
     color: $text-primary;
   }
@@ -119,12 +119,12 @@ $text-muted: #6b7280;
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: 0.85rem; // Scaled up
+    font-size: 0.85rem;
     font-weight: 600;
     color: $accent-green;
     background: rgba(16, 185, 129, 0.1);
     border: 1px solid rgba(16, 185, 129, 0.3);
-    padding: 4px 12px; // Roomier tag padding
+    padding: 4px 12px;
     border-radius: 6px;
 
     &::before {
@@ -141,10 +141,10 @@ $text-muted: #6b7280;
   }
 
   &__task-count {
-    font-size: 0.85rem; // Scaled up
+    font-size: 0.85rem;
     font-weight: 600;
     color: $text-secondary;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.03);
     border: 1px solid $card-border;
     padding: 5px 12px;
     border-radius: 6px;
@@ -154,7 +154,7 @@ $text-muted: #6b7280;
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    font-size: 0.85rem; // Scaled up
+    font-size: 0.85rem;
     font-weight: 600;
     padding: 5px 12px;
     border-radius: 6px;
@@ -172,7 +172,7 @@ $text-muted: #6b7280;
 
     &--finished {
       color: $text-secondary;
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.03);
       border: 1px solid $card-border;
     }
   }
@@ -183,23 +183,37 @@ $text-muted: #6b7280;
     gap: $space-3;
   }
 
+  /* Action Buttons (Matched Dark Theme) */
   &__btn {
-    font-size: 0.875rem; // Scaled up text
+    font-size: 0.875rem;
     font-weight: 700;
-    padding: 8px 18px; // Chunkier button targets
+    padding: 8px 18px;
     border-radius: 6px;
     cursor: pointer;
     text-transform: uppercase;
     letter-spacing: 0.03em;
-    transition: all 0.15s ease;
+    transition: all 0.2s ease;
 
     &--primary {
-      background: $accent-green-bright;
-      color: #000000;
-      border: none;
+      background: #27272a;
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+
+      svg, path {
+        color: #ffffff;
+        stroke: #ffffff;
+      }
 
       &:hover {
-        background: lighten($accent-green-bright, 5%);
+        background: #3f3f46;
+        border-color: rgba(255, 255, 255, 0.3);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+        transform: translateY(-1px);
+      }
+
+      &:active {
+        transform: translateY(0);
       }
     }
 
@@ -233,11 +247,11 @@ $text-muted: #6b7280;
     display: flex;
     align-items: center;
     gap: 8px;
-    font-size: 0.9rem; // Scaled up
+    font-size: 0.9rem;
     color: $text-secondary;
 
     label {
-      font-size: 0.8rem; // Scaled up label
+      font-size: 0.8rem;
       font-weight: 600;
       color: $text-muted;
       text-transform: uppercase;
@@ -269,10 +283,10 @@ $text-muted: #6b7280;
   }
 
   &__member-tag {
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.03);
     border: 1px solid $card-border;
     color: $text-secondary;
-    font-size: 0.85rem; // Scaled up member tags
+    font-size: 0.85rem;
     padding: 3px 10px;
     border-radius: 6px;
   }
@@ -286,7 +300,7 @@ $text-muted: #6b7280;
 
   &__tasks-heading {
     margin: 0 0 $space-3 0;
-    font-size: 0.95rem; // Scaled up
+    font-size: 0.95rem;
     font-weight: 600;
     color: $text-primary;
 
@@ -315,8 +329,8 @@ $text-muted: #6b7280;
     justify-content: space-between;
     align-items: center;
     gap: $space-3;
-    background: rgba(0, 0, 0, 0.2);
-    padding: $space-3 $space-4; // Roomier task items
+    background: rgba(0, 0, 0, 0.3);
+    padding: $space-3 $space-4;
     border-radius: 6px;
     border: 1px solid rgba(255, 255, 255, 0.04);
     cursor: pointer;
@@ -338,13 +352,13 @@ $text-muted: #6b7280;
   }
 
   &__task-name {
-    font-size: 0.95rem; // Scaled up
+    font-size: 0.95rem;
     font-weight: 600;
     color: $text-primary;
   }
 
   &__task-assignee {
-    font-size: 0.85rem; // Scaled up
+    font-size: 0.85rem;
     color: $text-secondary;
   }
 
@@ -354,13 +368,13 @@ $text-muted: #6b7280;
   }
 
   &__badge {
-    font-size: 0.75rem; // Scaled up badge text
+    font-size: 0.75rem;
     font-weight: 700;
     padding: 3px 8px;
     border-radius: 4px;
     text-transform: UPPERCASE;
     color: $text-secondary;
-    background: rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.03);
 
     &.priority--critical,
     &.priority--high,

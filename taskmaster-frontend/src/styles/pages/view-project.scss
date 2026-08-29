@@ -11,15 +11,49 @@
     margin-left: auto;
   }
 
+  /* Dark Neutral Action Buttons - Eliminates green-on-green icon clipping */
   &__action-btn {
-    background: $blue-600;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: $space-2 !important;
+    background: #27272a !important; /* Charcoal dark fill */
+    background-image: none !important;
+    color: #ffffff !important;
     font-weight: $fw-semibold;
     width: auto;
     padding: 0 $space-8;
+    height: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    border-radius: $radius-lg;
     flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+    transition: all $transition-fast ease-in-out;
+    cursor: pointer;
 
-    &:hover {
-      background: $blue-700;
+    /* Enforce high-contrast white icons and text */
+    span, svg, path {
+      color: #ffffff !important;
+      stroke: #ffffff !important;
+      fill: none;
+      opacity: 1 !important;
+    }
+
+    &:hover:not(:disabled) {
+      background: #3f3f46 !important;
+      border-color: rgba(255, 255, 255, 0.3) !important;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+
+      span, svg, path {
+        color: #ffffff !important;
+        stroke: #ffffff !important;
+      }
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      box-shadow: none !important;
     }
   }
 
@@ -36,14 +70,14 @@
 
   &__add-member-error {
     margin: -10px 0 $space-8 0;
-    font-size: 0.78rem;
-    color: #ef4444;
+    font-size: $fs-xs;
+    color: #f87171;
   }
 
-  /* --- Modern Members Grid UI --- */
+  /* --- Members Grid UI (Green Preserved) --- */
   &__no-members {
-    color: #6b7280;
-    font-size: 0.875rem;
+    color: #8e8e93;
+    font-size: $fs-sm;
     font-style: italic;
     margin-top: $space-4;
   }
@@ -62,29 +96,32 @@
     padding: $space-4 $space-5;
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 8px;
-    transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    border-radius: $radius-xl;
+    transition: transform $transition-fast, border-color $transition-fast, box-shadow $transition-fast, background-color $transition-fast;
 
     &:hover {
-      border-color: $blue-600;
+      border-color: rgba(34, 197, 94, 0.3); /* Green Accent restored */
+      background: rgba(34, 197, 94, 0.02);  /* Green Accent restored */
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
     }
   }
 
+  /* Green Avatar Accent Restored */
   &__member-avatar {
     width: 40px;
     height: 40px;
-    border-radius: 50%;
-    background: #22c55e;
+    border-radius: $radius-circle;
+    background: linear-gradient(135deg, $green-500, #059669);
     color: #ffffff;
     font-weight: $fw-semibold;
-    font-size: 0.875rem;
+    font-size: $fs-sm;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
     letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(34, 197, 94, 0.2);
   }
 
   &__member-info {
@@ -96,14 +133,15 @@
   &__member-name {
     font-weight: $fw-semibold;
     font-size: 0.9rem;
+    color: #ffffff;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
 
   &__member-email {
-    font-size: 0.78rem;
-    color: #9ca3af;
+    font-size: $fs-xs;
+    color: #8e8e93;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -114,12 +152,14 @@
     align-items: center;
     gap: $space-1;
     font-size: 0.72rem;
-    color: #6b7280;
+    color: #71717a;
     margin-top: $space-1;
   }
 
   &__member-branch-icon {
     flex-shrink: 0;
+    color: #71717a !important;
+    stroke: #71717a !important;
   }
 }
 
