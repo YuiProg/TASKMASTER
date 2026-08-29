@@ -21,6 +21,14 @@ const extractErrorMessage = (rawError, fallbackMessage = 'Something went wrong. 
   return fallbackMessage;
 };
 
+// Helper function to handle server-level crashes (5xx errors)
+const handleServerError = (err) => {
+  const status = err.response?.status;
+  if (!status || status >= 404 || status >= 500) {
+    navigateTo('/error'); // Navigate to the SCSS 500 Server Error page
+  }
+};
+
 export const useAuthStore = create((set, get) => ({
   user: null,
   isAuthenticated: false,
@@ -48,6 +56,7 @@ export const useAuthStore = create((set, get) => ({
       });
       return false;
     } catch (err) {
+      handleServerError(err);
       const rawError = err.response?.data?.message || err.response?.data;
       const parsedMessage = extractErrorMessage(rawError, 'Something went wrong. Please try again.');
 
@@ -98,6 +107,7 @@ export const useAuthStore = create((set, get) => ({
       return false;
 
     } catch (err) {
+      handleServerError(err);
       const rawError = err.response?.data?.message || err.response?.data;
       const parsedMessage = extractErrorMessage(rawError, 'Something went wrong. Please try again.');
 
@@ -109,7 +119,6 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
-  // --- Profile Update ---
   updateUser: async (base64Image) => {
     const currentUser = get().user;
     const userId = currentUser?._id || currentUser?.id;
@@ -144,6 +153,7 @@ export const useAuthStore = create((set, get) => ({
       });
       return false;
     } catch (err) {
+      handleServerError(err);
       const rawError = err.response?.data?.message || err.response?.data;
       const parsedMessage = extractErrorMessage(rawError, 'Failed to update profile picture.');
 
@@ -157,9 +167,6 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
-  // --- Forgot Password Flow ---
-
-  // Step 1: Request code
   requestPasswordResetCode: async (email) => {
     set({ isLoading: true, error: null });
     try {
@@ -180,6 +187,7 @@ export const useAuthStore = create((set, get) => ({
       });
       return false;
     } catch (err) {
+      handleServerError(err);
       const rawError = err.response?.data?.message || err.response?.data;
 
       set({
@@ -190,7 +198,6 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
-  // Step 2: Confirm Code
   verifyPasswordResetCode: async (email, code) => {
     set({ isLoading: true, error: null });
     try {
@@ -211,6 +218,7 @@ export const useAuthStore = create((set, get) => ({
       });
       return false;
     } catch (err) {
+      handleServerError(err);
       const rawError = err.response?.data?.message || err.response?.data;
 
       set({
@@ -221,7 +229,6 @@ export const useAuthStore = create((set, get) => ({
     }
   },
 
-  // Step 3: Final Password Reset
   resetPassword: async (email, code, newPassword, confirmPassword) => {
     set({ isLoading: true, error: null });
     try {
@@ -250,6 +257,7 @@ export const useAuthStore = create((set, get) => ({
       });
       return false;
     } catch (err) {
+      handleServerError(err);
       const rawError = err.response?.data?.message || err.response?.data;
 
       set({
@@ -269,6 +277,7 @@ export const useAuthStore = create((set, get) => ({
       }
       return null;
     } catch (err) {
+      handleServerError(err);
       console.log(err.message);
       return null;
     }

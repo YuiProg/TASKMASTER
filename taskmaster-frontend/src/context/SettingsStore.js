@@ -1,6 +1,15 @@
 import { create } from "zustand";
 import gateWayApi from "../lib/gateway";
 import toast from "react-hot-toast";
+import navigateTo from "../lib/navigate.js";
+
+// Helper function to handle error redirects (network failure, 403 Forbidden, 5xx Server Errors)
+const handleServerError = (err) => {
+  const status = err.response?.status;
+  if (!status || status === 403 || status >= 500) {
+    navigateTo('/error');
+  }
+};
 
 export const useSettingsStore = create((set, get) => ({
   settings: {
@@ -39,6 +48,7 @@ export const useSettingsStore = create((set, get) => ({
       });
       return null;
     } catch (error) {
+      handleServerError(error);
       console.error("Failed to fetch settings:", error);
       const errorMsg =
         error.response?.data?.message || "Something went wrong fetching settings.";
@@ -117,6 +127,7 @@ export const useSettingsStore = create((set, get) => ({
 
       return { success: true, data: resData?.data };
     } catch (error) {
+      handleServerError(error);
       console.error("Save settings failed:", error);
 
       let errorMsg = "Something went wrong. Please try again.";

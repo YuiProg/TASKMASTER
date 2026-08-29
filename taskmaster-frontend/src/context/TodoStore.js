@@ -1,182 +1,196 @@
 import { create } from 'zustand';
 import gateWayApi from '../lib/gateway';
+import navigateTo from '../lib/navigate.js';
 
 const extractErrorMessage = (rawError, fallbackMessage = 'Something went wrong. Please try again.') => {
-    if (!rawError) return fallbackMessage;
+  if (!rawError) return fallbackMessage;
 
-    const input = typeof rawError === 'object' ? rawError.message || rawError : rawError;
+  const input = typeof rawError === 'object' ? rawError.message || rawError : rawError;
 
-    if (typeof input === 'string') {
-        try {
-            const parsed = JSON.parse(input);
-            if (parsed && parsed.message) {
-                return parsed.message;
-            }
-        } catch {
-            return input;
-        }
+  if (typeof input === 'string') {
+    try {
+      const parsed = JSON.parse(input);
+      if (parsed && parsed.message) {
+        return parsed.message;
+      }
+    } catch {
+      return input;
     }
+  }
 
-    return fallbackMessage;
+  return fallbackMessage;
+};
+
+// Helper function to redirect on network failures, 403 Forbidden, or 5xx Server Errors
+const handleServerError = (err) => {
+  const status = err.response?.status;
+  if (!status || status === 403 || status >= 500) {
+    navigateTo('/error');
+  }
 };
 
 export const useTodoStore = create((set, get) => ({
-    todos: [],
-    currentTodo: null,
-    isLoading: false,
-    error: null,
+  todos: [],
+  currentTodo: null,
+  isLoading: false,
+  error: null,
 
-    // Fetch all todos
-    fetchTodos: async () => {
-        set({ isLoading: true, error: null });
-        try {
-            const res = await gateWayApi.get('/getTodos');
+  // Fetch all todos
+  fetchTodos: async () => {
+    set({ isLoading: true, error: null });
+    try {
+      const res = await gateWayApi.get('/getTodos');
 
-            if (res.data?.status === 'SUCCESS') {
-                set({
-                    todos: res.data.data || [],
-                    isLoading: false,
-                    error: null,
-                });
-                return true;
-            }
-
-            set({
-                isLoading: false,
-                error: extractErrorMessage(res.data?.message, 'Failed to fetch todos.'),
-            });
-            return false;
-        } catch (err) {
-            const rawError = err.response?.data?.message || err.response?.data;
-            const parsedMessage = extractErrorMessage(rawError, 'Failed to load todos. Please try again.');
-
-            set({
-                isLoading: false,
-                error: parsedMessage,
-            });
-            return false;
-        }
-    },
-
-    // Fetch single todo by ID
-    fetchTodoById: async (id) => {
-        set({ isLoading: true, error: null, currentTodo: null });
-        try {
-            const res = await gateWayApi.get(`/getTodoById/${id}`);
-
-            if (res.data?.status === 'SUCCESS') {
-                set({
-                    currentTodo: res.data.data,
-                    isLoading: false,
-                    error: null,
-                });
-                return true;
-            }
-
-            set({
-                isLoading: false,
-                error: extractErrorMessage(res.data?.message, 'Failed to fetch todo details.'),
-            });
-            return false;
-        } catch (err) {
-            const rawError = err.response?.data?.message || err.response?.data;
-            const parsedMessage = extractErrorMessage(rawError, 'Failed to load todo details.');
-
-            set({
-                isLoading: false,
-                error: parsedMessage,
-            });
-            return false;
-        }
-    },
-
-    // Toggle todo status (Sends payload: { completed: boolean })
-    toggleTodoStatus: async (todoId, currentFinishedStatus) => {
-        const isCurrentlyFinished = currentFinishedStatus === 1 || currentFinishedStatus === true;
-        const nextFinishedNumeric = isCurrentlyFinished ? 0 : 1;
-        const nextCompletedBoolean = !isCurrentlyFinished;
-
-        const previousTodos = get().todos;
-
-        // Optimistic UI update
+      if (res.data?.status === 'SUCCESS') {
         set({
-            todos: previousTodos.map((todo) =>
-                todo.id === todoId ? { ...todo, finished: nextFinishedNumeric } : todo
-            ),
-            currentTodo: get().currentTodo?.id === todoId 
-                ? { ...get().currentTodo, finished: nextFinishedNumeric } 
-                : get().currentTodo,
+          todos: res.data.data || [],
+          isLoading: false,
+          error: null,
         });
+        return true;
+      }
 
-        try {
-            const res = await gateWayApi.put(`/updateTodo/${todoId}`, {
-                completed: nextCompletedBoolean,
-            });
+      set({
+        isLoading: false,
+        error: extractErrorMessage(res.data?.message, 'Failed to fetch todos.'),
+      });
+      return false;
+    } catch (err) {
+      handleServerError(err);
+      const rawError = err.response?.data?.message || err.response?.data;
+      const parsedMessage = extractErrorMessage(rawError, 'Failed to load todos. Please try again.');
 
-            if (res.data?.status !== 'SUCCESS') {
-                set({ todos: previousTodos });
-            }
-        } catch (err) {
-            set({ todos: previousTodos });
-            console.error('Error updating todo status:', err);
-        }
-    },
+      set({
+        isLoading: false,
+        error: parsedMessage,
+      });
+      return false;
+    }
+  },
 
-    // Delete a todo (Optimistic update)
-    deleteTodo: async (todoId) => {
-        const previousTodos = get().todos;
+  // Fetch single todo by ID
+  fetchTodoById: async (id) => {
+    set({ isLoading: true, error: null, currentTodo: null });
+    try {
+      const res = await gateWayApi.get(`/getTodoById/${id}`);
 
+      if (res.data?.status === 'SUCCESS') {
         set({
-            todos: previousTodos.filter((todo) => todo.id !== todoId),
+          currentTodo: res.data.data,
+          isLoading: false,
+          error: null,
         });
+        return true;
+      }
 
-        try {
-            const res = await gateWayApi.delete(`/deleteTodo/${todoId}`);
+      set({
+        isLoading: false,
+        error: extractErrorMessage(res.data?.message, 'Failed to fetch todo details.'),
+      });
+      return false;
+    } catch (err) {
+      handleServerError(err);
+      const rawError = err.response?.data?.message || err.response?.data;
+      const parsedMessage = extractErrorMessage(rawError, 'Failed to load todo details.');
 
-            if (res.data?.status !== 'SUCCESS') {
-                set({ todos: previousTodos });
-            }
-        } catch (err) {
-            set({ todos: previousTodos });
-            console.error('Error deleting todo:', err);
-        }
-    },
+      set({
+        isLoading: false,
+        error: parsedMessage,
+      });
+      return false;
+    }
+  },
 
-    // Add a new todo
-    addTodo: async (todoData) => {
-        set({ isLoading: true, error: null });
-        try {
-            const res = await gateWayApi.post('/createTodo', {
-                todoName: todoData.todoName,
-                deadline: todoData.deadline,
-            });
+  // Toggle todo status (Sends payload: { completed: boolean })
+  toggleTodoStatus: async (todoId, currentFinishedStatus) => {
+    const isCurrentlyFinished = currentFinishedStatus === 1 || currentFinishedStatus === true;
+    const nextFinishedNumeric = isCurrentlyFinished ? 0 : 1;
+    const nextCompletedBoolean = !isCurrentlyFinished;
 
-            if (res.data?.status === 'SUCCESS') {
-                set((state) => ({
-                    todos: [res.data.data, ...state.todos],
-                    isLoading: false,
-                    error: null,
-                }));
-                return true;
-            }
+    const previousTodos = get().todos;
 
-            set({
-                isLoading: false,
-                error: extractErrorMessage(res.data?.message, 'Failed to create todo.'),
-            });
-            return false;
-        } catch (err) {
-            const rawError = err.response?.data?.message || err.response?.data;
-            const parsedMessage = extractErrorMessage(rawError, 'Something went wrong. Please try again.');
+    // Optimistic UI update
+    set({
+      todos: previousTodos.map((todo) =>
+        todo.id === todoId ? { ...todo, finished: nextFinishedNumeric } : todo
+      ),
+      currentTodo: get().currentTodo?.id === todoId 
+        ? { ...get().currentTodo, finished: nextFinishedNumeric } 
+        : get().currentTodo,
+    });
 
-            set({
-                isLoading: false,
-                error: parsedMessage,
-            });
-            return false;
-        }
-    },
+    try {
+      const res = await gateWayApi.put(`/updateTodo/${todoId}`, {
+        completed: nextCompletedBoolean,
+      });
 
-    clearCurrentTodo: () => set({ currentTodo: null }),
-    clearError: () => set({ error: null }),
+      if (res.data?.status !== 'SUCCESS') {
+        set({ todos: previousTodos });
+      }
+    } catch (err) {
+      handleServerError(err);
+      set({ todos: previousTodos });
+      console.error('Error updating todo status:', err);
+    }
+  },
+
+  // Delete a todo (Optimistic update)
+  deleteTodo: async (todoId) => {
+    const previousTodos = get().todos;
+
+    set({
+      todos: previousTodos.filter((todo) => todo.id !== todoId),
+    });
+
+    try {
+      const res = await gateWayApi.delete(`/deleteTodo/${todoId}`);
+
+      if (res.data?.status !== 'SUCCESS') {
+        set({ todos: previousTodos });
+      }
+    } catch (err) {
+      handleServerError(err);
+      set({ todos: previousTodos });
+      console.error('Error deleting todo:', err);
+    }
+  },
+
+  // Add a new todo
+  addTodo: async (todoData) => {
+    set({ isLoading: true, error: null });
+    try {
+      const res = await gateWayApi.post('/createTodo', {
+        todoName: todoData.todoName,
+        deadline: todoData.deadline,
+      });
+
+      if (res.data?.status === 'SUCCESS') {
+        set((state) => ({
+          todos: [res.data.data, ...state.todos],
+          isLoading: false,
+          error: null,
+        }));
+        return true;
+      }
+
+      set({
+        isLoading: false,
+        error: extractErrorMessage(res.data?.message, 'Failed to create todo.'),
+      });
+      return false;
+    } catch (err) {
+      handleServerError(err);
+      const rawError = err.response?.data?.message || err.response?.data;
+      const parsedMessage = extractErrorMessage(rawError, 'Something went wrong. Please try again.');
+
+      set({
+        isLoading: false,
+        error: parsedMessage,
+      });
+      return false;
+    }
+  },
+
+  clearCurrentTodo: () => set({ currentTodo: null }),
+  clearError: () => set({ error: null }),
 }));

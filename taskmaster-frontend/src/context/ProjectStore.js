@@ -1,5 +1,14 @@
 import { create } from 'zustand';
 import gateWayApi from '../lib/gateway';
+import navigateTo from '../lib/navigate.js';
+
+// Helper function to handle error redirects (network failure, 403 Forbidden, 5xx Server Errors)
+const handleServerError = (err) => {
+  const status = err.response?.status;
+  if (!status || status === 403 || status >= 500) {
+    navigateTo('/error');
+  }
+};
 
 export const useProjectStore = create((set, get) => ({
   projects: [],
@@ -18,6 +27,7 @@ export const useProjectStore = create((set, get) => ({
       const list = Array.isArray(res.data?.data) ? res.data.data : [];
       set({ projects: list, isLoading: false });
     } catch (err) {
+      handleServerError(err);
       set({
         isLoading: false,
         error: err.response?.data?.message || 'Could not load projects.',
@@ -28,8 +38,13 @@ export const useProjectStore = create((set, get) => ({
   createProject: async (projectName, description, emails = [], priorities) => {
     set({ isCreating: true, error: null });
     try {
-      const prio = priorities.map(p => p.toUpperCase());
-      const res = await gateWayApi.post('/addProject', { projectName, description, emails, priorities: prio });
+      const prio = priorities.map((p) => p.toUpperCase());
+      const res = await gateWayApi.post('/addProject', {
+        projectName,
+        description,
+        emails,
+        priorities: prio,
+      });
       if (String(res.data.status).toUpperCase() === 'SUCCESS') {
         set({
           projects: [res.data.data, ...get().projects],
@@ -44,6 +59,7 @@ export const useProjectStore = create((set, get) => ({
       });
       return false;
     } catch (err) {
+      handleServerError(err);
       set({
         isCreating: false,
         error:
@@ -61,8 +77,11 @@ export const useProjectStore = create((set, get) => ({
       set({ tasks: tasksList });
       return tasksList;
     } catch (err) {
+      handleServerError(err);
       set({
-        error: err.response?.data?.message || 'Something went wrong. Please try again.',
+        error:
+          err.response?.data?.message ||
+          'Something went wrong. Please try again.',
       });
       return [];
     }
@@ -80,8 +99,11 @@ export const useProjectStore = create((set, get) => ({
 
       return { project: projectData, tasks };
     } catch (err) {
+      handleServerError(err);
       set({
-        error: err.response?.data?.message || 'Something went wrong. Please try again.',
+        error:
+          err.response?.data?.message ||
+          'Something went wrong. Please try again.',
       });
     }
   },
@@ -91,7 +113,9 @@ export const useProjectStore = create((set, get) => ({
   addProjectMembers: async (projectId, emails) => {
     set({ error: null });
     try {
-      const res = await gateWayApi.put(`/addProjectMembers/${projectId}`, { emails });
+      const res = await gateWayApi.put(`/addProjectMembers/${projectId}`, {
+        emails,
+      });
 
       if (String(res.data.status).toUpperCase() === 'SUCCESS') {
         if (res.data.data) {
@@ -107,6 +131,7 @@ export const useProjectStore = create((set, get) => ({
       set({ error: res.data.message || 'Could not add members.' });
       return false;
     } catch (err) {
+      handleServerError(err);
       set({
         error:
           err.response?.data?.message ||
@@ -119,10 +144,11 @@ export const useProjectStore = create((set, get) => ({
   fetchArchivedProjects: async () => {
     try {
       set({ isLoading: true });
-      const res = await gateWayApi.get("/getArchiveProjects");
+      const res = await gateWayApi.get('/getArchiveProjects');
       const list = Array.isArray(res.data?.data) ? res.data.data : [];
       set({ archiveProjects: list, isLoading: false });
     } catch (err) {
+      handleServerError(err);
       set({
         error:
           err.response?.data?.message ||
@@ -136,10 +162,11 @@ export const useProjectStore = create((set, get) => ({
   fetchUserCreatedProjects: async () => {
     try {
       set({ isLoading: true });
-      const res = await gateWayApi.get("/getUserCreatedProjects");
+      const res = await gateWayApi.get('/getUserCreatedProjects');
       const list = Array.isArray(res.data?.data) ? res.data.data : [];
       set({ userProjects: list, isLoading: false });
     } catch (err) {
+      handleServerError(err);
       set({
         error:
           err.response?.data?.message ||
@@ -160,11 +187,14 @@ export const useProjectStore = create((set, get) => ({
         const tasks = await get().getProjectTasks(projectId);
         return { project: projectData, tasks };
       }
-      
+
       return { project: null, tasks: [] };
     } catch (err) {
+      handleServerError(err);
       set({
-        error: err.response?.data?.message || 'Something went wrong fetching the project by ID.',
+        error:
+          err.response?.data?.message ||
+          'Something went wrong fetching the project by ID.',
       });
       return { project: null, tasks: [] };
     }
