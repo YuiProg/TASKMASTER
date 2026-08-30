@@ -7,7 +7,7 @@ import { Label, InputField } from '../../components/TRCOMPONENTS/TRInputField/In
 import { Table } from '../../components/TRCOMPONENTS/TRTable/TrTable';
 import Spinner from '../../components/Spinner/Spinner';
 import Button from '../../components/TRCOMPONENTS/TRButton/Button';
-import { Plus, Zap, Eye, MapPin } from 'lucide-react';
+import { Plus, Zap, Eye, MapPin, Trash2, Redo2 } from 'lucide-react';
 import navigateTo from '../../lib/navigate';
 
 import '../../styles/pages/view-project.scss';
@@ -21,7 +21,8 @@ class ViewProject extends React.Component {
             tasks: [],
             newMemberEmail: '',
             isAddingMember: false,
-            addMemberError: null
+            addMemberError: null,
+            isArchiveLoading: false
         };
     }
 
@@ -190,6 +191,12 @@ class ViewProject extends React.Component {
         }
     }
 
+    archiveProject = (archive, navigate) => {
+        const { archiveProject } = useProjectStore.getState();
+        this.setState({isArchiveLoading: true});
+        archiveProject(this.state.project.id, archive, navigate);
+    }
+
     goToViewSprint = () => {
         const sprintId = this.state.project?.sprintId;
         if (sprintId) {
@@ -209,12 +216,11 @@ class ViewProject extends React.Component {
                 </PanelPage>
             );
         }
-
+        
         const memberCount = this.state.project.members ? this.state.project.members.length : 0;
         const { newMemberEmail, isAddingMember, addMemberError, project } = this.state;
         const hasActiveSprint = project?.inSprint === 1 && Boolean(project?.sprintId);
         const pageTitle = project?.projectName ? `${project.projectName} | TaskMaster` : 'Project Details | TaskMaster';
-
         return (
             <PanelPage titlePage={this.state.project.projectName.toUpperCase()} isLoading={false} subTitle={`Project ID: ${this.state.project.id}`}>
                 <Helmet>
@@ -259,6 +265,31 @@ class ViewProject extends React.Component {
                             } 
                             onClick={this.goToCreateTask}
                         />
+                        {project.archived === 0 
+                        ? (
+                        <Button 
+                            disabled={this.state.isArchiveLoading}  
+                            className="view-project__action-btn" 
+                            text={
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                                    <Trash2 size={14} color="#ffffff" />
+                                </span>
+                            } 
+                            onClick={() => this.archiveProject(true, '/projects/archived')}
+                        />
+                        )
+                        : (
+                        <Button 
+                            disabled={this.state.isArchiveLoading}
+                            className="view-project__action-btn" 
+                            text={
+                                <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                                    <Redo2 size={14} color="#ffffff" />
+                                </span>
+                            } 
+                            onClick={() => this.archiveProject(false, '/projects')}
+                        />
+                        )}
                     </div>
                 </PanelContainer>
                 
