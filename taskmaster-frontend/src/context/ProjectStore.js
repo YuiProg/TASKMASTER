@@ -19,6 +19,7 @@ export const useProjectStore = create((set, get) => ({
   error: null,
   userProjects: [],
   archiveProjects: [],
+  archiveLoading: false,
 
   fetchProjects: async () => {
     set({ isLoading: true, error: null });
@@ -67,6 +68,29 @@ export const useProjectStore = create((set, get) => ({
           'Something went wrong. Please try again.',
       });
       return false;
+    }
+  },
+
+  archiveProject: async (id, isArchive, navigate) => {
+    set({archiveLoading: true});
+    try {
+      const res = await gateWayApi.put(`/archiveProject/${id}`, {
+        isArchive
+      });
+      if (res.data != null) {
+        navigateTo(navigate);
+      }
+    } catch (err) {
+      handleServerError(err);
+      set({
+        isCreating: false,
+        error:
+          err.response?.data?.message ||
+          'Something went wrong. Please try again.',
+      });
+      return false;
+    } finally {
+      set({archiveLoading: false});
     }
   },
 
