@@ -224,16 +224,18 @@ public class ProjectServiceImpl implements ProjectServiceInterface{
     @Override
     public ResponseEntity<ApiResponseModel<Project>> archiveProject(String id, ProjectRequest projectRequest) {
         Project project = projectCacheService.getProjectInCacheById(id);
-
+        User user = authenticatedUser.getAuthenticatedUser();
         if (project == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(ApiResponseModel.error("PROJECT NOT FOUND", "ERROR"));
         }
 
         project.setArchived(projectRequest.getIsArchive().equals(StringCodes.TRUE.getFlag()) ? 1 : 0);
-
+        projectCacheService.evictUserCreatedProjects(user.getId());
+        projectCacheService.evictUserProjectsCache();
+        projectCacheService.evictArchivedProjects();
+        projectCacheService.evictUserViewProjectCache(project.getProjectName());
         Project newProject = projectRepository.save(project);
-
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponseModel.success("PROJECT ARCHIVED","SUCCESS", newProject));
     }
