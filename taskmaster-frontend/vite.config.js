@@ -7,9 +7,9 @@ export default defineConfig({
     proxy: {
       '/api': {
         //target: 'https://task-master-gateway.onrender.com',
-        //target: 'https://task-master-gateway-mh86.onrender.com',
+        target: 'https://task-master-gateway-mh86.onrender.com',
         //target: 'http://host.docker.internal:8083',
-        target: 'https://task-master-gateway-lh5y.onrender.com',
+        //target: 'https://task-master-gateway-lh5y.onrender.com',
         changeOrigin: true,
         secure: true,
       },
