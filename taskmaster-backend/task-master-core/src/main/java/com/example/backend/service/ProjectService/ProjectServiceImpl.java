@@ -60,6 +60,10 @@ public class ProjectServiceImpl implements ProjectServiceInterface{
         if (projectRequest.getPriorities() != null) {
             List<String> priorities = new ArrayList<>(projectRequest.getPriorities());
 
+            if (!priorities.contains("OPEN")) {
+                priorities.add("OPEN");
+            }
+
             if (!priorities.contains("CLOSED")) {
                 priorities.add("CLOSED");
             }
