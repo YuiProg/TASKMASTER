@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.example.comment-service</groupId>
 	<artifactId>task-master-comment</artifactId>
-	<version>1.0.6</version>
+	<version>1.0.7</version>
 	<name/>
 	<description/>
 	<url/>
@@ -45,7 +45,11 @@
 	</dependencyManagement>
 
 	<dependencies>
-
+		<dependency>
+			<groupId>org.apache.tomcat.embed</groupId>
+			<artifactId>tomcat-embed-core</artifactId>
+			<version>11.0.25</version>
+		</dependency>
 		<dependency>
 			<groupId>com.cloudinary</groupId>
 			<artifactId>cloudinary-http5</artifactId>
