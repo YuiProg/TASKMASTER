@@ -2,10 +2,7 @@ name: CI/CD
 
 on:
   push:
-    branches: [ "main", "staging" ]
-  pull_request:
     branches: [ "main" ]
-
 jobs:
   check-frontend:
     name: Frontend (Version Check, Security & Docker Build)
