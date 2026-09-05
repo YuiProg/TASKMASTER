@@ -44,4 +44,28 @@ public class SprintService implements SprintClient {
                             "ERROR"));
         }
     }
+
+    @Override
+    @Scheduled(cron = "0 59 23 * * 1", zone = "Asia/Manila")
+    public ResponseEntity<ApiResponseModel<List<SprintDTO>>> softDeleteSprints() {
+        try {
+            log.info("DELETING FINISHED SPRINTS");
+            ResponseEntity<ApiResponseModel<List<SprintDTO>>> response = sprintClient.softDeleteSprints();
+            log.info("DELETED SPRINTS status: {} data: {}", response.getStatusCode(), response.getBody());
+            ResponseEntity.BodyBuilder bodyBuilder = ResponseEntity.status(response.getStatusCode());
+            return bodyBuilder.body(response.getBody());
+        } catch (FeignException e) {
+            log.error("RESPONSE scheduledSoftDeleteSprints (error) -> status: {}, cause: {}",
+                    e.status(), e.getCause() != null ? e.getCause().getMessage() : e.getMessage(), e);
+
+            HttpStatus status = (e.status() > 0)
+                    ? HttpStatus.valueOf(e.status())
+                    : HttpStatus.SERVICE_UNAVAILABLE;
+
+            return ResponseEntity.status(status)
+                    .body(ApiResponseModel.error(
+                            e.status() > 0 ? e.contentUTF8() : "Sprint service unavailable, please try again",
+                            "ERROR"));
+        }
+    }
 }

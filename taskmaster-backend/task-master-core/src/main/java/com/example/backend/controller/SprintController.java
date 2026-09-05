@@ -42,4 +42,10 @@ public class SprintController implements SprintServiceInterface {
     public ResponseEntity<ApiResponseModel<List<Sprint>>> scheduledArchiveSprint() {
         return sprintServiceInterface.scheduledArchiveSprint();
     }
+
+    @Override
+    @PutMapping("/softDeleteSprint")
+    public ResponseEntity<ApiResponseModel<List<Sprint>>> softDeleteSprints() {
+        return sprintServiceInterface.softDeleteSprints();
+    }
 }

@@ -12,4 +12,5 @@ public interface SprintServiceInterface {
     ResponseEntity<ApiResponseModel<List<Sprint>>> getSprints ();
     ResponseEntity<ApiResponseModel<Sprint>> getSprintById (String id);
     ResponseEntity<ApiResponseModel<List<Sprint>>> scheduledArchiveSprint ();
+    ResponseEntity<ApiResponseModel<List<Sprint>>> softDeleteSprints();
 }
