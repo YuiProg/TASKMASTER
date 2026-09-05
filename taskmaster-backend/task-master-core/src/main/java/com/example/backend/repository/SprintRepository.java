@@ -24,4 +24,9 @@ public interface SprintRepository extends JpaRepository<Sprint, String> {
 
     @Query("SELECT s FROM Sprint s WHERE s.finished = 1 AND s.del = 0")
     List<Sprint> getFinishedSprints ();
+
+    @Modifying
+    @Transactional
+    @Query("UPDATE Sprint s SET s.del = 1 WHERE s.finished = 1 AND s.del = 0")
+    void softDeleteSprint();
 }

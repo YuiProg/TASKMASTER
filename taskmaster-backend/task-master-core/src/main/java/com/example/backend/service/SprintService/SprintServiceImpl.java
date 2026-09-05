@@ -201,4 +201,11 @@ public class SprintServiceImpl implements SprintServiceInterface {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponseModel.success("SPRINTS FOUND", "SUCCESS", finishedSprints));
     }
+
+    @Override
+    public ResponseEntity<ApiResponseModel<List<Sprint>>> softDeleteSprints() {
+        sprintRepository.softDeleteSprint();
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(ApiResponseModel.success("SPRINTS DELETED", "SUCCESS", null));
+    }
 }
