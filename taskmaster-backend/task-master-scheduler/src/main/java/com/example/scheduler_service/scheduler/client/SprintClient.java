@@ -16,4 +16,7 @@ public interface SprintClient {
 
     @PutMapping("/archiveSprints")
     ResponseEntity<ApiResponseModel<List<SprintDTO>>> scheduledArchiveSprints();
+
+    @PutMapping("/softDeleteSprint")
+    ResponseEntity<ApiResponseModel<List<SprintDTO>>> softDeleteSprints();
 }
