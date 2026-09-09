@@ -3,8 +3,7 @@ name: CI/CD
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+
 jobs:
   check-frontend:
     name: Frontend (Version Check, Security & Docker Build)
@@ -19,31 +18,24 @@ jobs:
         shell: bash
         run: |
           FRONTEND_PATH="taskmaster-frontend" # Change if your frontend folder name differs
+          COMPARE_REF="HEAD~1"
 
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
-            TARGET_BRANCH="${{ github.base_ref }}"
-            git fetch origin "$TARGET_BRANCH"
-            COMPARE_REF="origin/$TARGET_BRANCH"
-          else
-            COMPARE_REF="HEAD~1"
-          fi
-          
           # Check if any files changed in the frontend directory
           CHANGED_FILES=$(git diff --name-only "$COMPARE_REF" HEAD -- "$FRONTEND_PATH")
-          
+
           if [ -z "$CHANGED_FILES" ]; then
             echo "No changes detected in $FRONTEND_PATH. Skipping version check and build."
             exit 0
           fi
-          
+
           echo "Changes detected in $FRONTEND_PATH. Verifying package.json version bump against $COMPARE_REF..."
-          
+
           CURRENT_VERSION=$(jq -r '.version' "$FRONTEND_PATH/package.json")
           BASE_VERSION=$(git show "$COMPARE_REF:$FRONTEND_PATH/package.json" | jq -r '.version')
-          
+
           echo "Base frontend version ($COMPARE_REF): $BASE_VERSION"
           echo "Current frontend version: $CURRENT_VERSION"
-          
+
           if [ "$CURRENT_VERSION" == "$BASE_VERSION" ]; then
             echo "::error::Code changes were made in $FRONTEND_PATH, but its package.json version was not incremented!"
             exit 1
@@ -134,31 +126,25 @@ jobs:
       - name: Check if Version Is Incremented
         shell: bash
         run: |
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
-            TARGET_BRANCH="${{ github.base_ref }}"
-            git fetch origin "$TARGET_BRANCH"
-            COMPARE_REF="origin/$TARGET_BRANCH"
-          else
-            COMPARE_REF="HEAD~1"
-          fi
-          
+          COMPARE_REF="HEAD~1"
+
           # Check if any files changed in this specific module directory
           CHANGED_FILES=$(git diff --name-only "$COMPARE_REF" HEAD -- ${{ matrix.path }})
-          
+
           if [ -z "$CHANGED_FILES" ]; then
             echo "No changes detected in ${{ matrix.path }}. Skipping version check."
             exit 0
           fi
-          
+
           echo "Changes detected in ${{ matrix.path }}. Verifying version bump against $COMPARE_REF..."
-          
+
           # Strip out <parent>...</parent> block to get the actual project version
           CURRENT_VERSION=$(sed '/<parent>/,/<\/parent>/d' ${{ matrix.path }}/pom.xml | sed -n 's/.*<version>\(.*\)<\/version>.*/\1/p' | head -n 1 | xargs)
           BASE_VERSION=$(git show "$COMPARE_REF:${{ matrix.path }}/pom.xml" | sed '/<parent>/,/<\/parent>/d' | sed -n 's/.*<version>\(.*\)<\/version>.*/\1/p' | head -n 1 | xargs)
-          
+
           echo "Base project version ($COMPARE_REF): $BASE_VERSION"
           echo "Current project version: $CURRENT_VERSION"
-          
+
           if [ "$CURRENT_VERSION" == "$BASE_VERSION" ]; then
             echo "::error::Code changes were made in ${{ matrix.path }}, but its pom.xml version was not incremented!"
             exit 1
