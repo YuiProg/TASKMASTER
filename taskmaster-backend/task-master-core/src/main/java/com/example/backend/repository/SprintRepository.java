@@ -14,7 +14,8 @@ import java.util.List;
 @Repository
 public interface SprintRepository extends JpaRepository<Sprint, String> {
 
-    @Query("SELECT s FROM Sprint s JOIN s.sprintMembers m WHERE m.id = :userId OR s.initiatedBy.id = :userId AND s.del = 0")
+    @Query("SELECT s FROM Sprint s JOIN s.sprintMembers m " +
+            "WHERE (m.id = :userId OR s.initiatedBy.id = :userId) AND s.del = 0")
     List<Sprint> getSprints(@Param("userId") String userId);
 
     @Modifying
