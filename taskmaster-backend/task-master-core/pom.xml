@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.example</groupId>
 	<artifactId>task-master-core</artifactId>
-	<version>1.1.22</version>
+	<version>1.1.23</version>
 	<name/>
 	<description/>
 	<url/>
@@ -44,7 +44,13 @@
 	</dependencyManagement>
 
 	<dependencies>
-
+		<!-- Source: https://mvnrepository.com/artifact/io.netty/netty-handler -->
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-handler</artifactId>
+			<version>4.2.17.Final</version>
+			<scope>compile</scope>
+		</dependency>
 		<dependency>
 			<groupId>com.cloudinary</groupId>
 			<artifactId>cloudinary-http5</artifactId>
