@@ -39,6 +39,19 @@ function TaskComments({
     const file = e.target.files[0];
     if (!file) return;
 
+    const allowedImageTypes = [
+      "image/png",
+      "image/jpeg",
+      "image/jpg",
+      "image/gif",
+      "image/webp",
+    ];
+
+    if (!file.type || !allowedImageTypes.includes(file.type)) {
+      handleRemoveImage();
+      return;
+    }
+
     setSelectedFile(file);
     setImagePreview(URL.createObjectURL(file));
   };
@@ -98,7 +111,7 @@ function TaskComments({
             rows={2}
           />
 
-          {imagePreview && (
+          {imagePreview?.startsWith("blob:") && (
             <div className="task-comments__preview-wrapper">
               <img
                 src={imagePreview}
