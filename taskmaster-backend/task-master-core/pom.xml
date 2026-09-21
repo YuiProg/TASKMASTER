@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.example</groupId>
 	<artifactId>task-master-core</artifactId>
-	<version>1.1.23</version>
+	<version>1.1.24</version>
 	<name/>
 	<description/>
 	<url/>
@@ -44,6 +44,13 @@
 	</dependencyManagement>
 
 	<dependencies>
+		<!-- Source: https://mvnrepository.com/artifact/org.bouncycastle/bcprov-jdk18on -->
+		<dependency>
+			<groupId>org.bouncycastle</groupId>
+			<artifactId>bcprov-jdk18on</artifactId>
+			<version>1.86</version>
+			<scope>compile</scope>
+		</dependency>
 		<!-- Source: https://mvnrepository.com/artifact/io.netty/netty-handler -->
 		<dependency>
 			<groupId>io.netty</groupId>
