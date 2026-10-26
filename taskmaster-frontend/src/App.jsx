@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
+import { Analytics } from "@vercel/analytics/react";
 import AuthFlow from "./pages/Auth/AuthFlow";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Dashboard from "./pages/Dashboard/Dashboard";
@@ -128,6 +129,7 @@ function App() {
   return (
     <BrowserRouter>
       <AppRoutes />
+      <Analytics />
     </BrowserRouter>
   );
 }
